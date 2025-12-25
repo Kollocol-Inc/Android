@@ -5,8 +5,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.staticCompositionLocalOf
 
-val LocalAppColors = staticCompositionLocalOf<AppColors> {
-    error("AppColors not provided")
+val LocalExtraColors = staticCompositionLocalOf<ExtraColors> {
+    error("ExtraColors not provided")
 }
 
 @Composable
@@ -14,7 +14,7 @@ fun AppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
-    val appColors = if (darkTheme) DarkAppColors else LightAppColors
+    val appColors = if (darkTheme) DarkExtraColors else LightExtraColors
     val materialColors = if (darkTheme) DarkMaterialScheme else LightMaterialScheme
 
     MaterialTheme(
@@ -22,7 +22,7 @@ fun AppTheme(
         typography = Typography,
     ) {
         androidx.compose.runtime.CompositionLocalProvider(
-            LocalAppColors provides appColors,
+            LocalExtraColors provides appColors,
             content = content
         )
     }

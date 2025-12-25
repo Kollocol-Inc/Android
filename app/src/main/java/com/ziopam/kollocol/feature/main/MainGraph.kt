@@ -1,7 +1,6 @@
 package com.ziopam.kollocol.feature.main
 
 import androidx.compose.material3.Text
-import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
@@ -17,7 +16,7 @@ fun NavGraphBuilder.mainGraph() {
     ) {
         composable(MainRoute.HOME) {
             AppScaffold {
-                Text("Hello World", color = Color.Black)
+                Text("Hello World")
             }
         }
     }
