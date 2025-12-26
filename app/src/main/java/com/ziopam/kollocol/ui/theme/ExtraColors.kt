@@ -3,6 +3,7 @@ package com.ziopam.kollocol.ui.theme
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
 
+// TODO Подумать об удалении лишних цветов
 @Immutable
 data class ExtraColors(
     val textPrimary: Color,

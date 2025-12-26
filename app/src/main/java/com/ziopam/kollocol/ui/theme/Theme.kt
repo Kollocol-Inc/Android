@@ -5,6 +5,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.staticCompositionLocalOf
 
+// TODO Описать константы для максимального длины поля и максимального размера кнопки
 val LocalExtraColors = staticCompositionLocalOf<ExtraColors> {
     error("ExtraColors not provided")
 }

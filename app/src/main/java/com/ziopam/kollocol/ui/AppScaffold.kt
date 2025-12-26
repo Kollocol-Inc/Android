@@ -7,6 +7,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 
 @Composable
 fun AppScaffold(
@@ -17,7 +18,7 @@ fun AppScaffold(
         bottomBar = { bottomBar?.invoke() }
     ) { padding ->
         Box(
-            modifier = Modifier.fillMaxSize().padding(padding),
+            modifier = Modifier.fillMaxSize().padding(padding).padding(10.dp),
             contentAlignment = Alignment.Center
         ){
             content()

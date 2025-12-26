@@ -14,7 +14,7 @@ fun NavGraphBuilder.authGraph(
         startDestination = AuthRoute.LOGIN
     ) {
         composable(AuthRoute.LOGIN) {
-            LoginScreen(onLoginSuccess = onAuthorized)
+            LoginScreen()
         }
     }
 }
