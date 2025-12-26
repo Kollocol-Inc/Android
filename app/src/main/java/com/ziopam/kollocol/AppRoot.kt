@@ -19,15 +19,7 @@ fun AppRoot(
         route = Graph.ROOT
     ) {
 
-        authGraph(
-            onAuthorized = {
-                navController.navigate(Graph.MAIN) {
-                    popUpTo(Graph.AUTH) { inclusive = true }
-                    launchSingleTop = true
-                }
-            }
-        )
-
+        authGraph(navController)
         mainGraph()
     }
 }

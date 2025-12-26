@@ -5,6 +5,3 @@ object Graph {
     const val AUTH = "auth_graph"
     const val MAIN = "main_graph"
 }
-
-object AuthRoute { const val LOGIN = "login" }
-

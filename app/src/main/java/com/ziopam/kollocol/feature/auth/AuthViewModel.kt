@@ -23,4 +23,7 @@ class AuthViewModel @Inject constructor() : ViewModel(){
             .take(MAX_EMAIL_LENGTH)
     }
 
+    fun isEmailValid(input: String): Boolean {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(input).matches()
+    }
 }
