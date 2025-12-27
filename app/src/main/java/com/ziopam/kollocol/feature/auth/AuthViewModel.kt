@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 private const val MAX_EMAIL_LENGTH = 254
 
-// TODO Link ViewModel with Graph
+
 @HiltViewModel
 class AuthViewModel @Inject constructor() : ViewModel(){
     private val _email = MutableStateFlow("")
