@@ -1,10 +1,9 @@
 package com.ziopam.kollocol.feature.auth
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
 private const val MAX_EMAIL_LENGTH = 254
@@ -12,11 +11,11 @@ private const val MAX_EMAIL_LENGTH = 254
 // TODO Link ViewModel with Graph
 @HiltViewModel
 class AuthViewModel @Inject constructor() : ViewModel(){
-    var email by mutableStateOf("")
-        private set
+    private val _email = MutableStateFlow("")
+    val email = _email.asStateFlow()
 
     fun onEmailChanged(input: String) {
-        email = input
+        _email.value = input
             .lowercase()
             .filterNot { it.isWhitespace() }
             .filter { it.code < 128 }
