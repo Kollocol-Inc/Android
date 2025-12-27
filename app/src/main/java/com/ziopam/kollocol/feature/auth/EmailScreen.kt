@@ -26,15 +26,16 @@ import com.ziopam.kollocol.ui.theme.MAX_EDITTEXT_WIDTH
 import com.ziopam.kollocol.ui.theme.Typography
 
 // TODO Вынести текстовые данные в ресурсы
-// TODO Сделать выввод ошибки при неверном вводе почты
 @Composable
 fun EmailScreen(
     value: String,
     onValueChange: (String) -> Unit,
     onButtonClick: () -> Unit,
-    isButtonEnabled: Boolean = value.isNotEmpty()
+    isButtonEnabled: Boolean = value.isNotEmpty(),
+    currError: String? = null
 ) {
     AuthScaffold(
+        "Получить код",
         onButtonClick,
         isButtonEnabled
     ) {
@@ -51,7 +52,9 @@ fun EmailScreen(
             modifier = Modifier.widthIn(max = MAX_EDITTEXT_WIDTH.dp).fillMaxWidth(),
 
             textStyle = LocalTextStyle.current.copy(
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                color = if (currError == null) MaterialTheme.colorScheme.onBackground
+                else MaterialTheme.colorScheme.error
             ),
 
             singleLine = true,
@@ -81,21 +84,34 @@ fun EmailScreen(
                 cursorColor = MaterialTheme.colorScheme.primary
             )
         )
+
+        if (currError != null) {
+            Text(
+                text = currError,
+                style = Typography.bodyMedium,
+                color = MaterialTheme.colorScheme.error,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
     }
 }
 
 @Composable
 fun EmailScreen(vm: AuthViewModel, onNavigate: () -> Unit){
     val email by vm.email.collectAsState()
+    val currError by vm.currError.collectAsState()
 
     EmailScreen(
         value = email,
         onValueChange = vm::onEmailChanged,
+        isButtonEnabled = email.isNotEmpty() && (currError == null),
         onButtonClick = {
             if (vm.isEmailValid(email)){
                 onNavigate()
             }
-        }
+        },
+        currError = currError
     )
 }
 
@@ -105,6 +121,6 @@ fun EmailScreenPreview(){
     var email by remember { mutableStateOf("") }
 
     AppTheme {
-        EmailScreen(email, { email = it }, {})
+        EmailScreen(email, { email = it }, {}, isButtonEnabled = true)
     }
 }

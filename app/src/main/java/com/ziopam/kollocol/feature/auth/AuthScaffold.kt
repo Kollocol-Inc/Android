@@ -19,6 +19,7 @@ import com.ziopam.kollocol.ui.theme.Typography
 
 @Composable
 fun AuthScaffold(
+    buttonText: String,
     onButtonClick: () -> Unit,
     isButtonEnabled: Boolean,
     content: @Composable () -> Unit
@@ -44,7 +45,7 @@ fun AuthScaffold(
                 enabled = isButtonEnabled,
                 modifier = Modifier.widthIn(max = MAX_BUTTON_WIDTH.dp).fillMaxWidth()
             ) {
-                Text("Далее")
+                Text(buttonText)
             }
         }
     }
