@@ -2,6 +2,7 @@ package com.ziopam.kollocol.feature.auth
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -71,6 +72,14 @@ fun EmailScreen(
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Email,
                 imeAction = ImeAction.Done
+            ),
+
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    if (isButtonEnabled) {
+                        onButtonClick()
+                    }
+                }
             ),
 
             colors = TextFieldDefaults.colors(
