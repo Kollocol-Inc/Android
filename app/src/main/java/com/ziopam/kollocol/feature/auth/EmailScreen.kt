@@ -1,5 +1,8 @@
 package com.ziopam.kollocol.feature.auth
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.keyframes
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.text.KeyboardActions
@@ -10,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -17,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -35,6 +40,29 @@ fun EmailScreen(
     isButtonEnabled: Boolean = value.isNotEmpty(),
     currError: String? = null
 ) {
+    val shakeX = remember { Animatable(0f) }
+
+    LaunchedEffect(currError) {
+        shakeX.snapTo(0f)
+        if (currError != null) {
+            shakeX.animateTo(
+                targetValue = 0f,
+                animationSpec = keyframes {
+                    durationMillis = 400
+                    val a = 14f
+                    0f at 0 using LinearEasing
+                    -a at 50
+                    a at 100
+                    -a * 0.7f at 150
+                    a * 0.7f at 200
+                    -a * 0.4f at 250
+                    a * 0.4f at 300
+                    0f at 400
+                }
+            )
+        }
+    }
+
     AuthScaffold(
         "Получить код",
         onButtonClick,
@@ -50,7 +78,12 @@ fun EmailScreen(
         TextField(
             value = value,
             onValueChange = onValueChange,
-            modifier = Modifier.widthIn(max = MAX_EDITTEXT_WIDTH.dp).fillMaxWidth(),
+            modifier = Modifier
+                .widthIn(max = MAX_EDITTEXT_WIDTH.dp)
+                .fillMaxWidth()
+                .graphicsLayer {
+                    translationX = shakeX.value
+                },
 
             textStyle = LocalTextStyle.current.copy(
                 textAlign = TextAlign.Center,
