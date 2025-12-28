@@ -32,6 +32,7 @@ import com.ziopam.kollocol.ui.theme.MAX_EDITTEXT_WIDTH
 import com.ziopam.kollocol.ui.theme.Typography
 
 // TODO Вынести текстовые данные в ресурсы
+// TODO Ускорить убирание клавиатуры после нажатия Done
 @Composable
 fun EmailScreen(
     value: String,
