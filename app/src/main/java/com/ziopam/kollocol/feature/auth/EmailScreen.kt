@@ -159,7 +159,7 @@ fun EmailScreen(vm: AuthViewModel, onNavigate: () -> Unit){
 
 @PreviewLightDark
 @Composable
-fun EmailScreenPreview(){
+private fun EmailScreenPreview(){
     var email by remember { mutableStateOf("") }
 
     AppTheme {
