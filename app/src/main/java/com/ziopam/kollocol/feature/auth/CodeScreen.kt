@@ -1,20 +1,137 @@
 package com.ziopam.kollocol.feature.auth
 
-import android.util.Log
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.ziopam.kollocol.ui.theme.AppTheme
+import com.ziopam.kollocol.ui.theme.Typography
+import kotlinx.coroutines.delay
 
+private const val timerDuration = 59
+
+// TODO Сделать очистку ошибки при возвращении обратно
 @Composable
-fun CodeScreen(){
-    AuthScaffold({}, false) {
-        Text("Hello world!")
+fun CodeScreen(
+    email: String,
+    code: String,
+    onCodeChange: (String) -> Unit,
+    onCodeCompletion: () -> Unit,
+    onButtonClick: () -> Unit,
+    isLoading: Boolean = false,
+    currError: String? = null
+){
+    var restartKey by remember { mutableIntStateOf(0) }
+    val timerSeconds = remember { mutableIntStateOf(timerDuration) }
+
+    LaunchedEffect(restartKey) {
+        timerSeconds.intValue = timerDuration
+        while (timerSeconds.intValue > 0) {
+            delay(1_000)
+            timerSeconds.intValue--
+        }
+    }
+
+    // TODO Пофиксить отображение времени
+    AuthScaffold(
+        buttonText = if (timerSeconds.intValue > 0)
+            "Отправить код снова (00:${timerSeconds.intValue})"
+            else "Отправить код снова",
+        onButtonClick = {
+            restartKey++
+            onButtonClick()
+        },
+        isButtonEnabled = timerSeconds.intValue == 0
+    ) {
+        Text(
+            text="Код подтверждения",
+            style= Typography.headlineSmall,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        if (!isLoading) {
+            Otp4CodeInput(
+                code = code,
+                onCodeChange = onCodeChange,
+                onComplete = onCodeCompletion,
+                animateError = currError != null,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 15.dp, horizontal = 24.dp)
+            )
+        } else {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 15.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        }
+
+
+        if (currError == null) {
+            Text(
+                text = buildAnnotatedString {
+                    append("На почту ")
+
+                    withStyle(SpanStyle(
+                        fontWeight = FontWeight.Bold
+                    )){
+                        append(email)
+                    }
+
+                    append(" отправлено сообщение с кодом подтверждения авторизации")
+                },
+                style = Typography.bodySmall,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp)
+            )
+        } else {
+            Text(
+                text = currError,
+                style = Typography.bodySmall,
+                color = MaterialTheme.colorScheme.error,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp)
+            )
+        }
     }
 }
 
 @Composable
-fun CodeScreen(vm: AuthViewModel){
-    Log.d("CodeScreen", "Email from ViewModel: ${vm.email}")
-    AuthScaffold({}, false) {
-        Text("Введенная почта: ${vm.email}")
-    }
+fun CodeScreen(vm: AuthViewModel) {
+    val email by vm.email.collectAsState()
+    val code by vm.code.collectAsState()
+    val isLoading by vm.isLoading.collectAsState()
+    val currError by vm.currError.collectAsState()
+
+    CodeScreen(
+        email = email,
+        code = code,
+        onCodeChange = vm::onCodeChanged,
+        onCodeCompletion = vm::verifyCode,
+        onButtonClick = {},
+        isLoading = isLoading,
+        currError = currError
+    )
+}
+
+@Preview
+@Composable
+private fun CodeScreenPreview(){
+    val email = "example@mail.com"
+    var code by remember { mutableStateOf("") }
+
+    AppTheme { CodeScreen(email, code, { code = it }, {}, {}) }
 }

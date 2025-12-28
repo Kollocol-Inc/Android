@@ -1,10 +1,13 @@
 package com.ziopam.kollocol.feature.auth
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 private const val MAX_EMAIL_LENGTH = 254
@@ -13,10 +16,13 @@ private const val MAX_EMAIL_LENGTH = 254
 @HiltViewModel
 class AuthViewModel @Inject constructor() : ViewModel(){
     private val _email = MutableStateFlow("")
-    val email = _email.asStateFlow()
-
+    private val _code = MutableStateFlow("")
     private val _currError = MutableStateFlow<String?>(null)
+    private val _isLoading = MutableStateFlow(false)
+    val email = _email.asStateFlow()
+    val code = _code.asStateFlow()
     val currError = _currError.asStateFlow()
+    val isLoading = _isLoading.asStateFlow()
 
     fun onEmailChanged(input: String) {
         _email.value = input
@@ -34,6 +40,24 @@ class AuthViewModel @Inject constructor() : ViewModel(){
         } else {
             _currError.update { "Неверный формат email" }
             return false
+        }
+    }
+
+    fun onCodeChanged(input: String) {
+        _code.value = input.filter { it.isDigit() }.take(4)
+    }
+
+    fun verifyCode(){
+        viewModelScope.launch {
+            _isLoading.value = true
+            delay(1000L)
+            if (_code.value == "2222") {
+                _currError.update { null }
+            } else {
+                _currError.update { "Неверный код!" }
+            }
+            _code.value = ""
+            _isLoading.value = false
         }
     }
 }
