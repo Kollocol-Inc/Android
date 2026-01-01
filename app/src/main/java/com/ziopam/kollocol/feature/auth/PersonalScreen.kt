@@ -20,7 +20,6 @@ import com.ziopam.kollocol.ui.theme.MAX_EDITTEXT_WIDTH
 import com.ziopam.kollocol.ui.theme.Typography
 
 // TODO Вынести текстовые данные в ресурсы
-// TODO Подумать о другой иконке для аватара
 // TODO Поработать на активностью кнопки
 // TODO Убирать лишние пробелы в начале и конце имени и фамилии
 // TODO Добавить возможность удалить аватарку
