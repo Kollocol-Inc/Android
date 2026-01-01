@@ -4,11 +4,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+sealed interface AuthUiEvent {
+    data object NavigateToPersonal : AuthUiEvent
+}
 
 private const val MAX_EMAIL_LENGTH = 254
 
@@ -19,10 +25,12 @@ class AuthViewModel @Inject constructor() : ViewModel(){
     private val _code = MutableStateFlow("")
     private val _currError = MutableStateFlow<String?>(null)
     private val _isLoading = MutableStateFlow(false)
+    private val _events = MutableSharedFlow<AuthUiEvent>(replay = 0)
     val email = _email.asStateFlow()
     val code = _code.asStateFlow()
     val currError = _currError.asStateFlow()
     val isLoading = _isLoading.asStateFlow()
+    val events = _events.asSharedFlow()
 
     fun onEmailChanged(input: String) {
         _email.value = input
@@ -53,6 +61,7 @@ class AuthViewModel @Inject constructor() : ViewModel(){
             delay(1000L)
             if (_code.value == "2222") {
                 _currError.update { null }
+                _events.emit(AuthUiEvent.NavigateToPersonal)
             } else {
                 _currError.update { "Неверный код!" }
             }

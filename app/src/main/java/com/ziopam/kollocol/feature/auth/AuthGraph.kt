@@ -1,15 +1,19 @@
 package com.ziopam.kollocol.feature.auth
 
+import androidx.compose.runtime.LaunchedEffect
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.ziopam.kollocol.navigation.Graph
 import com.ziopam.kollocol.navigation.graphViewModel
+import kotlinx.coroutines.flow.collectLatest
 
 object AuthRoute {
     const val ENTER_EMAIL = "enter_email"
     const val ENTER_CODE = "enter_code"
+    const val ENTER_PERSONAL = "enter_personal"
 }
 
 fun NavGraphBuilder.authGraph(
@@ -30,7 +34,30 @@ fun NavGraphBuilder.authGraph(
             val vm = graphViewModel<AuthViewModel>(
                 navBackStackEntry=backStackEntry, navController=navController, graphRoute=Graph.AUTH
             )
+
+            LaunchedEffect(vm) {
+                vm.events.collectLatest { event ->
+                    when (event) {
+                        AuthUiEvent.NavigateToPersonal -> {
+                            navController.navigate(AuthRoute.ENTER_PERSONAL) {
+                                popUpTo(AuthRoute.ENTER_EMAIL) { inclusive = true }
+                                launchSingleTop = true
+                            }
+                        }
+                    }
+                }
+            }
+
             CodeScreen(vm)
+        }
+
+        composable(AuthRoute.ENTER_PERSONAL) { backStackEntry ->
+            val vm: PersonalViewModel = hiltViewModel()
+            PersonalScreen(vm) {
+                navController.navigate(Graph.MAIN) {
+                    popUpTo(Graph.AUTH) { inclusive = true }
+                }
+            }
         }
     }
 }
