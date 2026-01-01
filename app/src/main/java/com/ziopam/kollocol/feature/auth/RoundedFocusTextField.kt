@@ -1,5 +1,6 @@
 package com.ziopam.kollocol.feature.auth
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.widthIn
@@ -43,7 +44,8 @@ fun RoundedFocusTextField(
         onValueChange = onValueChange,
         modifier = (if (focusRequester != null) Modifier.focusRequester(focusRequester) else Modifier)
             .widthIn(max = MAX_EDITTEXT_WIDTH.dp)
-            .then(modifier),
+            .then(modifier)
+            .border(width = 2.dp, color = border, shape = shape),
         singleLine = true,
         interactionSource = interactionSource,
         placeholder = {
@@ -68,9 +70,9 @@ fun RoundedFocusTextField(
             unfocusedContainerColor = bg,
             disabledContainerColor = bg,
 
-            focusedIndicatorColor = border,
-            unfocusedIndicatorColor = border,
-            disabledIndicatorColor = border,
+            focusedIndicatorColor = bg,
+            unfocusedIndicatorColor = bg,
+            disabledIndicatorColor = bg,
 
             cursorColor = MaterialTheme.colorScheme.primary
         ),
