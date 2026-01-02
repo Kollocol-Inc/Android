@@ -20,8 +20,6 @@ import com.ziopam.kollocol.ui.theme.MAX_EDITTEXT_WIDTH
 import com.ziopam.kollocol.ui.theme.Typography
 
 // TODO Вынести текстовые данные в ресурсы
-// TODO Поработать на активностью кнопки
-// TODO Убирать лишние пробелы в начале и конце имени и фамилии
 // TODO Добавить возможность удалить аватарку
 @Composable
 fun PersonalScreen(
@@ -31,13 +29,14 @@ fun PersonalScreen(
     onLastNameChange: (String) -> Unit,
     onAvatarSelected: (Uri?) -> Unit,
     onAvatarError: (String) -> Unit,
+    isButtonEnabled: Boolean = false
 ) {
     val focusManager = LocalFocusManager.current
 
     AuthScaffold(
         buttonText = "Зарегистрироваться",
         onButtonClick = onButtonClick,
-        isButtonEnabled = state.isButtonEnabled
+        isButtonEnabled = isButtonEnabled
     ) {
         Text(
             text="Регистрация",
@@ -90,7 +89,10 @@ fun PersonalScreen(
             placeholder = "Фамилия",
             focusRequester = lastNameRequester,
             imeAction = ImeAction.Done,
-            onImeAction = { focusManager.clearFocus() },
+            onImeAction = {
+                focusManager.clearFocus()
+                onButtonClick()
+            },
             modifier = textFieldModifier
         )
 
@@ -120,7 +122,8 @@ fun PersonalScreen(
         onLastNameChange = vm::onLastNameChanged,
         onAvatarSelected = vm::onAvatarSelected,
         onAvatarError = vm::onAvatarError,
-        onButtonClick = onButtonClick
+        onButtonClick = vm::onButtonClick,
+        isButtonEnabled = vm.isButtonEnabled(state.value)
     )
 }
 

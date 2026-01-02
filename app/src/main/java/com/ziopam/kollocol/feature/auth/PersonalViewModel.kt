@@ -8,14 +8,14 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
-private const val MAX_PERSONAL_NAME_LENGTH = 100
+private const val MIN_PERSONAL_NAME_LENGTH = 2
+private const val MAX_PERSONAL_NAME_LENGTH = 50
 
 data class PersonalUiState(
     val firstName: String = "",
     val lastName: String = "",
     val avatarUri: Uri? = null,
     val error: PersonalError? = null,
-    val isButtonEnabled: Boolean = firstName.isNotBlank() && lastName.isNotBlank()
 )
 
 sealed interface PersonalError {
@@ -29,11 +29,11 @@ class PersonalViewModel @Inject constructor() : ViewModel() {
     val uiState = _uiState.asStateFlow()
 
     fun onFirstNameChanged(input: String) = _uiState.update {
-        it.copy(firstName = sanitizeName(input), error = null)
+        it.copy(firstName = sanitizeName(input), error = if (it.error is PersonalError.Fields) null else it.error)
     }
 
     fun onLastNameChanged(input: String) = _uiState.update {
-        it.copy(lastName = sanitizeName(input), error = null)
+        it.copy(lastName = sanitizeName(input), error = if (it.error is PersonalError.Fields) null else it.error)
     }
 
     fun onAvatarSelected(uri: Uri?) = _uiState.update {
@@ -42,6 +42,32 @@ class PersonalViewModel @Inject constructor() : ViewModel() {
 
     fun onAvatarError(error: String) = _uiState.update {
         it.copy(error = PersonalError.Avatar(error))
+    }
+
+    fun onButtonClick(){
+        _uiState.update {
+            it.copy(
+                firstName = it.firstName.trim().replace(Regex("\\s+"), " "),
+                lastName = it.lastName.trim().replace(Regex("\\s+"), " ")
+            )
+        }
+
+        if (_uiState.value.firstName.length in MIN_PERSONAL_NAME_LENGTH..MAX_PERSONAL_NAME_LENGTH &&
+            _uiState.value.lastName.length in MIN_PERSONAL_NAME_LENGTH..MAX_PERSONAL_NAME_LENGTH) {
+            _uiState.update {
+                it.copy(error = null)
+            }
+        } else {
+            _uiState.update {
+                it.copy(error = PersonalError.Fields("Имя и фамилия должны быть от $MIN_PERSONAL_NAME_LENGTH до $MAX_PERSONAL_NAME_LENGTH символов"))
+            }
+        }
+    }
+
+    fun isButtonEnabled(state: PersonalUiState): Boolean {
+        return state.firstName.isNotBlank() &&
+                state.lastName.isNotBlank() &&
+                state.error !is PersonalError.Fields
     }
 
     private fun sanitizeName(input: String): String {
