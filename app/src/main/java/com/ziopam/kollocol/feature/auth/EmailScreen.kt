@@ -22,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -35,7 +36,6 @@ import com.ziopam.kollocol.ui.theme.AppTheme
 import com.ziopam.kollocol.ui.theme.MAX_EDITTEXT_WIDTH
 import com.ziopam.kollocol.ui.theme.Typography
 
-// TODO Ускорить убирание клавиатуры после нажатия Done
 @Composable
 fun EmailScreen(
     value: String,
@@ -44,6 +44,7 @@ fun EmailScreen(
     isButtonEnabled: Boolean = value.isNotEmpty(),
     currError: UiText? = null
 ) {
+    val focusManager = LocalFocusManager.current
     val shakeX = remember { Animatable(0f) }
 
     LaunchedEffect(currError) {
@@ -113,6 +114,7 @@ fun EmailScreen(
 
             keyboardActions = KeyboardActions(
                 onDone = {
+                    focusManager.clearFocus()
                     if (isButtonEnabled) {
                         onButtonClick()
                     }
