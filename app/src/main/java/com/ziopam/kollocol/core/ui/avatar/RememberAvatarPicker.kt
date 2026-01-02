@@ -7,6 +7,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
+import com.ziopam.kollocol.R
+import com.ziopam.kollocol.core.ui.UiText
 
 private const val DEFAULT_MAX_AVATAR_BYTES: Long = 1_048_576L // 1MB
 
@@ -14,7 +16,7 @@ private const val DEFAULT_MAX_AVATAR_BYTES: Long = 1_048_576L // 1MB
 fun rememberAvatarPicker(
     mimeFilter: String = "image/*",
     onAvatarSelected: (Uri) -> Unit,
-    onError: (String) -> Unit,
+    onError: (UiText) -> Unit,
     maxBytes: Long = DEFAULT_MAX_AVATAR_BYTES
 ): () -> Unit {
     val resolver = LocalContext.current.contentResolver
@@ -42,10 +44,10 @@ private fun validateImageUri(
     resolver: ContentResolver,
     uri: Uri,
     maxBytes: Long,
-): String? {
+): UiText? {
     val mime = resolver.getType(uri)
     if (mime == null || !mime.startsWith("image/")) {
-        return "Можно выбрать только фотографию"
+        return UiText.StringRes(R.string.can_select_only_photos)
     }
 
     val size = runCatching {
@@ -53,7 +55,7 @@ private fun validateImageUri(
     }.getOrElse { -1L }
 
     if (size != -1L && size > maxBytes) {
-        return "Файл слишком большой (макс. 1 МБ)"
+        return UiText.StringRes(R.string.file_too_big)
     }
 
     return null

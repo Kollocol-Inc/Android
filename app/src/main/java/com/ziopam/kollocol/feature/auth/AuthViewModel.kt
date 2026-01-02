@@ -2,6 +2,8 @@ package com.ziopam.kollocol.feature.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ziopam.kollocol.R
+import com.ziopam.kollocol.core.ui.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -18,12 +20,11 @@ sealed interface AuthUiEvent {
 
 private const val MAX_EMAIL_LENGTH = 254
 
-// TODO Вынести текстовые данные в ресурсы
 @HiltViewModel
 class AuthViewModel @Inject constructor() : ViewModel(){
     private val _email = MutableStateFlow("")
     private val _code = MutableStateFlow("")
-    private val _currError = MutableStateFlow<String?>(null)
+    private val _currError = MutableStateFlow<UiText?>(null)
     private val _isLoading = MutableStateFlow(false)
     private val _events = MutableSharedFlow<AuthUiEvent>(replay = 0)
     val email = _email.asStateFlow()
@@ -46,7 +47,7 @@ class AuthViewModel @Inject constructor() : ViewModel(){
             _currError.update { null }
             return true
         } else {
-            _currError.update { "Неверный формат email" }
+            _currError.update { UiText.StringRes(R.string.wrong_email_format) }
             return false
         }
     }
@@ -63,7 +64,7 @@ class AuthViewModel @Inject constructor() : ViewModel(){
                 _currError.update { null }
                 _events.emit(AuthUiEvent.NavigateToPersonal)
             } else {
-                _currError.update { "Неверный код!" }
+                _currError.update { UiText.StringRes(R.string.wrong_verification_code) }
             }
             _code.value = ""
             _isLoading.value = false

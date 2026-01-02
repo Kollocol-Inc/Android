@@ -2,6 +2,8 @@ package com.ziopam.kollocol.feature.auth
 
 import android.net.Uri
 import androidx.lifecycle.ViewModel
+import com.ziopam.kollocol.R
+import com.ziopam.kollocol.core.ui.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,8 +21,8 @@ data class PersonalUiState(
 )
 
 sealed interface PersonalError {
-    data class Avatar(val message: String) : PersonalError
-    data class Fields(val message: String) : PersonalError
+    data class Avatar(val message: UiText) : PersonalError
+    data class Fields(val message: UiText) : PersonalError
 }
 
 @HiltViewModel
@@ -40,7 +42,7 @@ class PersonalViewModel @Inject constructor() : ViewModel() {
         it.copy(avatarUri = uri, error = if (it.error is PersonalError.Avatar) null else it.error)
     }
 
-    fun onAvatarError(error: String) = _uiState.update {
+    fun onAvatarError(error: UiText) = _uiState.update {
         it.copy(error = PersonalError.Avatar(error))
     }
 
@@ -59,7 +61,11 @@ class PersonalViewModel @Inject constructor() : ViewModel() {
             }
         } else {
             _uiState.update {
-                it.copy(error = PersonalError.Fields("Имя и фамилия должны быть от $MIN_PERSONAL_NAME_LENGTH до $MAX_PERSONAL_NAME_LENGTH символов"))
+                it.copy(error = PersonalError.Fields(
+                    UiText.StringRes(
+                        R.string.name_length_error,
+                        listOf(MIN_PERSONAL_NAME_LENGTH, MAX_PERSONAL_NAME_LENGTH)
+                    )))
             }
         }
     }

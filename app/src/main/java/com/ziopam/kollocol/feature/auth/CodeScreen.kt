@@ -5,13 +5,16 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ziopam.kollocol.R
+import com.ziopam.kollocol.core.ui.UiText
+import com.ziopam.kollocol.core.ui.asString
 import com.ziopam.kollocol.ui.theme.AppTheme
 import com.ziopam.kollocol.ui.theme.Typography
 import kotlinx.coroutines.delay
@@ -27,7 +30,7 @@ fun CodeScreen(
     onCodeCompletion: () -> Unit,
     onButtonClick: () -> Unit,
     isLoading: Boolean = false,
-    currError: String? = null
+    currError: UiText? = null
 ){
     var restartKey by remember { mutableIntStateOf(0) }
     val timerSeconds = remember { mutableIntStateOf(timerDuration) }
@@ -43,8 +46,8 @@ fun CodeScreen(
     // TODO Пофиксить отображение времени
     AuthScaffold(
         buttonText = if (timerSeconds.intValue > 0)
-            "Отправить код снова (00:${timerSeconds.intValue})"
-            else "Отправить код снова",
+            stringResource(R.string.send_code_again) + " (00:${timerSeconds.intValue})"
+            else stringResource(R.string.send_code_again),
         onButtonClick = {
             restartKey++
             onButtonClick()
@@ -52,7 +55,7 @@ fun CodeScreen(
         isButtonEnabled = timerSeconds.intValue == 0
     ) {
         Text(
-            text="Код подтверждения",
+            text= stringResource(R.string.verification_code),
             style= Typography.headlineSmall,
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()
@@ -81,29 +84,34 @@ fun CodeScreen(
 
 
         if (currError == null) {
+            val text = stringResource(R.string.code_sent_to_email, email)
             Text(
                 text = buildAnnotatedString {
-                    append("На почту ")
-
-                    withStyle(SpanStyle(
-                        fontWeight = FontWeight.Bold
-                    )){
-                        append(email)
+                    append(text)
+                    val start = text.indexOf(email)
+                    if (start >= 0) {
+                        addStyle(
+                            style = SpanStyle(fontWeight = FontWeight.Bold),
+                            start = start,
+                            end = start + email.length
+                        )
                     }
-
-                    append(" отправлено сообщение с кодом подтверждения авторизации")
                 },
                 style = Typography.bodySmall,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 24.dp)
             )
         } else {
             Text(
-                text = currError,
+                text = currError.asString(),
                 style = Typography.bodySmall,
                 color = MaterialTheme.colorScheme.error,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 24.dp)
             )
         }
     }

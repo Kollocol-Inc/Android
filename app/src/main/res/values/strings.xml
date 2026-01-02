@@ -1,3 +1,23 @@
 <resources>
     <string name="app_name">Kollocol</string>
+
+    <string name="email">Email</string>
+    <string name="example_email">example@mail.com</string>
+    <string name="receive_code">Получить код</string>
+    <string name="wrong_email_format">Неверный формат email</string>
+
+    <string name="verification_code">Код подтверждения</string>
+    <string name="code_sent_to_email">На почту %1$s отправлено сообщение с кодом подтверждения авторизации</string>
+    <string name="send_code_again">Отправить код снова</string>
+    <string name="wrong_verification_code">Неверный код авторизации</string>
+
+    <string name="registration">Регистрация</string>
+    <string name="perform_registration">Зарегистрироваться</string>
+    <string name="name">Имя</string>
+    <string name="lastName">Фамилия</string>
+    <string name="avatar">Аватар</string>
+    <string name="pick_a_photo">Выбрать фото</string>
+    <string name="name_length_error">Имя и фамилия должны быть от %1$d до %2$d символов</string>
+    <string name="can_select_only_photos">Можно выбрать только фотографию</string>
+    <string name="file_too_big">Файл слишком большой (макс. 1 МБ)</string>
 </resources>

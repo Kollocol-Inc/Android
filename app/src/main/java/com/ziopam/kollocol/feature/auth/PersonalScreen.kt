@@ -8,18 +8,21 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ziopam.kollocol.R
+import com.ziopam.kollocol.core.ui.UiText
+import com.ziopam.kollocol.core.ui.asString
 import com.ziopam.kollocol.core.ui.avatar.AvatarPicker
 import com.ziopam.kollocol.core.ui.avatar.rememberAvatarPicker
 import com.ziopam.kollocol.ui.theme.AppTheme
 import com.ziopam.kollocol.ui.theme.MAX_EDITTEXT_WIDTH
 import com.ziopam.kollocol.ui.theme.Typography
 
-// TODO Вынести текстовые данные в ресурсы
 // TODO Добавить возможность удалить аватарку
 @Composable
 fun PersonalScreen(
@@ -28,26 +31,26 @@ fun PersonalScreen(
     onFirstNameChange: (String) -> Unit,
     onLastNameChange: (String) -> Unit,
     onAvatarSelected: (Uri?) -> Unit,
-    onAvatarError: (String) -> Unit,
+    onAvatarError: (UiText) -> Unit,
     isButtonEnabled: Boolean = false
 ) {
     val focusManager = LocalFocusManager.current
 
     AuthScaffold(
-        buttonText = "Зарегистрироваться",
+        buttonText = stringResource(R.string.perform_registration),
         onButtonClick = onButtonClick,
         isButtonEnabled = isButtonEnabled
     ) {
         Text(
-            text="Регистрация",
+            text= stringResource(R.string.registration),
             style= Typography.headlineSmall,
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()
         )
 
         val pickAvatar = rememberAvatarPicker(
-            onAvatarSelected = { uri -> onAvatarSelected(uri) },
-            onError = { msg -> onAvatarError(msg) }
+            onAvatarSelected = onAvatarSelected,
+            onError = onAvatarError
         )
         AvatarPicker(
             avatarUri = state.avatarUri,
@@ -61,11 +64,13 @@ fun PersonalScreen(
 
         if (state.error is PersonalError.Avatar) {
             Text(
-                text = state.error.message,
+                text = state.error.message.asString(),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.error,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth().padding(bottom = 20.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 20.dp)
             )
         }
 
@@ -77,7 +82,7 @@ fun PersonalScreen(
         RoundedFocusTextField(
             value = state.firstName,
             onValueChange = onFirstNameChange,
-            placeholder = "Имя",
+            placeholder = stringResource(R.string.name),
             imeAction = ImeAction.Next,
             onImeAction = { lastNameRequester.requestFocus() },
             modifier = textFieldModifier
@@ -86,7 +91,7 @@ fun PersonalScreen(
         RoundedFocusTextField(
             value = state.lastName,
             onValueChange = onLastNameChange,
-            placeholder = "Фамилия",
+            placeholder = stringResource(R.string.lastName),
             focusRequester = lastNameRequester,
             imeAction = ImeAction.Done,
             onImeAction = {
@@ -99,11 +104,13 @@ fun PersonalScreen(
 
         if (state.error is PersonalError.Fields) {
             Text(
-                text = state.error.message,
+                text = state.error.message.asString(),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.error,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth().padding(top = 10.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 10.dp)
             )
         }
     }

@@ -22,16 +22,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
+import com.ziopam.kollocol.R
+import com.ziopam.kollocol.core.ui.UiText
+import com.ziopam.kollocol.core.ui.asString
 import com.ziopam.kollocol.ui.theme.AppTheme
 import com.ziopam.kollocol.ui.theme.MAX_EDITTEXT_WIDTH
 import com.ziopam.kollocol.ui.theme.Typography
 
-// TODO Вынести текстовые данные в ресурсы
 // TODO Ускорить убирание клавиатуры после нажатия Done
 @Composable
 fun EmailScreen(
@@ -39,7 +42,7 @@ fun EmailScreen(
     onValueChange: (String) -> Unit,
     onButtonClick: () -> Unit,
     isButtonEnabled: Boolean = value.isNotEmpty(),
-    currError: String? = null
+    currError: UiText? = null
 ) {
     val shakeX = remember { Animatable(0f) }
 
@@ -65,12 +68,12 @@ fun EmailScreen(
     }
 
     AuthScaffold(
-        "Получить код",
+        stringResource(R.string.receive_code),
         onButtonClick,
         isButtonEnabled
     ) {
         Text(
-            text="Email",
+            text= stringResource(R.string.email),
             style=Typography.headlineSmall,
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()
@@ -96,7 +99,7 @@ fun EmailScreen(
 
             placeholder = {
                 Text(
-                    text = "example@mail.com",
+                    text = stringResource(R.string.example_email),
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center
@@ -130,7 +133,7 @@ fun EmailScreen(
 
         if (currError != null) {
             Text(
-                text = currError,
+                text = currError.asString(),
                 style = Typography.bodyMedium,
                 color = MaterialTheme.colorScheme.error,
                 textAlign = TextAlign.Center,

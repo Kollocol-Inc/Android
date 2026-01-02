@@ -16,6 +16,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -47,14 +48,14 @@ fun AvatarPicker(
         if (avatarUri != null) {
             AsyncImage(
                 model = avatarUri,
-                contentDescription = "Аватар",
+                contentDescription = stringResource(R.string.avatar),
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
             )
         } else {
             Icon(
                 imageVector = ImageVector.vectorResource(R.drawable.user),
-                contentDescription = "Выбрать фото",
+                contentDescription = stringResource(R.string.pick_a_photo),
                 modifier = Modifier.size(50.dp),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant
             )

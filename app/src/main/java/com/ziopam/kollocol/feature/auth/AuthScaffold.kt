@@ -11,8 +11,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.ziopam.kollocol.R
 import com.ziopam.kollocol.ui.AppScaffold
 import com.ziopam.kollocol.ui.theme.MAX_BUTTON_WIDTH
 import com.ziopam.kollocol.ui.theme.Typography
@@ -30,10 +32,12 @@ fun AuthScaffold(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text="Kollocol",
+                text= stringResource(R.string.app_name),
                 style= Typography.headlineMedium,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth().padding(top = 50.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 50.dp)
             )
 
             Spacer(Modifier.weight(1f))
@@ -43,7 +47,9 @@ fun AuthScaffold(
             Button(
                 onClick = onButtonClick,
                 enabled = isButtonEnabled,
-                modifier = Modifier.widthIn(max = MAX_BUTTON_WIDTH.dp).fillMaxWidth()
+                modifier = Modifier
+                    .widthIn(max = MAX_BUTTON_WIDTH.dp)
+                    .fillMaxWidth()
             ) {
                 Text(buttonText)
             }
