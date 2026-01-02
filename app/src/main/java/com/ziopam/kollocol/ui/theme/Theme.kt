@@ -5,8 +5,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.staticCompositionLocalOf
 
-// TODO Описать константы для максимального длины поля и максимального размера кнопки
-
 const val MAX_BUTTON_WIDTH = 320
 const val MAX_EDITTEXT_WIDTH = 488
 
