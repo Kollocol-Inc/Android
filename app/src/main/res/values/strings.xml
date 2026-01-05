@@ -9,6 +9,8 @@
     <string name="verification_code">Код подтверждения</string>
     <string name="code_sent_to_email">На почту %1$s отправлено сообщение с кодом подтверждения авторизации</string>
     <string name="send_code_again">Отправить код снова</string>
+    <string name="send_code_again_timer">Отправить код снова (00:%1$02d)</string>
+
     <string name="wrong_verification_code">Неверный код авторизации</string>
 
     <string name="registration">Регистрация</string>

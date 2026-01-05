@@ -19,7 +19,7 @@ import com.ziopam.kollocol.ui.theme.AppTheme
 import com.ziopam.kollocol.ui.theme.Typography
 import kotlinx.coroutines.delay
 
-private const val timerDuration = 59
+private const val timerDuration = 30
 
 // TODO Сделать очистку ошибки при возвращении обратно
 @Composable
@@ -43,10 +43,9 @@ fun CodeScreen(
         }
     }
 
-    // TODO Пофиксить отображение времени
     AuthScaffold(
         buttonText = if (timerSeconds.intValue > 0)
-            stringResource(R.string.send_code_again) + " (00:${timerSeconds.intValue})"
+            stringResource(R.string.send_code_again_timer, timerSeconds.intValue)
             else stringResource(R.string.send_code_again),
         onButtonClick = {
             restartKey++
