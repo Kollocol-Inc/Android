@@ -70,4 +70,8 @@ class AuthViewModel @Inject constructor() : ViewModel(){
             _isLoading.value = false
         }
     }
+
+    fun clearError(){
+        _currError.value = null
+    }
 }

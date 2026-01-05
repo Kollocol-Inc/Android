@@ -27,6 +27,11 @@ fun NavGraphBuilder.authGraph(
             val vm = graphViewModel<AuthViewModel>(
                 navBackStackEntry=backStackEntry, navController=navController, graphRoute=Graph.AUTH
             )
+
+            LaunchedEffect(backStackEntry) {
+                vm.clearError()
+            }
+
             EmailScreen(vm) { navController.navigate(AuthRoute.ENTER_CODE) }
         }
 

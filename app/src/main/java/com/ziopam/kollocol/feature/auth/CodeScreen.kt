@@ -21,7 +21,6 @@ import kotlinx.coroutines.delay
 
 private const val timerDuration = 30
 
-// TODO Сделать очистку ошибки при возвращении обратно
 @Composable
 fun CodeScreen(
     email: String,
