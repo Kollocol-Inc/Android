@@ -46,6 +46,12 @@ class PersonalViewModel @Inject constructor() : ViewModel() {
         it.copy(error = PersonalError.Avatar(error))
     }
 
+    fun onAvatarRemove(){
+        _uiState.update {
+            it.copy(avatarUri = null, error = if (it.error is PersonalError.Avatar) null else it.error)
+        }
+    }
+
     fun onButtonClick(){
         _uiState.update {
             it.copy(

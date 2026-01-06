@@ -3,7 +3,9 @@ package com.ziopam.kollocol.core.ui.avatar
 import android.net.Uri
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -32,33 +34,49 @@ fun AvatarPicker(
     borderColor: Color = MaterialTheme.colorScheme.primary,
     borderWidth: Dp = 2.dp,
     borderAlpha: Float = 0.55f,
+    onLongClick: (() -> Unit)? = null,
+    overlay: (@Composable BoxScope.() -> Unit)? = null,
 ) {
     Box(
-        modifier = modifier
-            .size(size)
-            .clip(CircleShape)
-            .border(
-                width = borderWidth,
-                color = borderColor.copy(alpha = borderAlpha),
-                shape = CircleShape
-            )
-            .clickable(onClick = onClick),
-        contentAlignment = Alignment.Center
+        modifier = modifier.size(size)
     ) {
-        if (avatarUri != null) {
-            AsyncImage(
-                model = avatarUri,
-                contentDescription = stringResource(R.string.avatar),
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop
-            )
-        } else {
-            Icon(
-                imageVector = ImageVector.vectorResource(R.drawable.user),
-                contentDescription = stringResource(R.string.pick_a_photo),
-                modifier = Modifier.size(50.dp),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+        Box(
+            modifier = Modifier
+                .matchParentSize()
+                .clip(CircleShape)
+                .border(
+                    width = borderWidth,
+                    color = borderColor.copy(alpha = borderAlpha),
+                    shape = CircleShape
+                )
+                .then(
+                    if (onLongClick != null) {
+                        Modifier.combinedClickable(
+                            onClick = onClick,
+                            onLongClick = onLongClick
+                        )
+                    } else {
+                        Modifier.clickable(onClick = onClick)
+                    }
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            if (avatarUri != null) {
+                AsyncImage(
+                    model = avatarUri,
+                    contentDescription = stringResource(R.string.avatar),
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
+                )
+            } else {
+                Icon(
+                    imageVector = ImageVector.vectorResource(R.drawable.user),
+                    contentDescription = stringResource(R.string.pick_a_photo),
+                    modifier = Modifier.size(50.dp),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         }
+        overlay?.invoke(this)
     }
 }

@@ -22,4 +22,5 @@
     <string name="name_length_error">Имя и фамилия должны быть от %1$d до %2$d символов</string>
     <string name="can_select_only_photos">Можно выбрать только фотографию</string>
     <string name="file_too_big">Файл слишком большой (макс. 1 МБ)</string>
+    <string name="remove_avatar">Удалить аватар</string>
 </resources>

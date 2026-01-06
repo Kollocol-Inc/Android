@@ -1,14 +1,21 @@
 package com.ziopam.kollocol.feature.auth
 
 import android.net.Uri
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,7 +30,6 @@ import com.ziopam.kollocol.ui.theme.AppTheme
 import com.ziopam.kollocol.ui.theme.MAX_EDITTEXT_WIDTH
 import com.ziopam.kollocol.ui.theme.Typography
 
-// TODO Добавить возможность удалить аватарку
 @Composable
 fun PersonalScreen(
     state: PersonalUiState,
@@ -32,6 +38,7 @@ fun PersonalScreen(
     onLastNameChange: (String) -> Unit,
     onAvatarSelected: (Uri?) -> Unit,
     onAvatarError: (UiText) -> Unit,
+    onAvatarRemove: () -> Unit,
     isButtonEnabled: Boolean = false
 ) {
     val focusManager = LocalFocusManager.current
@@ -55,6 +62,21 @@ fun PersonalScreen(
         AvatarPicker(
             avatarUri = state.avatarUri,
             onClick = pickAvatar,
+            overlay = {
+                if (state.avatarUri != null) {
+                    Icon(
+                        imageVector = ImageVector.vectorResource(R.drawable.close),
+                        contentDescription = stringResource(R.string.remove_avatar),
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .size(25.dp)
+                            .offset(15.dp, (-5).dp)
+                            .background(MaterialTheme.colorScheme.surface, shape = CircleShape)
+                            .clickable(onClick = onAvatarRemove),
+                        tint = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+            },
             borderColor = if (state.error is PersonalError.Avatar)
                 MaterialTheme.colorScheme.error
             else
@@ -129,6 +151,7 @@ fun PersonalScreen(
         onLastNameChange = vm::onLastNameChanged,
         onAvatarSelected = vm::onAvatarSelected,
         onAvatarError = vm::onAvatarError,
+        onAvatarRemove = vm::onAvatarRemove,
         onButtonClick = vm::onButtonClick,
         isButtonEnabled = vm.isButtonEnabled(state.value)
     )
@@ -140,7 +163,7 @@ private fun PersonalScreenPreview() {
     val state = remember { mutableStateOf(PersonalUiState(
         firstName = "",
         lastName = "",
-        avatarUri = null,
+        avatarUri = Uri.EMPTY,
         error = null
     ))}
 
@@ -150,6 +173,7 @@ private fun PersonalScreenPreview() {
             onFirstNameChange = { state.value = state.value.copy(firstName = it) },
             onLastNameChange = { state.value = state.value.copy(lastName = it) },
             onAvatarSelected = {},
+            onAvatarRemove = {},
             onAvatarError = {},
             onButtonClick = {}
         )
