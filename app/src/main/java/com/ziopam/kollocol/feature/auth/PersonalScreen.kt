@@ -1,21 +1,14 @@
 package com.ziopam.kollocol.feature.auth
 
 import android.net.Uri
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,8 +17,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ziopam.kollocol.R
 import com.ziopam.kollocol.core.ui.UiText
 import com.ziopam.kollocol.core.ui.asString
-import com.ziopam.kollocol.core.ui.avatar.AvatarPicker
-import com.ziopam.kollocol.core.ui.avatar.rememberAvatarPicker
 import com.ziopam.kollocol.ui.theme.AppTheme
 import com.ziopam.kollocol.ui.theme.MAX_EDITTEXT_WIDTH
 import com.ziopam.kollocol.ui.theme.Typography
@@ -55,46 +46,12 @@ fun PersonalScreen(
             modifier = Modifier.fillMaxWidth()
         )
 
-        val pickAvatar = rememberAvatarPicker(
+        SignUpAvatar(
+            state = state,
             onAvatarSelected = onAvatarSelected,
-            onError = onAvatarError
+            onAvatarError = onAvatarError,
+            onAvatarRemove = onAvatarRemove
         )
-        AvatarPicker(
-            avatarUri = state.avatarUri,
-            onClick = pickAvatar,
-            overlay = {
-                if (state.avatarUri != null) {
-                    Icon(
-                        imageVector = ImageVector.vectorResource(R.drawable.close),
-                        contentDescription = stringResource(R.string.remove_avatar),
-                        modifier = Modifier
-                            .align(Alignment.TopEnd)
-                            .size(25.dp)
-                            .offset(15.dp, (-5).dp)
-                            .background(MaterialTheme.colorScheme.surface, shape = CircleShape)
-                            .clickable(onClick = onAvatarRemove),
-                        tint = MaterialTheme.colorScheme.onSurface
-                    )
-                }
-            },
-            borderColor = if (state.error is PersonalError.Avatar)
-                MaterialTheme.colorScheme.error
-            else
-                MaterialTheme.colorScheme.primary,
-            modifier = Modifier.padding(vertical = 20.dp)
-        )
-
-        if (state.error is PersonalError.Avatar) {
-            Text(
-                text = state.error.message.asString(),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.error,
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 20.dp)
-            )
-        }
 
         val lastNameRequester = remember { FocusRequester() }
         val textFieldModifier = Modifier
