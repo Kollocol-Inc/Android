@@ -1,4 +1,4 @@
-package com.ziopam.kollocol.feature.auth
+package com.ziopam.kollocol.feature.auth.email
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
@@ -32,6 +32,8 @@ import androidx.compose.ui.unit.dp
 import com.ziopam.kollocol.R
 import com.ziopam.kollocol.core.ui.UiText
 import com.ziopam.kollocol.core.ui.asString
+import com.ziopam.kollocol.feature.auth.AuthScaffold
+import com.ziopam.kollocol.feature.auth.AuthViewModel
 import com.ziopam.kollocol.ui.theme.AppTheme
 import com.ziopam.kollocol.ui.theme.MAX_EDITTEXT_WIDTH
 import com.ziopam.kollocol.ui.theme.Typography
@@ -74,8 +76,8 @@ fun EmailScreen(
         isButtonEnabled
     ) {
         Text(
-            text= stringResource(R.string.email),
-            style=Typography.headlineSmall,
+            text = stringResource(R.string.email),
+            style = Typography.headlineSmall,
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()
         )

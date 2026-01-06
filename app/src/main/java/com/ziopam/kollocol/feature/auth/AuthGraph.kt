@@ -6,6 +6,10 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.ziopam.kollocol.feature.auth.code.CodeScreen
+import com.ziopam.kollocol.feature.auth.email.EmailScreen
+import com.ziopam.kollocol.feature.auth.personal.PersonalScreen
+import com.ziopam.kollocol.feature.auth.personal.PersonalViewModel
 import com.ziopam.kollocol.navigation.Graph
 import com.ziopam.kollocol.navigation.graphViewModel
 import kotlinx.coroutines.flow.collectLatest

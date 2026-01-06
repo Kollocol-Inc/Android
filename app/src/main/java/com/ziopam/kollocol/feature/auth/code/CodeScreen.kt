@@ -1,4 +1,4 @@
-package com.ziopam.kollocol.feature.auth
+package com.ziopam.kollocol.feature.auth.code
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -15,6 +15,8 @@ import androidx.compose.ui.unit.dp
 import com.ziopam.kollocol.R
 import com.ziopam.kollocol.core.ui.UiText
 import com.ziopam.kollocol.core.ui.asString
+import com.ziopam.kollocol.feature.auth.AuthScaffold
+import com.ziopam.kollocol.feature.auth.AuthViewModel
 import com.ziopam.kollocol.ui.theme.AppTheme
 import com.ziopam.kollocol.ui.theme.Typography
 import kotlinx.coroutines.delay
@@ -45,7 +47,7 @@ fun CodeScreen(
     AuthScaffold(
         buttonText = if (timerSeconds.intValue > 0)
             stringResource(R.string.send_code_again_timer, timerSeconds.intValue)
-            else stringResource(R.string.send_code_again),
+        else stringResource(R.string.send_code_again),
         onButtonClick = {
             restartKey++
             onButtonClick()
@@ -53,8 +55,8 @@ fun CodeScreen(
         isButtonEnabled = timerSeconds.intValue == 0
     ) {
         Text(
-            text= stringResource(R.string.verification_code),
-            style= Typography.headlineSmall,
+            text = stringResource(R.string.verification_code),
+            style = Typography.headlineSmall,
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()
         )

@@ -1,4 +1,4 @@
-package com.ziopam.kollocol.feature.auth
+package com.ziopam.kollocol.feature.auth.personal
 
 import android.net.Uri
 import androidx.compose.foundation.layout.*
@@ -34,14 +34,14 @@ fun PersonalScreen(
 ) {
     val focusManager = LocalFocusManager.current
 
-    AuthScaffold(
+    _root_ide_package_.com.ziopam.kollocol.feature.auth.AuthScaffold(
         buttonText = stringResource(R.string.perform_registration),
         onButtonClick = onButtonClick,
         isButtonEnabled = isButtonEnabled
     ) {
         Text(
-            text= stringResource(R.string.registration),
-            style= Typography.headlineSmall,
+            text = stringResource(R.string.registration),
+            style = Typography.headlineSmall,
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()
         )

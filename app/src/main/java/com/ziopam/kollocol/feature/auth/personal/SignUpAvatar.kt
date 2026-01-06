@@ -1,4 +1,4 @@
-package com.ziopam.kollocol.feature.auth
+package com.ziopam.kollocol.feature.auth.personal
 
 import android.net.Uri
 import androidx.compose.foundation.background

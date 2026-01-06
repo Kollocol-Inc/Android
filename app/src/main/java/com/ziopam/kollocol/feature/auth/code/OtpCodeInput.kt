@@ -1,4 +1,4 @@
-package com.ziopam.kollocol.feature.auth
+package com.ziopam.kollocol.feature.auth.code
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.keyframes
