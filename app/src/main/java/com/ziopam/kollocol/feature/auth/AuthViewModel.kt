@@ -61,13 +61,12 @@ class AuthViewModel @Inject constructor() : ViewModel(){
             _isLoading.value = true
             delay(1000L)
             if (_code.value == "2222") {
-                _currError.update { null }
                 _events.emit(AuthUiEvent.NavigateToPersonal)
             } else {
                 _currError.update { UiText.StringRes(R.string.wrong_verification_code) }
+                _code.value = ""
+                _isLoading.value = false
             }
-            _code.value = ""
-            _isLoading.value = false
         }
     }
 
