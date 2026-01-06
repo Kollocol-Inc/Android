@@ -1,4 +1,4 @@
-package com.ziopam.kollocol.feature.session
+package com.ziopam.kollocol.core.session
 
 import dagger.Module
 import dagger.Provides
