@@ -20,7 +20,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.ziopam.kollocol.R
@@ -30,23 +29,20 @@ fun AvatarPicker(
     avatarUri: Uri?,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    size: Dp = 100.dp,
     borderColor: Color = MaterialTheme.colorScheme.primary,
-    borderWidth: Dp = 2.dp,
-    borderAlpha: Float = 0.55f,
     onLongClick: (() -> Unit)? = null,
     overlay: (@Composable BoxScope.() -> Unit)? = null,
 ) {
     Box(
-        modifier = modifier.size(size)
+        modifier = modifier
     ) {
         Box(
             modifier = Modifier
                 .matchParentSize()
                 .clip(CircleShape)
                 .border(
-                    width = borderWidth,
-                    color = borderColor.copy(alpha = borderAlpha),
+                    width = 2.dp,
+                    color = borderColor.copy(alpha = 0.55f),
                     shape = CircleShape
                 )
                 .then(

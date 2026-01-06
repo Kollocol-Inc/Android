@@ -58,7 +58,9 @@ fun SignUpAvatar(
             MaterialTheme.colorScheme.error
         else
             MaterialTheme.colorScheme.primary,
-        modifier = Modifier.padding(vertical = 20.dp)
+        modifier = Modifier
+            .padding(vertical = 20.dp)
+            .size(100.dp)
     )
 
     if (state.error is PersonalError.Avatar) {
