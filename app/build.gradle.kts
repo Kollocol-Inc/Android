@@ -66,6 +66,18 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.coil.compose)
 
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+
+    implementation(libs.okhttp)
+    implementation(libs.logging.interceptor)
+
+    implementation(libs.gson)
+
+    implementation(libs.androidx.datastore.preferences)
+
+    implementation(libs.kotlinx.coroutines.android)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

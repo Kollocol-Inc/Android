@@ -1,5 +1,6 @@
-package com.ziopam.kollocol.core.session
+package com.ziopam.kollocol.core.di
 
+import com.ziopam.kollocol.core.session.SessionDataStore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -8,11 +9,9 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object SessionModule {
+object StorageModule {
 
     @Provides
     @Singleton
-    fun provideSessionRepository(
-        impl: FakeSessionRepository
-    ): SessionRepository = impl
+    fun provideSessionDataStore(store: SessionDataStore): SessionDataStore = store
 }
