@@ -1,4 +1,4 @@
-package com.ziopam.kollocol.core.network
+package com.ziopam.kollocol.data.datasource.remote
 
 data class ApiErrorResponse(
     val error: String? = null,

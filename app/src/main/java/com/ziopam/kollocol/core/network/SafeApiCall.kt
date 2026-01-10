@@ -3,6 +3,7 @@ package com.ziopam.kollocol.core.network
 import com.google.gson.Gson
 import com.ziopam.kollocol.core.common.AppError
 import com.ziopam.kollocol.core.common.AppResult
+import com.ziopam.kollocol.data.datasource.remote.ApiErrorResponse
 import retrofit2.HttpException
 import java.io.IOException
 import java.net.SocketTimeoutException
