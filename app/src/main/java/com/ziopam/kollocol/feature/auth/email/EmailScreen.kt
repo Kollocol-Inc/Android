@@ -4,9 +4,12 @@ import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.keyframes
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -44,7 +47,8 @@ fun EmailScreen(
     onValueChange: (String) -> Unit,
     onButtonClick: () -> Unit,
     isButtonEnabled: Boolean = value.isNotEmpty(),
-    currError: UiText? = null
+    currError: UiText? = null,
+    isLoading: Boolean = false
 ) {
     val focusManager = LocalFocusManager.current
     val shakeX = remember { Animatable(0f) }
@@ -82,58 +86,66 @@ fun EmailScreen(
             modifier = Modifier.fillMaxWidth()
         )
 
-        TextField(
-            value = value,
-            onValueChange = onValueChange,
-            modifier = Modifier
-                .widthIn(max = MAX_EDITTEXT_WIDTH.dp)
-                .fillMaxWidth()
-                .graphicsLayer {
-                    translationX = shakeX.value
+        if (!isLoading) {
+            TextField(
+                value = value,
+                onValueChange = onValueChange,
+                modifier = Modifier
+                    .widthIn(max = MAX_EDITTEXT_WIDTH.dp)
+                    .fillMaxWidth()
+                    .graphicsLayer {
+                        translationX = shakeX.value
+                    },
+
+                textStyle = LocalTextStyle.current.copy(
+                    textAlign = TextAlign.Center,
+                    color = if (currError == null) MaterialTheme.colorScheme.onBackground
+                    else MaterialTheme.colorScheme.error
+                ),
+
+                singleLine = true,
+
+                placeholder = {
+                    Text(
+                        text = stringResource(R.string.example_email),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center
+                    )
                 },
 
-            textStyle = LocalTextStyle.current.copy(
-                textAlign = TextAlign.Center,
-                color = if (currError == null) MaterialTheme.colorScheme.onBackground
-                else MaterialTheme.colorScheme.error
-            ),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Email,
+                    imeAction = ImeAction.Done
+                ),
 
-            singleLine = true,
-
-            placeholder = {
-                Text(
-                    text = stringResource(R.string.example_email),
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Center
-                )
-            },
-
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Email,
-                imeAction = ImeAction.Done
-            ),
-
-            keyboardActions = KeyboardActions(
-                onDone = {
-                    focusManager.clearFocus()
-                    if (isButtonEnabled) {
-                        onButtonClick()
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        focusManager.clearFocus()
+                        if (isButtonEnabled) {
+                            onButtonClick()
+                        }
                     }
-                }
-            ),
+                ),
 
-            colors = TextFieldDefaults.colors(
-                focusedContainerColor = Color.Transparent,
-                unfocusedContainerColor = Color.Transparent,
-                disabledContainerColor = Color.Transparent,
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    disabledContainerColor = Color.Transparent,
 
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
 
-                cursorColor = MaterialTheme.colorScheme.primary
+                    cursorColor = MaterialTheme.colorScheme.primary
+                )
             )
-        )
+        } else {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .padding(top = 5.dp)
+                    .size(30.dp)
+            )
+        }
 
         if (currError != null) {
             Text(
@@ -148,20 +160,18 @@ fun EmailScreen(
 }
 
 @Composable
-fun EmailScreen(vm: AuthViewModel, onNavigate: () -> Unit){
+fun EmailScreen(vm: AuthViewModel){
     val email by vm.email.collectAsState()
     val currError by vm.currError.collectAsState()
+    val isLoading by vm.isLoading.collectAsState()
 
     EmailScreen(
         value = email,
         onValueChange = vm::onEmailChanged,
-        isButtonEnabled = email.isNotEmpty() && (currError == null),
-        onButtonClick = {
-            if (vm.isEmailValid(email)){
-                onNavigate()
-            }
-        },
-        currError = currError
+        isButtonEnabled = vm.isRequestCodeEnabled(),
+        onButtonClick = vm::requestCode,
+        currError = currError,
+        isLoading = isLoading
     )
 }
 
@@ -171,6 +181,6 @@ private fun EmailScreenPreview(){
     var email by remember { mutableStateOf("") }
 
     AppTheme {
-        EmailScreen(email, { email = it }, {}, isButtonEnabled = true)
+        EmailScreen(email, { email = it }, {}, isButtonEnabled = true, isLoading = true)
     }
 }

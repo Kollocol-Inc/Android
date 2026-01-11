@@ -1,5 +1,6 @@
 package com.ziopam.kollocol.core.network
 
+import android.util.Log
 import com.google.gson.Gson
 import com.ziopam.kollocol.core.common.AppError
 import com.ziopam.kollocol.core.common.AppResult
@@ -21,9 +22,10 @@ class SafeApiCall @Inject constructor(
             mapHttp(e)
         } catch (_: SocketTimeoutException) {
             AppResult.Err(AppError.Timeout)
-        } catch (_: IOException) {
+        } catch (e: IOException) {
+            Log.d("SafeApiCall", "IOException: ${e.message}")
             AppResult.Err(AppError.NoInternet)
-        } catch (t: Throwable) {
+        } catch (t: Exception) {
             AppResult.Err(AppError.Unknown(t.message))
         }
     }
@@ -32,15 +34,17 @@ class SafeApiCall @Inject constructor(
         val code = e.code()
 
         return when (code) {
+            400 -> AppResult.Err(AppError.BadRequest(parseError(e)?.message))
             401 -> AppResult.Err(AppError.Unauthorized)
             403 -> AppResult.Err(AppError.Forbidden)
+            404 -> AppResult.Err(AppError.NotFound)
+            429 -> AppResult.Err(AppError.TooManyRequests)
+            500 -> AppResult.Err(AppError.ServerError)
             else -> {
                 val parsed = parseError(e)
                 AppResult.Err(
-                    AppError.Http(
-                        code = code,
-                        error = parsed?.error,
-                        message = parsed?.message
+                    AppError.Unknown(
+                        parsed?.message ?: "HTTP $code"
                     )
                 )
             }

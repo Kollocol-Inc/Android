@@ -3,7 +3,11 @@ package com.ziopam.kollocol.feature.auth
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ziopam.kollocol.R
+import com.ziopam.kollocol.core.common.AppError
+import com.ziopam.kollocol.core.common.AppResult
 import com.ziopam.kollocol.core.ui.UiText
+import com.ziopam.kollocol.core.ui.toUiText
+import com.ziopam.kollocol.domain.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -16,12 +20,15 @@ import javax.inject.Inject
 
 sealed interface AuthUiEvent {
     data object NavigateToPersonal : AuthUiEvent
+    data object NavigateToCode : AuthUiEvent
 }
 
 private const val MAX_EMAIL_LENGTH = 254
 
 @HiltViewModel
-class AuthViewModel @Inject constructor() : ViewModel(){
+class AuthViewModel @Inject constructor(
+    private val authRepository: AuthRepository
+) : ViewModel(){
     private val _email = MutableStateFlow("")
     private val _code = MutableStateFlow("")
     private val _currError = MutableStateFlow<UiText?>(null)
@@ -35,21 +42,42 @@ class AuthViewModel @Inject constructor() : ViewModel(){
 
     fun onEmailChanged(input: String) {
         _email.value = input
-            .lowercase()
             .filterNot { it.isWhitespace() }
             .filter { it.code < 128 }
             .take(MAX_EMAIL_LENGTH)
         _currError.update { null }
     }
 
-    fun isEmailValid(input: String): Boolean {
-        if (android.util.Patterns.EMAIL_ADDRESS.matcher(input).matches()){
-            _currError.update { null }
-            return true
-        } else {
-            _currError.update { UiText.StringRes(R.string.wrong_email_format) }
-            return false
+    fun requestCode(){
+        viewModelScope.launch {
+            if (!isEmailValid(_email.value)) return@launch
+            _isLoading.value = true
+            val sendToEmail = _email.value
+            val result = authRepository.login(sendToEmail)
+
+            if (result is AppResult.Err) {
+                when (result.error) {
+                    is AppError.BadRequest -> {
+                        _currError.update { UiText.StringRes(R.string.wrong_email_format) }
+                    }
+                    else -> {
+                        _currError.update { result.error.toUiText() }
+                        delay(2000L)
+                        if (_currError.value == result.error.toUiText()){
+                            _currError.update { null }
+                        }
+                    }
+                }
+            } else {
+                _events.emit(AuthUiEvent.NavigateToCode)
+                _email.value = sendToEmail
+            }
+            _isLoading.value = false
         }
+    }
+
+    fun isRequestCodeEnabled(): Boolean {
+        return _email.value.isNotEmpty() && _currError.value == null && !_isLoading.value
     }
 
     fun onCodeChanged(input: String) {
@@ -72,5 +100,15 @@ class AuthViewModel @Inject constructor() : ViewModel(){
 
     fun clearError(){
         _currError.value = null
+    }
+
+    private fun isEmailValid(input: String): Boolean {
+        if (android.util.Patterns.EMAIL_ADDRESS.matcher(input).matches()){
+            _currError.update { null }
+            return true
+        } else {
+            _currError.update { UiText.StringRes(R.string.wrong_email_format) }
+            return false
+        }
     }
 }

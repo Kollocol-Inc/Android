@@ -36,7 +36,15 @@ fun NavGraphBuilder.authGraph(
                 vm.clearError()
             }
 
-            EmailScreen(vm) { navController.navigate(AuthRoute.ENTER_CODE) }
+            LaunchedEffect(vm) {
+                vm.events.collectLatest { event ->
+                    if (event is AuthUiEvent.NavigateToCode) {
+                        navController.navigate(AuthRoute.ENTER_CODE)
+                    }
+                }
+            }
+
+            EmailScreen(vm)
         }
 
         composable(AuthRoute.ENTER_CODE) { backStackEntry ->
@@ -46,12 +54,10 @@ fun NavGraphBuilder.authGraph(
 
             LaunchedEffect(vm) {
                 vm.events.collectLatest { event ->
-                    when (event) {
-                        AuthUiEvent.NavigateToPersonal -> {
-                            navController.navigate(AuthRoute.ENTER_PERSONAL) {
-                                popUpTo(AuthRoute.ENTER_EMAIL) { inclusive = true }
-                                launchSingleTop = true
-                            }
+                    if (event is AuthUiEvent.NavigateToPersonal) {
+                        navController.navigate(AuthRoute.ENTER_PERSONAL) {
+                            popUpTo(AuthRoute.ENTER_EMAIL) { inclusive = true }
+                            launchSingleTop = true
                         }
                     }
                 }

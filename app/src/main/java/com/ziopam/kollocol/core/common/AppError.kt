@@ -3,16 +3,13 @@ package com.ziopam.kollocol.core.common
 sealed interface AppError {
     data object NoInternet : AppError
     data object Timeout : AppError
-    data class Network(val message: String? = null) : AppError
 
-    data class Http(
-        val code: Int,
-        val error: String? = null,
-        val message: String? = null
-    ) : AppError
-
+    data class BadRequest(val message: String?) : AppError
     data object Unauthorized : AppError
     data object Forbidden : AppError
+    data object NotFound : AppError
+    data object TooManyRequests : AppError
+    data object ServerError : AppError
 
     data class Unknown(val message: String? = null) : AppError
 }
