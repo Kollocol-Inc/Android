@@ -19,7 +19,6 @@ class SessionRepositoryImpl @Inject constructor(
             if (ok) SessionState.Authorized else SessionState.Unauthorized
         }
 
-    // TODO Избавиться от лишнего метода
     override suspend fun hasValidSession(): Boolean {
         val tokens = store.tokensFlow.first()
         return !tokens.accessToken.isNullOrBlank() && !tokens.refreshToken.isNullOrBlank()
