@@ -1,78 +1,81 @@
 package com.ziopam.kollocol.core.network
 
+import com.google.gson.Gson
 import com.ziopam.kollocol.data.datasource.remote.auth.AuthApi
 import com.ziopam.kollocol.data.datasource.remote.auth.RefreshTokenRequestDto
 import com.ziopam.kollocol.domain.repository.SessionRepository
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
 import okhttp3.Authenticator
+import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.Route
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Inject
 import javax.inject.Singleton
 
+// TODO Чекнуть логику разлогирования
 @Singleton
 class TokenAuthenticator @Inject constructor(
     private val sessionRepository: SessionRepository,
-    private val authApiNoAuth: AuthApi
+    private val gson: Gson,
+    private val baseUrl: String
 ) : Authenticator {
 
-    private val mutex = Mutex()
-
     override fun authenticate(route: Route?, response: Response): Request? {
-        if (responseCount(response) >= 2) return null
+        val request = response.request
+        if (request.header("Authorization") == null) {
+            return null
+        }
 
-        return runBlocking {
-            mutex.withLock {
-                val currentAccess = sessionRepository.getAccessToken()
-                val requestAccess = response.request.header("Authorization")
-                    ?.removePrefix("Bearer")
-                    ?.trim()
+        if (responseCount(response) >= 2) {
+            return null
+        }
 
-                if (!currentAccess.isNullOrBlank() && currentAccess != requestAccess) {
-                    return@withLock response.request.newBuilder()
-                        .header("Authorization", "Bearer $currentAccess")
-                        .build()
-                }
+        val refreshToken = runBlocking { sessionRepository.getRefreshToken() }
+            ?: return null
 
-                val refresh = sessionRepository.getRefreshToken()
-                if (refresh.isNullOrBlank()) {
-                    sessionRepository.clearSession()
-                    return@withLock null
-                }
+        val client = OkHttpClient.Builder().build()
 
-                try {
-                    val refreshed = authApiNoAuth.refresh(RefreshTokenRequestDto(refresh))
-                    val newAccess = refreshed.accessToken
-                    val newRefresh = refreshed.refreshToken
+        val retrofit = Retrofit.Builder()
+            .baseUrl(baseUrl)
+            .client(client)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
 
-                    if (newAccess.isNullOrBlank() || newRefresh.isNullOrBlank()) {
-                        sessionRepository.clearSession()
-                        return@withLock null
-                    }
+        val authApi = retrofit.create(AuthApi::class.java)
 
-                    sessionRepository.saveTokens(newAccess, newRefresh)
-
-                    response.request.newBuilder()
-                        .header("Authorization", "Bearer $newAccess")
-                        .build()
-                } catch (_: Exception) {
-                    // TODO чекнуть логику разлогирования
-                    sessionRepository.clearSession()
-                    null
-                }
+        return try {
+            val refreshResponse = runBlocking {
+                authApi.refresh(RefreshTokenRequestDto(refreshToken))
             }
+
+            val newAccess = refreshResponse.accessToken.orEmpty()
+            val newRefresh = refreshResponse.refreshToken.orEmpty()
+
+            if (newAccess.isBlank()) {
+                return null
+            }
+
+            runBlocking {
+                sessionRepository.saveTokens(newAccess, newRefresh)
+            }
+
+            request.newBuilder()
+                .header("Authorization", "Bearer $newAccess")
+                .build()
+        } catch (_: Exception) {
+            null
         }
     }
 
     private fun responseCount(response: Response): Int {
-        var res: Response? = response
         var count = 1
-        while (res?.priorResponse != null) {
+        var current = response.priorResponse
+        while (current != null) {
             count++
-            res = res.priorResponse
+            current = current.priorResponse
         }
         return count
     }

@@ -6,6 +6,7 @@ import com.ziopam.kollocol.core.network.SafeApiCall
 import com.ziopam.kollocol.core.network.TokenAuthenticator
 import com.ziopam.kollocol.core.network.AuthInterceptor
 import com.ziopam.kollocol.data.datasource.remote.auth.AuthApi
+import com.ziopam.kollocol.data.datasource.remote.user.UserApi
 import com.ziopam.kollocol.domain.repository.SessionRepository
 import dagger.Module
 import dagger.Provides
@@ -15,7 +16,6 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -40,48 +40,24 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    @Named("no_authenticator")
-    fun provideOkHttpNoAuthenticator(
-        logging: HttpLoggingInterceptor
-    ): OkHttpClient = OkHttpClient.Builder()
-        .addInterceptor(logging)
-        .build()
-
-    @Provides
-    @Singleton
-    @Named("retrofit_no_authenticator")
-    fun provideRetrofitNoAuthenticator(
-        gson: Gson,
-        @Named("no_authenticator") okHttp: OkHttpClient
-    ): Retrofit = Retrofit.Builder()
-        .baseUrl(BASE_URL)
-        .client(okHttp)
-        .addConverterFactory(GsonConverterFactory.create(gson))
-        .build()
-
-    @Provides
-    @Singleton
-    @Named("authApiNoAuth")
-    fun provideAuthApiNoAuth(
-        @Named("retrofit_no_authenticator") retrofit: Retrofit
-    ): AuthApi = retrofit.create(AuthApi::class.java)
-
-    @Provides
-    @Singleton
     fun provideTokenAuthenticator(
         sessionRepository: SessionRepository,
-        @Named("authApiNoAuth") authApiNoAuth: AuthApi
-    ): TokenAuthenticator = TokenAuthenticator(sessionRepository, authApiNoAuth)
+        gson: Gson
+    ): TokenAuthenticator = TokenAuthenticator(
+        sessionRepository = sessionRepository,
+        gson = gson,
+        baseUrl = BASE_URL
+    )
 
-
-    @Provides @Singleton
+    @Provides
+    @Singleton
     fun provideOkHttp(
         logging: HttpLoggingInterceptor,
         authInterceptor: AuthInterceptor,
         tokenAuthenticator: TokenAuthenticator
     ): OkHttpClient = OkHttpClient.Builder()
-        .addInterceptor(logging)
         .addInterceptor(authInterceptor)
+        .addInterceptor(logging)
         .authenticator(tokenAuthenticator)
         .build()
 
@@ -100,4 +76,9 @@ object NetworkModule {
     @Singleton
     fun provideAuthApi(retrofit: Retrofit): AuthApi =
         retrofit.create(AuthApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideUserApi(retrofit: Retrofit): UserApi =
+        retrofit.create(UserApi::class.java)
 }

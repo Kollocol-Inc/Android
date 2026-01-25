@@ -20,6 +20,7 @@ import javax.inject.Inject
 
 sealed interface AuthUiEvent {
     data object NavigateToPersonal : AuthUiEvent
+    data object NavigateToMain: AuthUiEvent
     data object NavigateToCode : AuthUiEvent
 }
 
@@ -87,13 +88,28 @@ class AuthViewModel @Inject constructor(
     fun verifyCode(){
         viewModelScope.launch {
             _isLoading.value = true
-            delay(1000L)
-            if (_code.value == "2222") {
-                _events.emit(AuthUiEvent.NavigateToPersonal)
-            } else {
-                _currError.update { UiText.StringRes(R.string.wrong_verification_code) }
-                _code.value = ""
+            val result = authRepository.verifyCode(_email.value, _code.value)
+            _code.update { "" }
+            if (result is AppResult.Err) {
+                when (result.error) {
+                    is AppError.BadRequest -> {
+                        _currError.update { UiText.StringRes(R.string.wrong_verification_code) }
+                    }
+                    else -> {
+                        _currError.update { result.error.toUiText() }
+                        delay(2000L)
+                        if (_currError.value == result.error.toUiText()){
+                            _currError.update { null }
+                        }
+                    }
+                }
                 _isLoading.value = false
+            } else if (result is AppResult.Ok) {
+                if (result.value.isRegistered) {
+                    _events.emit(AuthUiEvent.NavigateToMain)
+                } else {
+                    _events.emit(AuthUiEvent.NavigateToPersonal)
+                }
             }
         }
     }

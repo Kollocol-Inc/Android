@@ -9,9 +9,7 @@ import com.ziopam.kollocol.domain.repository.AuthRepository
 import com.ziopam.kollocol.domain.repository.SessionRepository
 import com.ziopam.kollocol.domain.repository.VerifyResult
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class AuthRepositoryImpl @Inject constructor(
     private val api: AuthApi,
     private val safeApiCall: SafeApiCall,
@@ -32,11 +30,7 @@ class AuthRepositoryImpl @Inject constructor(
             val refresh = res.refreshToken.orEmpty()
             sessionRepository.saveTokens(access, refresh)
 
-            // TODO Посмотреть, какие данные нужны в VerifyResult
-            VerifyResult(
-                isRegistered = (res.isRegistered == true),
-                userId = res.userId
-            )
+            VerifyResult(isRegistered = (res.isRegistered == true))
         }
 
     override suspend fun logout(): AppResult<Unit> =

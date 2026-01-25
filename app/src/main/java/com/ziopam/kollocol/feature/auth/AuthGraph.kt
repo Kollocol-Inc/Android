@@ -9,6 +9,7 @@ import androidx.navigation.navigation
 import com.ziopam.kollocol.feature.auth.code.CodeScreen
 import com.ziopam.kollocol.feature.auth.email.EmailScreen
 import com.ziopam.kollocol.feature.auth.personal.PersonalScreen
+import com.ziopam.kollocol.feature.auth.personal.PersonalUiEvent
 import com.ziopam.kollocol.feature.auth.personal.PersonalViewModel
 import com.ziopam.kollocol.navigation.Graph
 import com.ziopam.kollocol.navigation.graphViewModel
@@ -59,6 +60,11 @@ fun NavGraphBuilder.authGraph(
                             popUpTo(AuthRoute.ENTER_EMAIL) { inclusive = true }
                             launchSingleTop = true
                         }
+                    } else if (event is AuthUiEvent.NavigateToMain) {
+                        navController.navigate(Graph.MAIN) {
+                            popUpTo(Graph.AUTH) { inclusive = true }
+                            launchSingleTop = true
+                        }
                     }
                 }
             }
@@ -68,6 +74,18 @@ fun NavGraphBuilder.authGraph(
 
         composable(AuthRoute.ENTER_PERSONAL) { backStackEntry ->
             val vm: PersonalViewModel = hiltViewModel()
+
+            LaunchedEffect(vm) {
+                vm.events.collectLatest { event ->
+                    if (event is PersonalUiEvent.NavigateToMain) {
+                        navController.navigate(Graph.MAIN) {
+                            popUpTo(Graph.AUTH) { inclusive = true }
+                            launchSingleTop = true
+                        }
+                    }
+                }
+            }
+
             PersonalScreen(vm) {
                 navController.navigate(Graph.MAIN) {
                     popUpTo(Graph.AUTH) { inclusive = true }

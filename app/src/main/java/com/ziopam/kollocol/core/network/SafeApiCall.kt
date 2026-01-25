@@ -1,6 +1,5 @@
 package com.ziopam.kollocol.core.network
 
-import android.util.Log
 import com.google.gson.Gson
 import com.ziopam.kollocol.core.common.AppError
 import com.ziopam.kollocol.core.common.AppResult
@@ -22,10 +21,10 @@ class SafeApiCall @Inject constructor(
             mapHttp(e)
         } catch (_: SocketTimeoutException) {
             AppResult.Err(AppError.Timeout)
-        } catch (e: IOException) {
-            Log.d("SafeApiCall", "IOException: ${e.message}")
+        } catch (_: IOException) {
             AppResult.Err(AppError.NoInternet)
         } catch (t: Exception) {
+            println("SafeApiCall Unknown error: ${t.message}")
             AppResult.Err(AppError.Unknown(t.message))
         }
     }

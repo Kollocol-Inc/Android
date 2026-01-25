@@ -3,8 +3,7 @@ package com.ziopam.kollocol.domain.repository
 import com.ziopam.kollocol.core.common.AppResult
 
 data class VerifyResult(
-    val isRegistered: Boolean,
-    val userId: String?
+    val isRegistered: Boolean
 )
 
 interface AuthRepository {

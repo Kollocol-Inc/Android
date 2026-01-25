@@ -2,12 +2,18 @@ package com.ziopam.kollocol.feature.auth.personal
 
 import android.net.Uri
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.ziopam.kollocol.R
+import com.ziopam.kollocol.core.common.AppResult
 import com.ziopam.kollocol.core.ui.UiText
+import com.ziopam.kollocol.core.ui.toUiText
+import com.ziopam.kollocol.domain.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 private const val MIN_PERSONAL_NAME_LENGTH = 2
@@ -25,10 +31,19 @@ sealed interface PersonalError {
     data class Fields(val message: UiText) : PersonalError
 }
 
+sealed interface PersonalUiEvent {
+    data object NavigateToMain : PersonalUiEvent
+}
+
 @HiltViewModel
-class PersonalViewModel @Inject constructor() : ViewModel() {
+class PersonalViewModel @Inject constructor(
+    private val userRepository: UserRepository
+) : ViewModel() {
     private val _uiState = MutableStateFlow(PersonalUiState())
     val uiState = _uiState.asStateFlow()
+
+    private val _events = MutableStateFlow<PersonalUiEvent?>(null)
+    val events = _events.asStateFlow()
 
     fun onFirstNameChanged(input: String) = _uiState.update {
         it.copy(firstName = sanitizeName(input), error = if (it.error is PersonalError.Fields) null else it.error)
@@ -62,9 +77,7 @@ class PersonalViewModel @Inject constructor() : ViewModel() {
 
         if (_uiState.value.firstName.length in MIN_PERSONAL_NAME_LENGTH..MAX_PERSONAL_NAME_LENGTH &&
             _uiState.value.lastName.length in MIN_PERSONAL_NAME_LENGTH..MAX_PERSONAL_NAME_LENGTH) {
-            _uiState.update {
-                it.copy(error = null)
-            }
+            register()
         } else {
             _uiState.update {
                 it.copy(error = PersonalError.Fields(
@@ -72,6 +85,30 @@ class PersonalViewModel @Inject constructor() : ViewModel() {
                         R.string.name_length_error,
                         listOf(MIN_PERSONAL_NAME_LENGTH, MAX_PERSONAL_NAME_LENGTH)
                     )))
+            }
+        }
+    }
+
+    private fun register(){
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(error = null)
+            }
+
+            val result = userRepository.registerUser(
+                _uiState.value.firstName,
+                _uiState.value.lastName
+            )
+
+            if (result is AppResult.Err) {
+                val error = PersonalError.Fields(result.error.toUiText())
+                _uiState.update { it.copy(error = error) }
+                delay(2000L)
+                if (uiState.value.error == error){
+                    _uiState.update { it.copy(error = null) }
+                }
+            } else if (result is AppResult.Ok){
+                _events.update { PersonalUiEvent.NavigateToMain }
             }
         }
     }

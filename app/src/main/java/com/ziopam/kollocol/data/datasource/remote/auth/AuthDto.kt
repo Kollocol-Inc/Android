@@ -1,5 +1,7 @@
 package com.ziopam.kollocol.data.datasource.remote.auth
 
+import com.google.gson.annotations.SerializedName
+
 data class LoginRequestDto(val email: String)
 
 data class VerifyCodeRequestDto(
@@ -7,23 +9,28 @@ data class VerifyCodeRequestDto(
     val email: String
 )
 
-// TODO Подумать об удалении лишних полей
 data class VerifyCodeResponseDto(
+    @SerializedName("access_token")
     val accessToken: String? = null,
+
+    @SerializedName("refresh_token")
     val refreshToken: String? = null,
+
+    @SerializedName("is_registered")
     val isRegistered: Boolean? = null,
-    val success: Boolean? = null,
-    val message: String? = null,
-    val userId: String? = null
 )
 
-data class RefreshTokenRequestDto(val refreshToken: String)
+data class RefreshTokenRequestDto(
+    @SerializedName("refresh_token")
+    val refreshToken: String
+)
 
 data class RefreshTokenResponseDto(
+    @SerializedName("access_token")
     val accessToken: String? = null,
-    val refreshToken: String? = null,
-    val success: Boolean? = null,
-    val message: String? = null
+
+    @SerializedName("refresh_token")
+    val refreshToken: String? = null
 )
 
 data class LogoutResponseDto(

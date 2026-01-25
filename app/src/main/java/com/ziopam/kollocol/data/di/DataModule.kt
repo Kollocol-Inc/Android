@@ -1,7 +1,13 @@
+@file:Suppress("unused")
+
 package com.ziopam.kollocol.data.di
 
 import com.ziopam.kollocol.data.repository.AuthRepositoryImpl
+import com.ziopam.kollocol.data.repository.PersonalRepositoryImpl
+import com.ziopam.kollocol.data.repository.UserRepositoryImpl
 import com.ziopam.kollocol.domain.repository.AuthRepository
+import com.ziopam.kollocol.domain.repository.PersonalRepository
+import com.ziopam.kollocol.domain.repository.UserRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -14,4 +20,12 @@ abstract class DataModule {
     @Binds
     @Singleton
     abstract fun bindAuthRepository(impl: AuthRepositoryImpl): AuthRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindUserRepository(impl: UserRepositoryImpl): UserRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindPersonalRepository(impl: PersonalRepositoryImpl): PersonalRepository
 }
