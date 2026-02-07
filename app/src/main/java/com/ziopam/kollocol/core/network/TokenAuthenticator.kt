@@ -10,12 +10,12 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.Route
+import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Inject
 import javax.inject.Singleton
 
-// TODO Чекнуть логику разлогирования
 @Singleton
 class TokenAuthenticator @Inject constructor(
     private val sessionRepository: SessionRepository,
@@ -65,6 +65,12 @@ class TokenAuthenticator @Inject constructor(
             request.newBuilder()
                 .header("Authorization", "Bearer $newAccess")
                 .build()
+        } catch (e: HttpException) {
+            val code = e.code()
+            if (code == 401 || code == 403) {
+                runBlocking { sessionRepository.clearSession() }
+            }
+            null
         } catch (_: Exception) {
             null
         }

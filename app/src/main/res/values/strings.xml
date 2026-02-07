@@ -33,4 +33,9 @@
     <string name="can_select_only_photos">Можно выбрать только фотографию</string>
     <string name="file_too_big">Файл слишком большой (макс. 1 МБ)</string>
     <string name="remove_avatar">Удалить аватар</string>
+
+    <string name="tab_home">Главная</string>
+    <string name="tab_groups">Группы</string>
+    <string name="tab_quizzes">Квизы</string>
+    <string name="tab_profile">Профиль</string>
 </resources>
