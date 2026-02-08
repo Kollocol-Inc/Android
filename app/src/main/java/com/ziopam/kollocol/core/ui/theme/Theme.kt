@@ -1,4 +1,4 @@
-package com.ziopam.kollocol.ui.theme
+package com.ziopam.kollocol.core.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme

@@ -15,9 +15,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.ziopam.kollocol.R
-import com.ziopam.kollocol.ui.AppScaffold
-import com.ziopam.kollocol.ui.theme.MAX_BUTTON_WIDTH
-import com.ziopam.kollocol.ui.theme.Typography
+import com.ziopam.kollocol.core.ui.AppScaffold
+import com.ziopam.kollocol.core.ui.theme.MAX_BUTTON_WIDTH
+import com.ziopam.kollocol.core.ui.theme.Typography
 
 @Composable
 fun AuthScaffold(

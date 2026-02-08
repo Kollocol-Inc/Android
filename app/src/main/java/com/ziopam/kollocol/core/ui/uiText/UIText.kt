@@ -1,4 +1,4 @@
-package com.ziopam.kollocol.core.ui
+package com.ziopam.kollocol.core.ui.uiText
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource

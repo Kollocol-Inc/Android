@@ -1,4 +1,4 @@
-package com.ziopam.kollocol.ui
+package com.ziopam.kollocol.core.ui
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize

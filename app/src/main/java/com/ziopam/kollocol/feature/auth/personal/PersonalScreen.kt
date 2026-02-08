@@ -15,11 +15,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ziopam.kollocol.R
-import com.ziopam.kollocol.core.ui.UiText
-import com.ziopam.kollocol.core.ui.asString
-import com.ziopam.kollocol.ui.theme.AppTheme
-import com.ziopam.kollocol.ui.theme.MAX_EDITTEXT_WIDTH
-import com.ziopam.kollocol.ui.theme.Typography
+import com.ziopam.kollocol.core.ui.uiText.UiText
+import com.ziopam.kollocol.core.ui.uiText.asString
+import com.ziopam.kollocol.core.ui.theme.AppTheme
+import com.ziopam.kollocol.core.ui.theme.MAX_EDITTEXT_WIDTH
+import com.ziopam.kollocol.core.ui.theme.Typography
 
 @Composable
 fun PersonalScreen(
@@ -98,7 +98,6 @@ fun PersonalScreen(
 @Composable
 fun PersonalScreen(
     vm: PersonalViewModel,
-    onButtonClick: () -> Unit,
 ) {
     val state = vm.uiState.collectAsStateWithLifecycle()
 

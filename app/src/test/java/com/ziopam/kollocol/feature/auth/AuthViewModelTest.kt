@@ -5,7 +5,7 @@ import app.cash.turbine.test
 import com.ziopam.kollocol.R
 import com.ziopam.kollocol.core.common.AppError
 import com.ziopam.kollocol.core.common.AppResult
-import com.ziopam.kollocol.core.ui.UiText
+import com.ziopam.kollocol.core.ui.uiText.UiText
 import com.ziopam.kollocol.domain.repository.AuthRepository
 import com.ziopam.kollocol.domain.repository.VerifyResult
 import io.mockk.coEvery

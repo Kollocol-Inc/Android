@@ -20,8 +20,8 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.ziopam.kollocol.R
-import com.ziopam.kollocol.core.ui.UiText
-import com.ziopam.kollocol.core.ui.asString
+import com.ziopam.kollocol.core.ui.uiText.UiText
+import com.ziopam.kollocol.core.ui.uiText.asString
 import com.ziopam.kollocol.core.ui.avatar.AvatarPicker
 import com.ziopam.kollocol.core.ui.avatar.rememberAvatarPicker
 

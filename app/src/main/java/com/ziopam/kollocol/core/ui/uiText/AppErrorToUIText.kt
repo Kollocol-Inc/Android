@@ -1,4 +1,4 @@
-package com.ziopam.kollocol.core.ui
+package com.ziopam.kollocol.core.ui.uiText
 
 import com.ziopam.kollocol.R
 import com.ziopam.kollocol.core.common.AppError

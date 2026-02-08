@@ -34,7 +34,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import com.ziopam.kollocol.ui.theme.MAX_EDITTEXT_WIDTH
+import com.ziopam.kollocol.core.ui.theme.MAX_EDITTEXT_WIDTH
 
 @Composable
 fun Otp4CodeInput(

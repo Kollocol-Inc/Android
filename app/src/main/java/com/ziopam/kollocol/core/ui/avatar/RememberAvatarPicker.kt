@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import com.ziopam.kollocol.R
-import com.ziopam.kollocol.core.ui.UiText
+import com.ziopam.kollocol.core.ui.uiText.UiText
 
 private const val DEFAULT_MAX_AVATAR_BYTES: Long = 1_048_576L // 1MB
 

@@ -72,7 +72,7 @@ fun NavGraphBuilder.authGraph(
             CodeScreen(vm)
         }
 
-        composable(AuthRoute.ENTER_PERSONAL) { backStackEntry ->
+        composable(AuthRoute.ENTER_PERSONAL) { _ ->
             val vm: PersonalViewModel = hiltViewModel()
 
             LaunchedEffect(vm) {
@@ -86,11 +86,7 @@ fun NavGraphBuilder.authGraph(
                 }
             }
 
-            PersonalScreen(vm) {
-                navController.navigate(Graph.MAIN) {
-                    popUpTo(Graph.AUTH) { inclusive = true }
-                }
-            }
+            PersonalScreen(vm)
         }
     }
 }

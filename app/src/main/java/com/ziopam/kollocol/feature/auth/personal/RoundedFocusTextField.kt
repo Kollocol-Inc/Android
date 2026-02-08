@@ -19,7 +19,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
-import com.ziopam.kollocol.ui.theme.MAX_EDITTEXT_WIDTH
+import com.ziopam.kollocol.core.ui.theme.MAX_EDITTEXT_WIDTH
 
 @Composable
 fun RoundedFocusTextField(

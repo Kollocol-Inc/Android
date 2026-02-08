@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ziopam.kollocol.R
 import com.ziopam.kollocol.core.common.AppResult
-import com.ziopam.kollocol.core.ui.UiText
-import com.ziopam.kollocol.core.ui.toUiText
+import com.ziopam.kollocol.core.ui.uiText.UiText
+import com.ziopam.kollocol.core.ui.uiText.toUiText
 import com.ziopam.kollocol.domain.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
