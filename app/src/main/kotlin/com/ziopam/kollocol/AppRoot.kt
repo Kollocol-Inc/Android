@@ -5,10 +5,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
+import com.ziopam.kollocol.core.navigation.Graph
 import com.ziopam.kollocol.domain.repository.SessionState
 import com.ziopam.kollocol.feature.auth.authGraph
 import com.ziopam.kollocol.feature.main.mainGraph
-import com.ziopam.kollocol.navigation.Graph
 
 @Composable
 fun AppRoot(

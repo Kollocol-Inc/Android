@@ -1,0 +1,6 @@
+<resources>
+    <string name="avatar">Аватар</string>
+    <string name="pick_a_photo">Выбрать фото</string>
+    <string name="can_select_only_photos">Можно выбрать только фотографию</string>
+    <string name="file_too_big">Файл слишком большой (макс. 1 МБ)</string>
+</resources>

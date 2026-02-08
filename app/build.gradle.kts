@@ -54,6 +54,18 @@ android {
 }
 
 dependencies {
+    // Module dependencies
+    implementation(project(":core:common"))
+    implementation(project(":core:di"))
+    implementation(project(":core:navigation"))
+    implementation(project(":core:network"))
+    implementation(project(":core:session"))
+    implementation(project(":core:ui"))
+    implementation(project(":data"))
+    implementation(project(":domain"))
+    implementation(project(":feature:auth"))
+    implementation(project(":feature:main"))
+    
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -70,39 +82,7 @@ dependencies {
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
-    implementation(libs.coil.compose)
 
-    implementation(libs.retrofit)
-    implementation(libs.converter.gson)
-
-    implementation(libs.okhttp)
-    implementation(libs.logging.interceptor)
-
-    implementation(libs.gson)
-
-    implementation(libs.androidx.datastore.preferences)
-
-    implementation(libs.kotlinx.coroutines.android)
-
-    // Unit Testing
-    testImplementation(libs.junit)
-    testImplementation(libs.mockk)
-    testImplementation(libs.turbine)
-    testImplementation(libs.androidx.core.testing)
-    testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.hilt.android.testing)
-    testImplementation(libs.robolectric)
-    kaptTest(libs.hilt.compiler)
-    
-    // Android Testing
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.ui.test.junit4)
-    androidTestImplementation(libs.mockk.android)
-    androidTestImplementation(libs.hilt.android.testing)
-    kaptAndroidTest(libs.hilt.compiler)
-    
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 }

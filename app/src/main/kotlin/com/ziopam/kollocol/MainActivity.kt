@@ -6,9 +6,9 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
-import com.ziopam.kollocol.domain.repository.SessionRepository
-import com.ziopam.kollocol.navigation.Graph
+import com.ziopam.kollocol.core.navigation.Graph
 import com.ziopam.kollocol.core.ui.theme.AppTheme
+import com.ziopam.kollocol.domain.repository.SessionRepository
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject

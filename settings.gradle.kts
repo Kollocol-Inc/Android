@@ -23,4 +23,16 @@ dependencyResolutionManagement {
 
 rootProject.name = "Kollocol"
 include(":app")
+include(":data")
+include(":domain")
+include(":core")
+include(":core:common")
+include(":core:di")
+include(":core:navigation")
+include(":core:network")
+include(":core:session")
+include(":core:ui")
+include(":feature")
+include(":feature:auth")
+include(":feature:main")
  
