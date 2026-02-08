@@ -27,6 +27,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import com.ziopam.kollocol.core.common.R as commonR
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(RobolectricTestRunner::class)
@@ -210,7 +211,7 @@ class AuthViewModelTest {
             
             val error = awaitItem()
             assertTrue(error is UiText.StringRes)
-            assertEquals(R.string.error_no_internet, (error as UiText.StringRes).resId)
+            assertEquals(commonR.string.error_no_internet, (error as UiText.StringRes).resId)
 
             advanceTimeBy(2000L)
             
@@ -356,7 +357,7 @@ class AuthViewModelTest {
             
             val error = awaitItem()
             assertTrue(error is UiText.StringRes)
-            assertEquals(R.string.error_timeout, (error as UiText.StringRes).resId)
+            assertEquals(commonR.string.error_timeout, (error as UiText.StringRes).resId)
 
             advanceTimeBy(2000L)
             

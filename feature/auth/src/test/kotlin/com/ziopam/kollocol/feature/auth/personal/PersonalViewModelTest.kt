@@ -27,6 +27,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import com.ziopam.kollocol.core.ui.R as coreR
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class PersonalViewModelTest {
@@ -141,7 +142,7 @@ class PersonalViewModelTest {
     fun `onAvatarSelected updates avatarUri and clears Avatar error`() = runTest {
         // Given
         val uri = mockk<Uri>()
-        viewModel.onAvatarError(UiText.StringRes(R.string.file_too_big))
+        viewModel.onAvatarError(UiText.StringRes(coreR.string.file_too_big))
 
         // When
         viewModel.onAvatarSelected(uri)
@@ -157,7 +158,7 @@ class PersonalViewModelTest {
     @Test
     fun `onAvatarError sets Avatar error`() = runTest {
         // Given
-        val errorMessage = UiText.StringRes(R.string.file_too_big)
+        val errorMessage = UiText.StringRes(coreR.string.file_too_big)
 
         // When
         viewModel.onAvatarError(errorMessage)
@@ -175,7 +176,7 @@ class PersonalViewModelTest {
         // Given
         val uri = mockk<Uri>()
         viewModel.onAvatarSelected(uri)
-        viewModel.onAvatarError(UiText.StringRes(R.string.file_too_big))
+        viewModel.onAvatarError(UiText.StringRes(coreR.string.file_too_big))
 
         // When
         viewModel.onAvatarRemove()
@@ -321,7 +322,8 @@ class PersonalViewModelTest {
         assertTrue(state.error is PersonalError.Fields)
         val error = (state.error as PersonalError.Fields).message
         assertTrue(error is UiText.StringRes)
-        assertEquals(R.string.error_no_internet, (error as UiText.StringRes).resId)
+        assertEquals(com.ziopam.kollocol.core.common.R.string.error_no_internet,
+            (error as UiText.StringRes).resId)
     }
 
     @Test
@@ -360,7 +362,7 @@ class PersonalViewModelTest {
         advanceUntilIdle()
 
         // Change error before 2 seconds
-        viewModel.onAvatarError(UiText.StringRes(R.string.file_too_big))
+        viewModel.onAvatarError(UiText.StringRes(coreR.string.file_too_big))
         advanceTimeBy(2000L)
 
         // Then
@@ -440,7 +442,7 @@ class PersonalViewModelTest {
         val state = PersonalUiState(
             firstName = "John",
             lastName = "Smith",
-            error = PersonalError.Avatar(UiText.StringRes(R.string.file_too_big))
+            error = PersonalError.Avatar(UiText.StringRes(coreR.string.file_too_big))
         )
 
         // When
