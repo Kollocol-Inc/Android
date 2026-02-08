@@ -129,7 +129,7 @@ fun CodeScreen(vm: AuthViewModel) {
         code = code,
         onCodeChange = vm::onCodeChanged,
         onCodeCompletion = vm::verifyCode,
-        onButtonClick = {},
+        onButtonClick = vm::requestCode,
         isLoading = isLoading,
         currError = currError
     )
