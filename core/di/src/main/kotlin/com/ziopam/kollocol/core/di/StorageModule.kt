@@ -1,4 +1,4 @@
-package com.ziopam.kollocol.data.di
+package com.ziopam.kollocol.core.di
 
 import android.content.Context
 import androidx.datastore.core.DataStore

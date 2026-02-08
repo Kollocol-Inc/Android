@@ -1,6 +1,6 @@
 @file:Suppress("unused")
 
-package com.ziopam.kollocol.data.di
+package com.ziopam.kollocol.core.di
 
 import com.ziopam.kollocol.data.repository.AuthRepositoryImpl
 import com.ziopam.kollocol.data.repository.PersonalRepositoryImpl
