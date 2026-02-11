@@ -1,34 +1,33 @@
 package com.ziopam.kollocol.feature.main
 
-import androidx.compose.foundation.layout.padding
+import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.ziopam.kollocol.feature.main.home.HomeScreen
 
-val mainScreenPadding: Dp = 16.dp
-
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MainRootScreen() {
     val tabNavController = rememberNavController()
 
-    Scaffold(
+    Scaffold (
         bottomBar = {
             MainBottomBar(navController = tabNavController)
         }
-    ) { innerPadding ->
+    ) { _ ->
         NavHost(
             navController = tabNavController,
             startDestination = MainRoute.HOME,
-            modifier = Modifier.padding(innerPadding).padding(mainScreenPadding)
+            modifier = Modifier.fillMaxSize()
         ) {
             composable(MainRoute.HOME) {
-                Text("Home screen")
+                HomeScreen()
             }
 
             composable(MainRoute.GROUPS) {

@@ -23,6 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ziopam.kollocol.core.ui.input.Otp4CodeInput
 import com.ziopam.kollocol.core.ui.theme.AppTheme
 import com.ziopam.kollocol.core.ui.theme.Typography
 import com.ziopam.kollocol.core.ui.uiText.UiText

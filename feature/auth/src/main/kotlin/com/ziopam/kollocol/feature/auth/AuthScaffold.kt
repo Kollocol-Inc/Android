@@ -36,7 +36,7 @@ fun AuthScaffold(
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 50.dp)
+                    .padding(top = 40.dp)
             )
 
             Spacer(Modifier.weight(1f))
