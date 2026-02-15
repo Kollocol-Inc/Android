@@ -41,7 +41,7 @@ fun PersonalScreen(
     ) {
         Text(
             text = stringResource(R.string.registration),
-            style = Typography.headlineSmall,
+            style = Typography.headlineMedium,
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()
         )
@@ -119,7 +119,7 @@ private fun PersonalScreenPreview() {
     val state = remember { mutableStateOf(PersonalUiState(
         firstName = "",
         lastName = "",
-        avatarUri = Uri.EMPTY,
+        avatarUri = null,
         error = null
     ))}
 

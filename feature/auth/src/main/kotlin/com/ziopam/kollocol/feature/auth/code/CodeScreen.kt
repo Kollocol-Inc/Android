@@ -23,7 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.ziopam.kollocol.core.ui.input.Otp4CodeInput
+import com.ziopam.kollocol.core.ui.input.OtpCodeInput
 import com.ziopam.kollocol.core.ui.theme.AppTheme
 import com.ziopam.kollocol.core.ui.theme.Typography
 import com.ziopam.kollocol.core.ui.uiText.UiText
@@ -68,13 +68,13 @@ fun CodeScreen(
     ) {
         Text(
             text = stringResource(R.string.verification_code),
-            style = Typography.headlineSmall,
+            style = Typography.headlineMedium,
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()
         )
 
         if (!isLoading) {
-            Otp4CodeInput(
+            OtpCodeInput(
                 code = code,
                 onCodeChange = onCodeChange,
                 onComplete = onCodeCompletion,

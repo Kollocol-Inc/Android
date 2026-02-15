@@ -26,25 +26,27 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import com.ziopam.kollocol.core.ui.theme.MAX_EDITTEXT_WIDTH
 
 @Composable
-fun Otp4CodeInput(
+fun OtpCodeInput(
     code: String,
     onCodeChange: (String) -> Unit,
     onComplete: () -> Unit,
     modifier: Modifier = Modifier,
+    cellsAmount: Int = 4,
     cellSize: DpSize = DpSize(52.dp, 56.dp),
-    cellSpacing: Dp = 12.dp,
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(12.dp),
     shape: RoundedCornerShape = RoundedCornerShape(12.dp),
+    borderColor: Color = MaterialTheme.colorScheme.primary,
     animateError: Boolean = false
 ) {
     val focusRequester = remember { FocusRequester() }
@@ -53,7 +55,7 @@ fun Otp4CodeInput(
     val interactionSource = remember { MutableInteractionSource() }
 
     LaunchedEffect(code) {
-        if (code.length == 4) {
+        if (code.length == cellsAmount) {
             keyboardController?.hide()
             onComplete()
         }
@@ -115,22 +117,23 @@ fun Otp4CodeInput(
         )
 
         Row(
-            horizontalArrangement = Arrangement.spacedBy(cellSpacing),
+            horizontalArrangement = horizontalArrangement,
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.graphicsLayer(
                 translationX = shakeX.value
             )
         ) {
-            repeat(4) { index ->
+            repeat(cellsAmount) { index ->
                 val char = code.getOrNull(index)?.toString().orEmpty()
 
-                val isActive = (index == code.length || (code.length == 4 && index == 3))
+                val isActive = (index == code.length || (code.length == cellsAmount && index == cellsAmount - 1))
 
                 OtpCell(
                     char = char,
                     isActive = isActive,
                     size = cellSize,
                     shape = shape,
+                    borderColor = borderColor,
                     modifier = Modifier.clickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null
@@ -147,6 +150,7 @@ private fun OtpCell(
     isActive: Boolean,
     size: DpSize,
     shape: RoundedCornerShape,
+    borderColor: Color = MaterialTheme.colorScheme.primary,
     modifier: Modifier = Modifier,
 ) {
     Surface(
@@ -154,7 +158,7 @@ private fun OtpCell(
             .size(size.width, size.height)
             .border(
                 width = if (isActive) 2.dp else 1.dp,
-                color = if (isActive) MaterialTheme.colorScheme.primary
+                color = if (isActive) borderColor
                 else MaterialTheme.colorScheme.outline,
                 shape = shape
             ),
@@ -164,7 +168,7 @@ private fun OtpCell(
         Box(contentAlignment = Alignment.Center) {
             Text(
                 text = char,
-                style = MaterialTheme.typography.headlineSmall,
+                style = MaterialTheme.typography.headlineMedium,
                 color = MaterialTheme.colorScheme.onPrimaryContainer
             )
         }

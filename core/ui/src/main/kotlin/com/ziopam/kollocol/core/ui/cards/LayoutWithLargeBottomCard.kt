@@ -35,8 +35,6 @@ fun LayoutWithLargeBottomCard(
             content = contentAbove
         )
 
-        Spacer(Modifier.height(10.dp))
-
         LargeBottomCard(
             modifier = Modifier.weight(1f),
             content = content

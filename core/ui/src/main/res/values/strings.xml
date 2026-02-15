@@ -3,4 +3,7 @@
     <string name="pick_a_photo">Выбрать фото</string>
     <string name="can_select_only_photos">Можно выбрать только фотографию</string>
     <string name="file_too_big">Файл слишком большой (макс. 1 МБ)</string>
+
+    <string name="sync_quiz">Синхронный</string>
+    <string name="async_quiz">Асинхронный</string>
 </resources>

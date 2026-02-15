@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.ziopam.kollocol.core.ui.R
@@ -29,6 +30,7 @@ fun AvatarPicker(
     avatarUri: Uri?,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    defaultIconSize: Dp = 50.dp,
     borderColor: Color = MaterialTheme.colorScheme.primary,
     onLongClick: (() -> Unit)? = null,
     overlay: (@Composable BoxScope.() -> Unit)? = null,
@@ -68,7 +70,7 @@ fun AvatarPicker(
                 Icon(
                     imageVector = ImageVector.vectorResource(R.drawable.user),
                     contentDescription = stringResource(R.string.pick_a_photo),
-                    modifier = Modifier.size(50.dp),
+                    modifier = Modifier.size(defaultIconSize),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }

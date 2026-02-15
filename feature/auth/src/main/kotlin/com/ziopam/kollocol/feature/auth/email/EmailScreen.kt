@@ -81,7 +81,7 @@ fun EmailScreen(
     ) {
         Text(
             text = stringResource(R.string.email),
-            style = Typography.headlineSmall,
+            style = Typography.headlineMedium,
             textAlign = TextAlign.Center,
             modifier = Modifier.fillMaxWidth()
         )

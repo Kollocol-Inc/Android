@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -15,6 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.ziopam.kollocol.core.ui.AppScaffold
+import com.ziopam.kollocol.core.ui.buttons.DefaultButton
 import com.ziopam.kollocol.core.ui.theme.MAX_BUTTON_WIDTH
 import com.ziopam.kollocol.core.ui.theme.Typography
 
@@ -32,26 +34,23 @@ fun AuthScaffold(
         ) {
             Text(
                 text= stringResource(R.string.app_name),
-                style= Typography.headlineMedium,
+                style= MaterialTheme.typography.headlineLarge,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 40.dp)
+                    .padding(top = 50.dp)
             )
 
             Spacer(Modifier.weight(1f))
             content()
             Spacer(Modifier.weight(1f))
 
-            Button(
+            DefaultButton(
+                text = buttonText,
                 onClick = onButtonClick,
-                enabled = isButtonEnabled,
-                modifier = Modifier
-                    .widthIn(max = MAX_BUTTON_WIDTH.dp)
-                    .fillMaxWidth()
-            ) {
-                Text(buttonText)
-            }
+                isButtonEnabled = isButtonEnabled,
+                modifier = Modifier.fillMaxWidth()
+            )
         }
     }
 }

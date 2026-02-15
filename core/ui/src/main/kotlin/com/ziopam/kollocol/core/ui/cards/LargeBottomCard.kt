@@ -37,7 +37,7 @@ fun LargeBottomCard(
             containerColor = Color.White
         ),
         elevation = CardDefaults.cardElevation(
-            defaultElevation = 4.dp
+            defaultElevation = 6.dp
         )
     ) {
         Box(

@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 val contentPadding = PaddingValues(
-    top = 20.dp,
+    top = 10.dp,
     start = 10.dp,
     end = 10.dp,
     bottom = 10.dp

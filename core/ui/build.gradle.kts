@@ -43,9 +43,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:common"))
-    
-    // Need core:common resources for error strings
+    implementation(project(":domain"))
     api(project(":core:common"))
     
     implementation(libs.androidx.core.ktx)
