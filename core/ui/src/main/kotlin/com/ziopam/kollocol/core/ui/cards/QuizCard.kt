@@ -1,7 +1,5 @@
 package com.ziopam.kollocol.core.ui.cards
 
-import androidx.compose.ui.res.vectorResource
-import com.ziopam.kollocol.core.ui.R
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,16 +10,23 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ziopam.kollocol.core.ui.R
 import com.ziopam.kollocol.core.ui.preview.quizzesInfoExample
 import com.ziopam.kollocol.core.ui.theme.AppTheme
 import com.ziopam.kollocol.domain.model.QuizInfo
@@ -50,7 +55,7 @@ fun QuizCard(
                 verticalAlignment = Alignment.Top
             ) {
                 Text(
-                    text = quizInfo.quizCode,
+                    text = quizInfo.accessCode,
                     style = MaterialTheme.typography.headlineMedium.copy(
                         fontSize = 16.sp
                     ),
@@ -61,10 +66,9 @@ fun QuizCard(
                     horizontalAlignment = Alignment.End,
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    StatLine(text = quizInfo.questionsCount.toString(), icon = ImageVector.vectorResource(R.drawable.question_in_circle))
-                    quizInfo.deadline?.let {
-                        StatLine(text = it, icon = ImageVector.vectorResource(R.drawable.clock))
-                    }
+                    StatLine(text = quizInfo.totalQuestions.toString(), icon = ImageVector.vectorResource(R.drawable.question_in_circle))
+                    StatLine(text = quizInfo.totalTime, icon = ImageVector.vectorResource(R.drawable.clock))
+                    StatLine(text = quizInfo.deadline, icon = ImageVector.vectorResource(R.drawable.calendar))
                 }
             }
 
@@ -119,7 +123,7 @@ fun QuizCard(
 
 @Composable
 private fun StatLine(
-    text: String,
+    text: String?,
     icon: ImageVector,
     modifier: Modifier = Modifier,
 ) {
@@ -128,17 +132,21 @@ private fun StatLine(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(5.dp)
     ) {
-        Text(
-            text = text,
-            style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f)
-        )
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.size(18.dp)
-        )
+        if (text != null) {
+            Text(
+                text = text,
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f)
+            )
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.size(18.dp)
+            )
+        } else {
+            Spacer(Modifier.height(18.dp))
+        }
     }
 }
 

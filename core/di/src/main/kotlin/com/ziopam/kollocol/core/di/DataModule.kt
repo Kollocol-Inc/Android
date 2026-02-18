@@ -3,10 +3,14 @@
 package com.ziopam.kollocol.core.di
 
 import com.ziopam.kollocol.data.repository.AuthRepositoryImpl
+import com.ziopam.kollocol.data.repository.PersonalOnlineRepositoryImpl
 import com.ziopam.kollocol.data.repository.PersonalRepositoryImpl
+import com.ziopam.kollocol.data.repository.QuizRepositoryImpl
 import com.ziopam.kollocol.data.repository.UserRepositoryImpl
 import com.ziopam.kollocol.domain.repository.AuthRepository
+import com.ziopam.kollocol.domain.repository.PersonalOnlineRepository
 import com.ziopam.kollocol.domain.repository.PersonalRepository
+import com.ziopam.kollocol.domain.repository.QuizRepository
 import com.ziopam.kollocol.domain.repository.UserRepository
 import dagger.Binds
 import dagger.Module
@@ -28,4 +32,12 @@ abstract class DataModule {
     @Binds
     @Singleton
     abstract fun bindPersonalRepository(impl: PersonalRepositoryImpl): PersonalRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindPersonalOnlineRepository(impl: PersonalOnlineRepositoryImpl): PersonalOnlineRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindQuizRepository(impl: QuizRepositoryImpl): QuizRepository
 }

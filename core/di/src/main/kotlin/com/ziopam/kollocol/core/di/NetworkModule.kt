@@ -6,6 +6,7 @@ import com.ziopam.kollocol.core.network.AuthInterceptor
 import com.ziopam.kollocol.core.network.SafeApiCall
 import com.ziopam.kollocol.core.network.TokenAuthenticator
 import com.ziopam.kollocol.data.datasource.remote.auth.AuthApi
+import com.ziopam.kollocol.data.datasource.remote.quiz.QuizApi
 import com.ziopam.kollocol.data.datasource.remote.user.UserApi
 import com.ziopam.kollocol.domain.repository.SessionRepository
 import dagger.Module
@@ -81,4 +82,9 @@ object NetworkModule {
     @Singleton
     fun provideUserApi(retrofit: Retrofit): UserApi =
         retrofit.create(UserApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideQuizApi(retrofit: Retrofit): QuizApi =
+        retrofit.create(QuizApi::class.java)
 }

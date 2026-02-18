@@ -3,7 +3,10 @@ package com.ziopam.kollocol.core.di
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.room.Room
 import com.ziopam.kollocol.core.session.datastore.dataStore
+import com.ziopam.kollocol.data.storage.room.AppDatabase
+import com.ziopam.kollocol.data.storage.room.QuizInstanceDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,4 +24,19 @@ object StorageModule {
     fun providePreferencesDataStore(
         @ApplicationContext context: Context
     ): DataStore<Preferences> = context.dataStore
+
+    @Provides
+    @Singleton
+    fun provideAppDatabase(
+        @ApplicationContext context: Context
+    ): AppDatabase = Room.databaseBuilder(
+        context,
+        AppDatabase::class.java,
+        "kollocol_database"
+    ).build()
+
+    @Provides
+    @Singleton
+    fun provideQuizInstanceDao(database: AppDatabase): QuizInstanceDao =
+        database.quizInstanceDao()
 }

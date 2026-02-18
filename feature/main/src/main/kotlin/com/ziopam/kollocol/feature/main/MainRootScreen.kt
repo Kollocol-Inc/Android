@@ -9,7 +9,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.ziopam.kollocol.core.ui.preview.quizzesInfoExample
 import com.ziopam.kollocol.feature.main.home.HomeScreen
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -28,7 +27,7 @@ fun MainRootScreen() {
             modifier = Modifier.fillMaxSize()
         ) {
             composable(MainRoute.HOME) {
-                HomeScreen("Павел Попов", quizzesInfoExample, quizzesInfoExample, {},{})
+                HomeScreen()
             }
 
             composable(MainRoute.GROUPS) {
