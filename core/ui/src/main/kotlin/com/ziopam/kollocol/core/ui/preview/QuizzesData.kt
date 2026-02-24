@@ -6,6 +6,7 @@ import com.ziopam.kollocol.domain.model.QuizMode
 val quizzesInfoExample = listOf(
     QuizInfo(
         accessCode = "127287",
+        totalTime = "11 мин",
         totalQuestions = 10,
         mode = QuizMode.ASYNC,
         title = "Коллоквиум Android",
