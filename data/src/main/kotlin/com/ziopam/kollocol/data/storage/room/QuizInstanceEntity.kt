@@ -2,6 +2,7 @@ package com.ziopam.kollocol.data.storage.room
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.ziopam.kollocol.core.common.TimeFormatter
 import com.ziopam.kollocol.domain.model.QuizInfo
 import com.ziopam.kollocol.domain.model.QuizMode
 
@@ -29,15 +30,6 @@ fun QuizInstanceEntity.toQuizInfo(): QuizInfo {
             else -> QuizMode.ASYNC
         },
         deadline = deadline,
-        totalTime = totalTime?.let { formatTime(it) }
+        totalTime = totalTime?.let { TimeFormatter.formatTime(it) }
     )
-}
-
-private fun formatTime(seconds: Int): String {
-    val minutes = seconds / 60
-    return if (minutes > 0) {
-        "$minutes мин"
-    } else {
-        "$seconds сек"
-    }
 }

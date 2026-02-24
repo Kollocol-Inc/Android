@@ -12,8 +12,6 @@ import com.ziopam.kollocol.domain.model.QuizInfo
 import com.ziopam.kollocol.feature.main.MainScaffoldPreview
 
 
-// TODO Поправить иконки
-// TODO Поправить текст
 // TODO Исправить цвета
 // TODO Сделать кнопку дополнительной информации
 // TODO Переделать нижнюю панель

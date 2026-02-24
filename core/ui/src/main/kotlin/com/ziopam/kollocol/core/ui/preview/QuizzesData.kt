@@ -1,12 +1,13 @@
 package com.ziopam.kollocol.core.ui.preview
 
+import com.ziopam.kollocol.core.common.TimeFormatter
 import com.ziopam.kollocol.domain.model.QuizInfo
 import com.ziopam.kollocol.domain.model.QuizMode
 
 val quizzesInfoExample = listOf(
     QuizInfo(
         accessCode = "127287",
-        totalTime = "11 мин",
+        totalTime = TimeFormatter.formatTime(8400),
         totalQuestions = 10,
         mode = QuizMode.ASYNC,
         title = "Коллоквиум Android",

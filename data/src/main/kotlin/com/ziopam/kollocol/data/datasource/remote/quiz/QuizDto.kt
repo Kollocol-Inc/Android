@@ -62,13 +62,4 @@ data class InstanceDto(
             instanceType = type
         )
     }
-
-    private fun formatTime(seconds: Int): String {
-        val minutes = seconds / 60
-        return if (minutes > 0) {
-            "$minutes мин"
-        } else {
-            "$seconds сек"
-        }
-    }
 }
