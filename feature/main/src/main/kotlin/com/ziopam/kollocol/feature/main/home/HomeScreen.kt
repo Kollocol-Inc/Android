@@ -3,7 +3,7 @@ package com.ziopam.kollocol.feature.main.home
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ziopam.kollocol.core.ui.cards.LayoutWithLargeBottomCard
@@ -12,10 +12,10 @@ import com.ziopam.kollocol.domain.model.QuizInfo
 import com.ziopam.kollocol.feature.main.MainScaffoldPreview
 
 
-// TODO Исправить цвета
 // TODO Сделать кнопку дополнительной информации
 // TODO Переделать нижнюю панель
 // TODO Сделать ввода кода
+// TODO Центрировать текст
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
@@ -51,7 +51,7 @@ private fun HomeScreenContent(
     )
 }
 
-@Preview
+@PreviewLightDark
 @Composable
 private fun HomeScreenPreview() {
     MainScaffoldPreview {

@@ -43,10 +43,12 @@ fun OtpCodeInput(
     onComplete: () -> Unit,
     modifier: Modifier = Modifier,
     cellsAmount: Int = 4,
-    cellSize: DpSize = DpSize(52.dp, 56.dp),
+    cellSize: DpSize = DpSize(48.dp, 71.dp),
     horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(12.dp),
     shape: RoundedCornerShape = RoundedCornerShape(12.dp),
     borderColor: Color = MaterialTheme.colorScheme.primary,
+    cellColor: Color = MaterialTheme.colorScheme.primaryContainer,
+    useActive: Boolean = true,
     animateError: Boolean = false
 ) {
     val focusRequester = remember { FocusRequester() }
@@ -126,7 +128,7 @@ fun OtpCodeInput(
             repeat(cellsAmount) { index ->
                 val char = code.getOrNull(index)?.toString().orEmpty()
 
-                val isActive = (index == code.length || (code.length == cellsAmount && index == cellsAmount - 1))
+                val isActive = useActive && (index == code.length || (code.length == cellsAmount && index == cellsAmount - 1))
 
                 OtpCell(
                     char = char,
@@ -134,6 +136,7 @@ fun OtpCodeInput(
                     size = cellSize,
                     shape = shape,
                     borderColor = borderColor,
+                    cellColor = cellColor,
                     modifier = Modifier.clickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null
@@ -151,6 +154,7 @@ private fun OtpCell(
     size: DpSize,
     shape: RoundedCornerShape,
     borderColor: Color = MaterialTheme.colorScheme.primary,
+    cellColor: Color = MaterialTheme.colorScheme.primaryContainer,
     modifier: Modifier = Modifier,
 ) {
     Surface(
@@ -163,7 +167,7 @@ private fun OtpCell(
                 shape = shape
             ),
         shape = shape,
-        color = MaterialTheme.colorScheme.primaryContainer
+        color = cellColor
     ) {
         Box(contentAlignment = Alignment.Center) {
             Text(

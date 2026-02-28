@@ -5,17 +5,17 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.graphics.Color
 
 val LightMaterialScheme = lightColorScheme(
-    primary = Color(0xFF5B5CE2),
+    primary = Color(0xFF534DC9),
     onPrimary = Color(0xFFFFFFFF),
-    primaryContainer = Color(0xFFE4E5FF),
+    primaryContainer = Color(0x1A848484),
 
     secondary = Color(0xFF8B8FE8),
     secondaryContainer = Color(0xFFF0F1FF),
 
-    background = Color(0xFFF4F5F7),
+    background = Color(0xFFE9E7F4),
     onBackground = Color(0xFF1B1C1F),
 
-    surface = Color(0xFFFFFFFF),
+    surface = Color(0xFFF7F4FB),
     onSurface = Color(0xFF1B1C1F),
     surfaceVariant = Color(0xFFECEFF3),
     onSurfaceVariant = Color(0xFF5A5D66),
@@ -24,20 +24,20 @@ val LightMaterialScheme = lightColorScheme(
 )
 
 val DarkMaterialScheme = darkColorScheme(
-    primary = Color(0xFF37379F),
+    primary = Color(0xFF534DC9),
     onPrimary = Color(0xFFFFFFFF),
     primaryContainer = Color(0xFF2F305E),
 
     secondary = Color(0xFFA2A5FF),
     secondaryContainer = Color(0xFF24254A),
 
-    background = Color(0xFF0F1015),
+    background = Color(0xFF1F202C),
     onBackground = Color(0xFFEDEDF2),
 
-    surface = Color(0xFF1A1B22),
+    surface = Color(0xFF2A2B38),
     onSurface = Color(0xFFEDEDF2),
-    surfaceVariant = Color(0xFF2A2B35),
+    surfaceVariant = Color(0xFF353542),
     onSurfaceVariant = Color(0xFFB7B8C4),
 
-    outline = Color(0xFF3A3B45),
+    outline = Color(0xE63A3B45),
 )

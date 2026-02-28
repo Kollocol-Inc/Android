@@ -19,15 +19,14 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import com.ziopam.kollocol.feature.main.R
 import com.ziopam.kollocol.core.ui.avatar.AvatarPicker
 import com.ziopam.kollocol.core.ui.buttons.CircleIconButton
 import com.ziopam.kollocol.core.ui.buttons.DefaultButton
 import com.ziopam.kollocol.core.ui.contentPadding
 import com.ziopam.kollocol.core.ui.input.OtpCodeInput
 import com.ziopam.kollocol.core.ui.theme.AppTheme
+import com.ziopam.kollocol.feature.main.R
 
 @Composable
 fun HomeAbove(
@@ -71,10 +70,11 @@ fun HomeAbove(
             onCodeChange = {},
             onComplete = {},
             cellsAmount = 6,
-            cellSize = DpSize(48.dp, 71.dp),
             shape = RoundedCornerShape(16.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             borderColor = MaterialTheme.colorScheme.outline,
+            cellColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
+            useActive = false,
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
 
