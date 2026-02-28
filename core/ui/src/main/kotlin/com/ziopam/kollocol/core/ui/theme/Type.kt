@@ -72,8 +72,8 @@ val Typography = Typography(
     bodySmall = TextStyle(
         fontFamily = InterFontFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 16.sp,
-        lineHeight = 24.sp
+        fontSize = 12.sp,
+        lineHeight = 16.sp
     ),
 
     labelLarge = TextStyle(

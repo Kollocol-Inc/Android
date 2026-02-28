@@ -181,6 +181,6 @@ private fun EmailScreenPreview(){
     var email by remember { mutableStateOf("") }
 
     AppTheme {
-        EmailScreen(email, { email = it }, {}, isButtonEnabled = true, isLoading = true)
+        EmailScreen(email, { email = it }, {}, isButtonEnabled = true, isLoading = false)
     }
 }

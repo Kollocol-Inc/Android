@@ -12,7 +12,6 @@ import com.ziopam.kollocol.domain.model.QuizInfo
 import com.ziopam.kollocol.feature.main.MainScaffoldPreview
 
 
-// TODO Сделать кнопку дополнительной информации
 // TODO Переделать нижнюю панель
 // TODO Сделать ввода кода
 // TODO Центрировать текст

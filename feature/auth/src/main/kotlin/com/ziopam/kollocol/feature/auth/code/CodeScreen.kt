@@ -21,7 +21,7 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.ziopam.kollocol.core.ui.input.OtpCodeInput
 import com.ziopam.kollocol.core.ui.theme.AppTheme
@@ -109,7 +109,7 @@ fun CodeScreen(
                         )
                     }
                 },
-                style = Typography.bodySmall,
+                style = Typography.bodyMedium,
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -147,7 +147,7 @@ fun CodeScreen(vm: AuthViewModel) {
     )
 }
 
-@Preview
+@PreviewLightDark
 @Composable
 private fun CodeScreenPreview(){
     val email = "example@mail.com"

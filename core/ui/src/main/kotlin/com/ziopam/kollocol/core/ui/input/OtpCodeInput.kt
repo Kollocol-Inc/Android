@@ -3,7 +3,6 @@ package com.ziopam.kollocol.core.ui.input
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.keyframes
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -34,6 +33,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import com.ziopam.kollocol.core.ui.clickableNoIndication
 import com.ziopam.kollocol.core.ui.theme.MAX_EDITTEXT_WIDTH
 
 @Composable
@@ -93,11 +93,7 @@ fun OtpCodeInput(
 
     Box(
         modifier = modifier
-            .clickable (
-                interactionSource = interactionSource,
-                indication = null
-            )
-            { focusAndShowKeyboard() },
+            .clickableNoIndication { focusAndShowKeyboard() },
         contentAlignment = Alignment.Center
     ) {
         TextField(
@@ -137,10 +133,7 @@ fun OtpCodeInput(
                     shape = shape,
                     borderColor = borderColor,
                     cellColor = cellColor,
-                    modifier = Modifier.clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = null
-                    ) { focusAndShowKeyboard() }
+                    modifier = Modifier.clickableNoIndication { focusAndShowKeyboard() }
                 )
             }
         }

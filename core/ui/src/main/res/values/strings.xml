@@ -6,4 +6,7 @@
 
     <string name="sync_quiz">Синхронный</string>
     <string name="async_quiz">Асинхронный</string>
+    <string name="quiz_mode_info">Информация о режиме квиза</string>
+    <string name="sync_quiz_description">Все участники проходят квиз одновременно под контролем создателя</string>
+    <string name="async_quiz_description">Участники могут проходить квиз в любое время до дедлайна</string>
 </resources>
