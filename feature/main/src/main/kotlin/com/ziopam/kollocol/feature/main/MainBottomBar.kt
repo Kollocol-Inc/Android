@@ -3,6 +3,7 @@ package com.ziopam.kollocol.feature.main
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -54,9 +55,11 @@ fun MainBottomBar(
                 shape = RoundedCornerShape(24.dp),
                 shadow = Shadow(
                     radius = 10.dp,
-                    spread = 1.dp,
+                    spread = if (isSystemInDarkTheme()) 1.dp else 0.dp,
                     color = DefaultShadowColor.copy(alpha = 0.2f),
-                    offset = DpOffset(x = 0.dp, 2.dp),
+                    offset = DpOffset(
+                        x = 0.dp,
+                        y = if (isSystemInDarkTheme()) 2.dp else 6.dp),
                 )
             ),
         contentAlignment = Alignment.Center
