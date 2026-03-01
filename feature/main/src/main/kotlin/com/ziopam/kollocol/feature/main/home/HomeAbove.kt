@@ -73,7 +73,7 @@ fun HomeAbove(
             shape = RoundedCornerShape(16.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             borderColor = MaterialTheme.colorScheme.outline,
-            cellColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.3f),
+            cellColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
             useActive = false,
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )

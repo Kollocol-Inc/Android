@@ -16,7 +16,7 @@ val LightMaterialScheme = lightColorScheme(
     background = Color(0xFFF4F5F7),
     onBackground = Color(0xFF1B1C1F),
 
-    surface = Color(0xFFF7F4FB),
+    surface = Color(0xFFF7F7FF),
     onSurface = Color(0xFF1B1C1F),
     surfaceVariant = Color(0xFFEAEAEA),
     onSurfaceVariant = Color(0xFF5A5D66),
