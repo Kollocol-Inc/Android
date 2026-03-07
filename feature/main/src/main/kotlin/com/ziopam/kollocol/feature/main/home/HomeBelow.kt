@@ -2,6 +2,7 @@ package com.ziopam.kollocol.feature.main.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -36,10 +37,10 @@ fun HomeBelow(
         if (participatingQuizzes.isEmpty()) {
             Text(
                 text = stringResource(R.string.no_participating_quizzes),
-                style = MaterialTheme.typography.bodySmall,
+                style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(vertical = 20.dp)
+                modifier = Modifier.fillMaxWidth().padding(vertical = 20.dp)
             )
         } else {
             QuizCardList(participatingQuizzes, onParticipatingQuizClick)
@@ -54,10 +55,10 @@ fun HomeBelow(
         if (runningQuizzes.isEmpty()) {
             Text(
                 text = stringResource(R.string.no_running_quizzes),
-                style = MaterialTheme.typography.bodySmall,
+                style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(vertical = 20.dp)
+                modifier = Modifier.fillMaxWidth().padding(vertical = 20.dp)
             )
         } else {
             QuizCardList(runningQuizzes, onRunningQuizClick)
