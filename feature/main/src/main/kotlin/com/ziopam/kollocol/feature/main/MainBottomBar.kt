@@ -39,6 +39,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.ziopam.kollocol.core.ui.clickableNoIndication
 
+private val selectionWidthPadding = 10.dp
+
 @Composable
 fun MainBottomBar(
     navController: NavHostController
@@ -80,7 +82,7 @@ fun MainBottomBar(
                 val tabWidth = maxWidth / tabsCount
 
                 val indicatorOffsetX by animateDpAsState(
-                    targetValue = selectedIndex * tabWidth,
+                    targetValue = selectedIndex * tabWidth + selectionWidthPadding / 2,
                     animationSpec = tween(durationMillis = 220),
                     label = "bottomBarIndicatorOffset"
                 )
@@ -106,7 +108,12 @@ fun MainBottomBar(
                         ) {
                             Icon(
                                 modifier = Modifier.size(26.dp),
-                                painter = painterResource(tab.iconRes),
+                                painter = painterResource(
+                                    if (selected)
+                                        tab.iconResFilled
+                                    else
+                                        tab.iconRes
+                                ),
                                 contentDescription = stringResource(tab.labelRes),
                                 tint = if (selected)
                                     MaterialTheme.colorScheme.primary
@@ -125,12 +132,12 @@ fun MainBottomBar(
                 ) {
                     Box(
                         modifier = Modifier
+                            .width(tabWidth - selectionWidthPadding)
                             .offset(x = indicatorOffsetX)
                             .padding(vertical = 4.dp)
-                            .width(tabWidth)
                             .fillMaxHeight()
                             .clip(RoundedCornerShape(22.dp))
-                            .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.08f))
+                            .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.04f))
                     )
                 }
             }
