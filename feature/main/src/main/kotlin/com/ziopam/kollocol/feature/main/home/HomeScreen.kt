@@ -3,6 +3,9 @@ package com.ziopam.kollocol.feature.main.home
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -12,9 +15,6 @@ import com.ziopam.kollocol.domain.model.QuizInfo
 import com.ziopam.kollocol.feature.main.MainScaffoldPreview
 
 
-// TODO Переделать нижнюю панель
-// TODO Сделать ввода кода
-// TODO Центрировать текст
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
@@ -32,20 +32,24 @@ fun HomeScreen(
         participatingQuizzes = state.participatingQuizzes,
         runningQuizzes = state.hostingQuizzes,
         onParticipatingQuizClick = onParticipatingQuizClick,
-        onRunningQuizClick = onRunningQuizClick
+        onRunningQuizClick = onRunningQuizClick,
+        code = state.quizCode,
+        codeChanged = viewModel::onCodeChanged
     )
 }
 
 @Composable
 private fun HomeScreenContent(
     personName: String,
+    code: String,
+    codeChanged: (String) -> Unit,
     participatingQuizzes: List<QuizInfo>,
     runningQuizzes: List<QuizInfo>,
     onParticipatingQuizClick: (QuizInfo) -> Unit,
     onRunningQuizClick: (QuizInfo) -> Unit
 ) {
     LayoutWithLargeBottomCard(
-        contentAbove = { HomeAbove(personName) },
+        contentAbove = { HomeAbove(personName, code, codeChanged) },
         content = { HomeBelow(participatingQuizzes, runningQuizzes, onParticipatingQuizClick, onRunningQuizClick) }
     )
 }
@@ -53,9 +57,13 @@ private fun HomeScreenContent(
 @PreviewLightDark
 @Composable
 private fun HomeScreenPreview() {
+    var code by remember { mutableStateOf("") }
+
     MainScaffoldPreview {
         HomeScreenContent(
             personName = "Павел Попов",
+            code = code,
+            codeChanged = { code = it },
             participatingQuizzes = quizzesInfoExample,
             runningQuizzes = quizzesInfoExample.reversed(),
             onParticipatingQuizClick = {},

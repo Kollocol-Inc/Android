@@ -3,7 +3,6 @@ package com.ziopam.kollocol.core.ui.input
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.keyframes
 import androidx.compose.foundation.border
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -54,7 +53,6 @@ fun OtpCodeInput(
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
-    val interactionSource = remember { MutableInteractionSource() }
 
     LaunchedEffect(code) {
         if (code.length == cellsAmount) {
@@ -166,7 +164,7 @@ private fun OtpCell(
             Text(
                 text = char,
                 style = MaterialTheme.typography.headlineMedium,
-                color = MaterialTheme.colorScheme.onPrimaryContainer
+                color = MaterialTheme.colorScheme.primary
             )
         }
     }

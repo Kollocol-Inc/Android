@@ -7,6 +7,7 @@ import com.ziopam.kollocol.domain.model.User
 import com.ziopam.kollocol.domain.repository.PersonalOnlineRepository
 import com.ziopam.kollocol.domain.repository.QuizRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
@@ -15,6 +16,7 @@ import javax.inject.Inject
 
 data class HomeUiState(
     val personName: String = "",
+    val quizCode: String = "",
     val participatingQuizzes: List<QuizInfo> = emptyList(),
     val hostingQuizzes: List<QuizInfo> = emptyList(),
 )
@@ -24,14 +26,17 @@ class HomeViewModel @Inject constructor(
     private val quizRepository: QuizRepository,
     private val personalRepository: PersonalOnlineRepository
 ) : ViewModel() {
+    private val quizCode = MutableStateFlow("")
 
     val uiState = combine(
         personalRepository.user,
+        quizCode,
         quizRepository.participatingQuizzes,
         quizRepository.hostingQuizzes,
-    ) { user, participating, hosting ->
+    ) { user, quizCode, participating, hosting ->
         HomeUiState(
             personName = formatPersonName(user),
+            quizCode = quizCode,
             participatingQuizzes = participating,
             hostingQuizzes = hosting,
         )
@@ -41,8 +46,10 @@ class HomeViewModel @Inject constructor(
         initialValue = HomeUiState()
     )
 
+    fun onCodeChanged(code: String) {
+        quizCode.value = code.take(6)
+    }
 
-    // TODO Добавить обработку ошибок
     fun refresh() {
         viewModelScope.launch {
             personalRepository.getUser()

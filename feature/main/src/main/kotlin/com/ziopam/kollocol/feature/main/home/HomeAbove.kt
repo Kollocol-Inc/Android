@@ -31,6 +31,8 @@ import com.ziopam.kollocol.feature.main.R
 @Composable
 fun HomeAbove(
     personName: String,
+    code: String = "",
+    onCodeChanged: (String) -> Unit = {},
     avatarUri: Uri? = null,
     onClick: () -> Unit = {}
 ){
@@ -66,8 +68,8 @@ fun HomeAbove(
         Spacer(Modifier.height(3.dp))
 
         OtpCodeInput(
-            code = "",
-            onCodeChange = {},
+            code = code,
+            onCodeChange = onCodeChanged,
             onComplete = {},
             cellsAmount = 6,
             shape = RoundedCornerShape(16.dp),
