@@ -10,4 +10,9 @@
     <string name="no_participating_quizzes">Нет квизов, в которых вы участвуете</string>
     <string name="currently_running">Провожу</string>
     <string name="no_running_quizzes">Нет квизов, которые вы проводите</string>
+
+    <string name="pending_quizzes">Ожидают оценивания</string>
+    <string name="no_pending_quizzes">Нет квизов ожидающих оценивания</string>
+    <string name="reviewed_quizzes">Оценены</string>
+    <string name="no_reviewed_quizzes">Нет оцененных квизов</string>
 </resources>
