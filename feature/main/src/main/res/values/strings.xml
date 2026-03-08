@@ -15,4 +15,8 @@
     <string name="no_pending_quizzes">Нет квизов ожидающих оценивания</string>
     <string name="reviewed_quizzes">Оценены</string>
     <string name="no_reviewed_quizzes">Нет оцененных квизов</string>
+
+    <string name="my_quizzes">Мои квизы</string>
+    <string name="my_templates">Шаблоны</string>
+    <string name="search">Поиск</string>
 </resources>

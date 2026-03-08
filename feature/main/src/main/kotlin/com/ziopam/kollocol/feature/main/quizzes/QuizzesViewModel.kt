@@ -14,6 +14,7 @@ import javax.inject.Inject
 
 data class MyQuizzesState(
     val searchQuery: String = "",
+    val selectedTabIndex: Int = 0,
     val runningQuizzes: List<QuizInfo> = emptyList(),
     val pendingQuizzes: List<QuizInfo> = emptyList(),
     val reviewedQuizzes: List<QuizInfo> = emptyList(),
@@ -24,15 +25,18 @@ class QuizzesViewModel @Inject constructor(
     private val quizRepository: QuizRepository
 ) : ViewModel() {
     private val searchQuery = MutableStateFlow("")
+    private val selectedTabIndex = MutableStateFlow(0)
 
     val myQuizzesState = combine(
         searchQuery,
+        selectedTabIndex,
         quizRepository.runningQuizzes,
         quizRepository.pendingQuizzes,
         quizRepository.reviewedQuizzes
-    ) { query, running, pending, reviewed ->
+    ) { query, tabIndex, running, pending, reviewed ->
         MyQuizzesState(
             searchQuery = query,
+            selectedTabIndex = tabIndex,
             runningQuizzes = filterQuizzesByQuery(running, query),
             pendingQuizzes = filterQuizzesByQuery(pending, query),
             reviewedQuizzes = filterQuizzesByQuery(reviewed, query)
@@ -45,6 +49,10 @@ class QuizzesViewModel @Inject constructor(
 
     fun onSearchQueryChange(query: String) {
         searchQuery.value = query
+    }
+
+    fun onTabSelected(index: Int) {
+        selectedTabIndex.value = index
     }
 
     fun refresh() {

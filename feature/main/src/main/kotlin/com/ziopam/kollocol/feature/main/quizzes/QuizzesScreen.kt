@@ -30,7 +30,9 @@ fun QuizzesScreen(
         pendingQuizzes = state.pendingQuizzes,
         reviewedQuizzes = state.reviewedQuizzes,
         searchQuery = state.searchQuery,
+        selectedTabIndex = state.selectedTabIndex,
         onSearchQueryChange = viewModel::onSearchQueryChange,
+        onTabSelected = viewModel::onTabSelected,
         onQuizClick = onQuizClick
     )
 }
@@ -41,11 +43,20 @@ private fun QuizzesScreen(
     pendingQuizzes: List<QuizInfo>,
     reviewedQuizzes: List<QuizInfo>,
     searchQuery: String,
+    selectedTabIndex: Int,
     onSearchQueryChange: (String) -> Unit,
+    onTabSelected: (Int) -> Unit,
     onQuizClick: (QuizInfo) -> Unit
 ) {
     LayoutWithLargeBottomCard(
-        contentAbove = { QuizzesAbove(searchQuery, onSearchQueryChange) },
+        contentAbove = {
+            QuizzesAbove(
+                searchString = searchQuery,
+                selectedTabIndex = selectedTabIndex,
+                onSearchStringChange = onSearchQueryChange,
+                onTabSelected = onTabSelected
+            )
+        },
         content = { MyQuizzesBelow(runningQuizzes, pendingQuizzes, reviewedQuizzes, onQuizClick) }
     )
 }
@@ -61,7 +72,9 @@ private fun QuizzesScreenPreview() {
             pendingQuizzes = quizzesInfoExample,
             reviewedQuizzes = emptyList(),
             searchQuery = text,
+            selectedTabIndex = 0,
             onSearchQueryChange = { text = it },
+            onTabSelected = {},
             onQuizClick = {}
         )
     }
