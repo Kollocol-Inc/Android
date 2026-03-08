@@ -16,7 +16,8 @@ data class QuizInstanceEntity(
     val totalQuestions: Int,
     val totalTime: Int?,
     val deadline: String?,
-    val instanceType: String // "participating" or "hosting"
+    val instanceType: String, // "participating" or "hosting"
+    val status: String? = null // quiz status from server
 )
 
 fun QuizInstanceEntity.toQuizInfo(): QuizInfo {

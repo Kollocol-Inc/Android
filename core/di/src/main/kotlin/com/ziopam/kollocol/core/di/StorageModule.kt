@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.room.Room
 import com.ziopam.kollocol.core.session.datastore.dataStore
 import com.ziopam.kollocol.data.storage.room.AppDatabase
+import com.ziopam.kollocol.data.storage.room.MIGRATION_1_2
 import com.ziopam.kollocol.data.storage.room.QuizInstanceDao
 import dagger.Module
 import dagger.Provides
@@ -33,7 +34,7 @@ object StorageModule {
         context,
         AppDatabase::class.java,
         "kollocol_database"
-    ).build()
+    ).addMigrations(MIGRATION_1_2).build()
 
     @Provides
     @Singleton

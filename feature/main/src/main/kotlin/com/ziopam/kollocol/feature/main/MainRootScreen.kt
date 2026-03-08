@@ -9,7 +9,6 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.ziopam.kollocol.core.ui.preview.quizzesInfoExample
 import com.ziopam.kollocol.feature.main.home.HomeScreen
 import com.ziopam.kollocol.feature.main.quizzes.QuizzesScreen
 
@@ -37,14 +36,7 @@ fun MainRootScreen() {
             }
 
             composable(MainRoute.QUIZZES) {
-                QuizzesScreen(
-                    quizzesInfoExample,
-                    emptyList(),
-                    quizzesInfoExample,
-                    "",
-                    {},
-                    {}
-                )
+                QuizzesScreen()
             }
 
             composable(MainRoute.PROFILE) {

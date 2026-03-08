@@ -59,7 +59,8 @@ data class InstanceDto(
             totalQuestions = totalQuestions,
             totalTime = totalTime,
             deadline = deadline,
-            instanceType = type
+            instanceType = type,
+            status = status
         )
     }
 }

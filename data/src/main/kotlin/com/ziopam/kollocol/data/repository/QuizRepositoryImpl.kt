@@ -23,6 +23,20 @@ class QuizRepositoryImpl @Inject constructor(
         entities.map { it.toQuizInfo() }
     }
 
+    override val runningQuizzes = quizDao.getQuizzesByType("hosting").map { entities ->
+        entities.filter {it.status != "pending_review" && it.status != "reviewed"}.map { it.toQuizInfo() }
+    }
+
+    override val pendingQuizzes = quizDao.getQuizzesByType("hosting").map { entities ->
+        entities.filter { it.status == "pending_review" }
+            .map { it.toQuizInfo() }
+    }
+
+    override val reviewedQuizzes = quizDao.getQuizzesByType("hosting").map { entities ->
+        entities.filter { it.status == "reviewed" }
+            .map { it.toQuizInfo() }
+    }
+
     override suspend fun getParticipatingQuizzes(sessionStatus: String?): AppResult<Unit> {
         val result = safeApiCall.call {
             api.getParticipatingInstances(sessionStatus)
