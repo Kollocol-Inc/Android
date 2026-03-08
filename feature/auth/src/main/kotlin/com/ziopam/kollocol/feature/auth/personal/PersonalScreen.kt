@@ -1,10 +1,14 @@
 package com.ziopam.kollocol.feature.auth.personal
 
 import android.net.Uri
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalFocusManager
@@ -19,6 +23,7 @@ import com.ziopam.kollocol.core.ui.theme.MAX_EDITTEXT_WIDTH
 import com.ziopam.kollocol.core.ui.theme.Typography
 import com.ziopam.kollocol.core.ui.uiText.UiText
 import com.ziopam.kollocol.core.ui.uiText.asString
+import com.ziopam.kollocol.feature.auth.AuthScaffold
 import com.ziopam.kollocol.feature.auth.R
 
 @Composable
@@ -34,7 +39,7 @@ fun PersonalScreen(
 ) {
     val focusManager = LocalFocusManager.current
 
-    _root_ide_package_.com.ziopam.kollocol.feature.auth.AuthScaffold(
+    AuthScaffold(
         buttonText = stringResource(R.string.perform_registration),
         onButtonClick = onButtonClick,
         isButtonEnabled = isButtonEnabled

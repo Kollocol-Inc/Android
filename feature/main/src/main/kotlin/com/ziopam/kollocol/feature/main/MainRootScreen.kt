@@ -41,6 +41,8 @@ fun MainRootScreen() {
                     quizzesInfoExample,
                     emptyList(),
                     quizzesInfoExample,
+                    "",
+                    {},
                     {}
                 )
             }
