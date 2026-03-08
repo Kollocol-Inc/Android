@@ -6,7 +6,6 @@ import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -96,7 +95,6 @@ fun SearchBar(
         ),
         shape = shape,
         modifier = modifier
-            .height(50.dp)
             .border(1.dp, borderColor, shape),
         colors = TextFieldDefaults.colors(
             focusedContainerColor = bg,
@@ -109,7 +107,8 @@ fun SearchBar(
 
             cursorColor = MaterialTheme.colorScheme.primary
         ),
-        interactionSource = interactionSource
+        interactionSource = interactionSource,
+        textStyle = MaterialTheme.typography.bodyMedium
     )
 }
 
