@@ -1,5 +1,7 @@
 package com.ziopam.kollocol.feature.main.quizzes
 
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -57,13 +59,35 @@ private fun QuizzesScreen(
                 onTabSelected = onTabSelected
             )
         },
-        content = { MyQuizzesBelow(runningQuizzes, pendingQuizzes, reviewedQuizzes, onQuizClick) }
+        content = {
+            Crossfade(
+                targetState = selectedTabIndex,
+                animationSpec = tween(durationMillis = 300),
+                label = "content_crossfade"
+            ) { tabIndex ->
+                when (tabIndex) {
+                    0 -> MyQuizzesBelow(
+                        runningQuizzes = runningQuizzes,
+                        pendingQuizzes = pendingQuizzes,
+                        reviewedQuizzes = reviewedQuizzes,
+                        onQuizClick = onQuizClick
+                    )
+                    1 -> TemplatesBelow()
+                    else -> MyQuizzesBelow(
+                        runningQuizzes = runningQuizzes,
+                        pendingQuizzes = pendingQuizzes,
+                        reviewedQuizzes = reviewedQuizzes,
+                        onQuizClick = onQuizClick
+                    )
+                }
+            }
+        }
     )
 }
 
 @PreviewLightDark
 @Composable
-private fun QuizzesScreenPreview() {
+private fun MyQuizzesPreview() {
     var text by remember { mutableStateOf("") }
 
     MainScaffoldPreview {
@@ -73,6 +97,25 @@ private fun QuizzesScreenPreview() {
             reviewedQuizzes = emptyList(),
             searchQuery = text,
             selectedTabIndex = 0,
+            onSearchQueryChange = { text = it },
+            onTabSelected = {},
+            onQuizClick = {}
+        )
+    }
+}
+
+@PreviewLightDark
+@Composable
+private fun TemplatesPreview() {
+    var text by remember { mutableStateOf("") }
+
+    MainScaffoldPreview {
+        QuizzesScreen(
+            runningQuizzes = emptyList(),
+            pendingQuizzes = quizzesInfoExample,
+            reviewedQuizzes = emptyList(),
+            searchQuery = text,
+            selectedTabIndex = 1,
             onSearchQueryChange = { text = it },
             onTabSelected = {},
             onQuizClick = {}

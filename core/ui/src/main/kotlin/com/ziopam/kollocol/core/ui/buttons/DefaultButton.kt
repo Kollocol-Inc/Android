@@ -1,6 +1,5 @@
 package com.ziopam.kollocol.core.ui.buttons
 
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -16,14 +15,16 @@ fun DefaultButton(
     text: String,
     onClick: () -> Unit,
     isButtonEnabled: Boolean,
+    isWidthLimited: Boolean = true,
     modifier: Modifier = Modifier
 ) {
     Button(
         onClick = onClick,
         enabled = isButtonEnabled,
-        modifier = Modifier
-            .widthIn(max = MAX_BUTTON_WIDTH.dp)
-            .then(modifier)
+        modifier =
+            if (isWidthLimited) {
+                Modifier.widthIn(max = MAX_BUTTON_WIDTH.dp).then(modifier)
+            } else { modifier }
     ) {
         Text(text)
     }
