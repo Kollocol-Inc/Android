@@ -20,6 +20,10 @@ data class MyQuizzesState(
     val reviewedQuizzes: List<QuizInfo> = emptyList(),
 )
 
+data class TemplatesState(
+    val templates: List<QuizInfo> = emptyList()
+)
+
 @HiltViewModel
 class QuizzesViewModel @Inject constructor(
     private val quizRepository: QuizRepository
@@ -46,6 +50,17 @@ class QuizzesViewModel @Inject constructor(
         started = SharingStarted.WhileSubscribed(5000),
         initialValue = MyQuizzesState()
     )
+    
+    val templatesState = combine(
+        searchQuery,
+        quizRepository.templates
+    ) { query, templates ->
+        TemplatesState(templates = filterQuizzesByQuery(templates, query))
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = TemplatesState()
+    )
 
     fun onSearchQueryChange(query: String) {
         searchQuery.value = query
@@ -60,6 +75,13 @@ class QuizzesViewModel @Inject constructor(
             quizRepository.getHostingQuizzes(status = null)
             quizRepository.getHostingQuizzes(status = "pending_review")
             quizRepository.getHostingQuizzes(status = "reviewed")
+            quizRepository.getTemplates()
+        }
+    }
+    
+    fun refreshTemplates() {
+        viewModelScope.launch {
+            quizRepository.getTemplates()
         }
     }
 

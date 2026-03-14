@@ -18,7 +18,7 @@ fun MyQuizzesBelow(
 ) {
 
     Column(
-        verticalArrangement = Arrangement.spacedBy(10.dp)
+        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         QuizCardSection(
             headlineText = stringResource(R.string.currently_running),

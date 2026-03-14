@@ -10,7 +10,9 @@ interface QuizRepository {
     val runningQuizzes: Flow<List<QuizInfo>>
     val pendingQuizzes: Flow<List<QuizInfo>>
     val reviewedQuizzes: Flow<List<QuizInfo>>
+    val templates: Flow<List<QuizInfo>>
 
     suspend fun getParticipatingQuizzes(sessionStatus: String? = null): AppResult<Unit>
     suspend fun getHostingQuizzes(status: String? = null): AppResult<Unit>
+    suspend fun getTemplates(): AppResult<Unit>
 }

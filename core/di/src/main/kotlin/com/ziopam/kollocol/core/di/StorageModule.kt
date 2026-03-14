@@ -7,7 +7,10 @@ import androidx.room.Room
 import com.ziopam.kollocol.core.session.datastore.dataStore
 import com.ziopam.kollocol.data.storage.room.AppDatabase
 import com.ziopam.kollocol.data.storage.room.MIGRATION_1_2
+import com.ziopam.kollocol.data.storage.room.MIGRATION_2_3
+import com.ziopam.kollocol.data.storage.room.MIGRATION_3_4
 import com.ziopam.kollocol.data.storage.room.QuizInstanceDao
+import com.ziopam.kollocol.data.storage.room.TemplateDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -34,10 +37,15 @@ object StorageModule {
         context,
         AppDatabase::class.java,
         "kollocol_database"
-    ).addMigrations(MIGRATION_1_2).build()
+    ).addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4).build()
 
     @Provides
     @Singleton
     fun provideQuizInstanceDao(database: AppDatabase): QuizInstanceDao =
         database.quizInstanceDao()
+    
+    @Provides
+    @Singleton
+    fun provideTemplateDao(database: AppDatabase): TemplateDao =
+        database.templateDao()
 }

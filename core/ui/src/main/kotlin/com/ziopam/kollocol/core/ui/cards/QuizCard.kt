@@ -11,6 +11,7 @@ import androidx.compose.animation.scaleOut
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -33,8 +34,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
@@ -58,6 +61,8 @@ fun QuizCard(
     quizInfo: QuizInfo,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    showButton: Boolean = false,
+    onButtonClick: (() -> Unit)? = null,
 ) {
     val cardColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface
 
@@ -77,13 +82,31 @@ fun QuizCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.Top
             ) {
-                Text(
-                    text = quizInfo.accessCode,
-                    style = MaterialTheme.typography.headlineMedium.copy(
-                        fontSize = 16.sp
-                    ),
-                    color = MaterialTheme.colorScheme.onSurface
-                )
+                if (showButton && onButtonClick != null) {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier
+                            .size(50.dp)
+                            .clip(RoundedCornerShape(18.dp))
+                            .background(MaterialTheme.colorScheme.primary)
+                            .clickable { onButtonClick() },
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.play),
+                            contentDescription = stringResource(R.string.start_quiz),
+                            tint = MaterialTheme.colorScheme.onPrimary,
+                            modifier = Modifier.size(22.dp)
+                        )
+                    }
+                } else {
+                    Text(
+                        text = quizInfo.accessCode,
+                        style = MaterialTheme.typography.headlineMedium.copy(
+                            fontSize = 16.sp
+                        ),
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                }
 
                 Column(
                     horizontalAlignment = Alignment.End,

@@ -22,20 +22,25 @@ fun QuizzesScreen(
     onQuizClick: (QuizInfo) -> Unit = {}
 ) {
     val state by viewModel.myQuizzesState.collectAsStateWithLifecycle()
+    val templatesState by viewModel.templatesState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
         viewModel.refresh()
+        viewModel.refreshTemplates()
     }
 
     QuizzesScreen(
         runningQuizzes = state.runningQuizzes,
         pendingQuizzes = state.pendingQuizzes,
         reviewedQuizzes = state.reviewedQuizzes,
+        templates = templatesState.templates,
         searchQuery = state.searchQuery,
         selectedTabIndex = state.selectedTabIndex,
         onSearchQueryChange = viewModel::onSearchQueryChange,
         onTabSelected = viewModel::onTabSelected,
-        onQuizClick = onQuizClick
+        onQuizClick = onQuizClick,
+        onTemplateClick = onQuizClick,
+        onStartClick = {}
     )
 }
 
@@ -44,11 +49,14 @@ private fun QuizzesScreen(
     runningQuizzes: List<QuizInfo>,
     pendingQuizzes: List<QuizInfo>,
     reviewedQuizzes: List<QuizInfo>,
+    templates: List<QuizInfo>,
     searchQuery: String,
     selectedTabIndex: Int,
     onSearchQueryChange: (String) -> Unit,
     onTabSelected: (Int) -> Unit,
-    onQuizClick: (QuizInfo) -> Unit
+    onQuizClick: (QuizInfo) -> Unit,
+    onTemplateClick: (QuizInfo) -> Unit,
+    onStartClick: (QuizInfo) -> Unit
 ) {
     LayoutWithLargeBottomCard(
         contentAbove = {
@@ -72,7 +80,11 @@ private fun QuizzesScreen(
                         reviewedQuizzes = reviewedQuizzes,
                         onQuizClick = onQuizClick
                     )
-                    1 -> TemplatesBelow()
+                    1 -> TemplatesBelow(
+                        templates = templates,
+                        onTemplateClick = onTemplateClick,
+                        onStartClick = onStartClick
+                    )
                     else -> MyQuizzesBelow(
                         runningQuizzes = runningQuizzes,
                         pendingQuizzes = pendingQuizzes,
@@ -95,11 +107,14 @@ private fun MyQuizzesPreview() {
             runningQuizzes = emptyList(),
             pendingQuizzes = quizzesInfoExample,
             reviewedQuizzes = emptyList(),
+            templates = emptyList(),
             searchQuery = text,
             selectedTabIndex = 0,
             onSearchQueryChange = { text = it },
             onTabSelected = {},
-            onQuizClick = {}
+            onQuizClick = {},
+            onTemplateClick = {},
+            onStartClick = {}
         )
     }
 }
@@ -112,13 +127,16 @@ private fun TemplatesPreview() {
     MainScaffoldPreview {
         QuizzesScreen(
             runningQuizzes = emptyList(),
-            pendingQuizzes = quizzesInfoExample,
+            pendingQuizzes = emptyList(),
             reviewedQuizzes = emptyList(),
+            templates = emptyList(),
             searchQuery = text,
             selectedTabIndex = 1,
             onSearchQueryChange = { text = it },
             onTabSelected = {},
-            onQuizClick = {}
+            onQuizClick = {},
+            onTemplateClick = {},
+            onStartClick = {}
         )
     }
 }

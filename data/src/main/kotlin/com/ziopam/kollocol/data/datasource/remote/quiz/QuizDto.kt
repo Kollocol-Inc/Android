@@ -1,5 +1,6 @@
 package com.ziopam.kollocol.data.datasource.remote.quiz
 
+import com.google.gson.annotations.JsonAdapter
 import com.google.gson.annotations.SerializedName
 import com.ziopam.kollocol.data.storage.room.QuizInstanceEntity
 
@@ -64,3 +65,81 @@ data class InstanceDto(
         )
     }
 }
+
+data class GetTemplatesResponseDto(
+    @SerializedName("templates")
+    val templates: List<TemplateDTO>
+)
+
+data class TemplateDTO(
+    @SerializedName("id")
+    val id: String,
+    
+    @SerializedName("user_id")
+    val userId: String,
+    
+    @SerializedName("title")
+    val title: String,
+    
+    @SerializedName("description")
+    val description: String?,
+    
+    @SerializedName("quiz_type")
+    val quizType: String,
+    
+    @SerializedName("settings")
+    val settings: QuizSettingsDTO?,
+    
+    @SerializedName("questions")
+    val questions: List<QuestionDTO>,
+    
+    @SerializedName("total_questions")
+    val totalQuestions: Int,
+    
+    @SerializedName("total_time")
+    val totalTime: Int
+)
+
+data class QuizSettingsDTO(
+    @SerializedName("time_limit_total")
+    val timeLimitTotal: Int?,
+    
+    @SerializedName("random_order")
+    val randomOrder: Boolean?,
+    
+    @SerializedName("show_correct_answers")
+    val showCorrectAnswers: Boolean?,
+    
+    @SerializedName("allow_review")
+    val allowReview: Boolean?
+)
+
+data class QuestionDTO(
+    @SerializedName("id")
+    val id: String,
+    
+    @SerializedName("text")
+    val text: String,
+    
+    @SerializedName("type")
+    val type: String,
+    
+    @SerializedName("options")
+    val options: List<String>?,
+    
+    @SerializedName("correct_answer")
+    @JsonAdapter(CorrectAnswerDeserializer::class)
+    val correctAnswer: String,
+    
+    @SerializedName("max_score")
+    val maxScore: Int,
+    
+    @SerializedName("time_limit_sec")
+    val timeLimitSec: Int?,
+    
+    @SerializedName("order_index")
+    val orderIndex: Int,
+    
+    @SerializedName("ai_answer")
+    val aiAnswer: String?
+)

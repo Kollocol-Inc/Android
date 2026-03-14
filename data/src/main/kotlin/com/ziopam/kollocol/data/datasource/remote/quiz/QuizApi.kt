@@ -13,4 +13,7 @@ interface QuizApi {
     suspend fun getHostingInstances(
         @Query("status") status: String? = null
     ): GetHostingInstancesResponseDto
+    
+    @GET("quizzes/templates")
+    suspend fun getTemplates(): GetTemplatesResponseDto
 }

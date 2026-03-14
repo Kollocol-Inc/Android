@@ -4,6 +4,8 @@ import com.ziopam.kollocol.core.common.AppResult
 import com.ziopam.kollocol.core.network.SafeApiCall
 import com.ziopam.kollocol.data.datasource.remote.quiz.QuizApi
 import com.ziopam.kollocol.data.storage.room.QuizInstanceDao
+import com.ziopam.kollocol.data.storage.room.TemplateDao
+import com.ziopam.kollocol.data.storage.room.toEntity
 import com.ziopam.kollocol.data.storage.room.toQuizInfo
 import com.ziopam.kollocol.domain.repository.QuizRepository
 import kotlinx.coroutines.flow.map
@@ -13,6 +15,7 @@ class QuizRepositoryImpl @Inject constructor(
     private val api: QuizApi,
     private val safeApiCall: SafeApiCall,
     private val quizDao: QuizInstanceDao,
+    private val templateDao: TemplateDao,
 ) : QuizRepository {
 
     override val participatingQuizzes = quizDao.getQuizzesByType("participating").map { entities ->
@@ -35,6 +38,10 @@ class QuizRepositoryImpl @Inject constructor(
     override val reviewedQuizzes = quizDao.getQuizzesByType("hosting").map { entities ->
         entities.filter { it.status == "reviewed" }
             .map { it.toQuizInfo() }
+    }
+    
+    override val templates = templateDao.getAllTemplates().map { entities ->
+        entities.map { it.toQuizInfo() }
     }
 
     override suspend fun getParticipatingQuizzes(sessionStatus: String?): AppResult<Unit> {
@@ -65,6 +72,22 @@ class QuizRepositoryImpl @Inject constructor(
                 val entities = result.value.instances.map { it.toEntity("hosting") }
                 quizDao.insertQuizzes(entities)
 
+                AppResult.Ok(Unit)
+            }
+            is AppResult.Err -> AppResult.Err(result.error)
+        }
+    }
+    
+    override suspend fun getTemplates(): AppResult<Unit> {
+        val result = safeApiCall.call {
+            api.getTemplates()
+        }
+        
+        return when (result) {
+            is AppResult.Ok -> {
+                val entities = result.value.templates.map { it.toEntity() }
+                templateDao.insertAll(entities)
+                
                 AppResult.Ok(Unit)
             }
             is AppResult.Err -> AppResult.Err(result.error)
