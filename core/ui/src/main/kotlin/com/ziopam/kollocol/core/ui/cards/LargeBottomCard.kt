@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
@@ -47,8 +49,8 @@ fun LargeBottomCard(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(
-                    start = contentPadding.calculateLeftPadding(LayoutDirection.Ltr),
-                    end = contentPadding.calculateRightPadding(LayoutDirection.Ltr),
+                    start = contentPadding.calculateStartPadding(LayoutDirection.Ltr),
+                    end = contentPadding.calculateEndPadding(LayoutDirection.Ltr),
                     bottom = contentPadding.calculateBottomPadding()
                 )
                 .padding(horizontal = 20.dp, vertical = 24.dp)

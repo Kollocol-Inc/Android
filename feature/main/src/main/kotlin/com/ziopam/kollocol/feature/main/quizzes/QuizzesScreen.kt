@@ -13,6 +13,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ziopam.kollocol.core.ui.cards.LayoutWithLargeBottomCard
 import com.ziopam.kollocol.core.ui.preview.quizzesInfoExample
+import com.ziopam.kollocol.core.ui.preview.templatesInfoExample
 import com.ziopam.kollocol.domain.model.QuizInfo
 import com.ziopam.kollocol.feature.main.MainScaffoldPreview
 
@@ -129,7 +130,7 @@ private fun TemplatesPreview() {
             runningQuizzes = emptyList(),
             pendingQuizzes = emptyList(),
             reviewedQuizzes = emptyList(),
-            templates = emptyList(),
+            templates = templatesInfoExample,
             searchQuery = text,
             selectedTabIndex = 1,
             onSearchQueryChange = { text = it },
