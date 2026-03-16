@@ -21,4 +21,30 @@
     <string name="search">Поиск</string>
     <string name="create_template">Создать шаблон</string>
     <string name="no_templates">Нет шаблонов</string>
+
+    <string name="template_creation">Создание шаблона</string>
+    <string name="template_name">Название</string>
+    <string name="parameters">Параметры</string>
+    <string name="quiz_type">Тип квиза</string>
+    <string name="random_order">Случайный порядок</string>
+    <string name="add_question">Добавить вопрос</string>
+    <string name="question_label">Вопрос</string>
+    <string name="points">Баллы</string>
+    <string name="time">Время</string>
+    <string name="answer_options">Варианты ответа</string>
+    <string name="answer_optional">Ответ (опционально)</string>
+    <string name="async_short">Асинх.</string>
+    <string name="sync_short">Синх.</string>
+    <string name="single_choice">Один ответ</string>
+    <string name="multiple_choice">Несколько</string>
+    <string name="open_ended">Открытый</string>
+    <string name="sec_short">сек</string>
+    <string name="pts_short">б.</string>
+    <string name="questions_count">Вопросов: %d</string>
+    <string name="total_points">Всего баллов: %d</string>
+    <string name="total_time_label">Время: %s</string>
+    <string name="fill_title_error">Введите название шаблона</string>
+    <string name="add_question_error">Добавьте хотя бы один вопрос</string>
+    <string name="template_created">Шаблон создан</string>
+    <string name="option_hint">Вариант %d</string>
 </resources>

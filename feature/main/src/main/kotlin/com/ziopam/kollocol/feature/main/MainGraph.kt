@@ -9,6 +9,7 @@ object MainRoute {
     const val GROUPS = "groups"
     const val QUIZZES = "quizzes"
     const val PROFILE = "profile"
+    const val CREATE_TEMPLATE = "create_template"
 }
 
 fun NavGraphBuilder.mainGraph() {

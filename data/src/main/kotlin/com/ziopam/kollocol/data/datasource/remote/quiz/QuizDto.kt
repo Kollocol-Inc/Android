@@ -114,6 +114,53 @@ data class QuizSettingsDTO(
     val allowReview: Boolean?
 )
 
+// --- Create Template Request/Response DTOs ---
+
+data class CreateTemplateRequestDto(
+    @SerializedName("title")
+    val title: String,
+
+    @SerializedName("quiz_type")
+    val quizType: String,
+
+    @SerializedName("questions")
+    val questions: List<QuestionInputDto>,
+
+    @SerializedName("description")
+    val description: String? = null,
+
+    @SerializedName("settings")
+    val settings: QuizSettingsDTO? = null
+)
+
+data class QuestionInputDto(
+    @SerializedName("text")
+    val text: String,
+
+    @SerializedName("type")
+    val type: String,
+
+    @SerializedName("correct_answer")
+    val correctAnswer: String,
+
+    @SerializedName("max_score")
+    val maxScore: Int,
+
+    @SerializedName("options")
+    val options: List<String>? = null,
+
+    @SerializedName("time_limit_sec")
+    val timeLimitSec: Int? = null,
+
+    @SerializedName("order_index")
+    val orderIndex: Int
+)
+
+data class CreateTemplateResponseDto(
+    @SerializedName("template_id")
+    val templateId: String
+)
+
 data class QuestionDTO(
     @SerializedName("id")
     val id: String,

@@ -32,7 +32,8 @@ fun QuizzesAbove(
     searchString: String,
     selectedTabIndex: Int,
     onSearchStringChange: (String) -> Unit,
-    onTabSelected: (Int) -> Unit
+    onTabSelected: (Int) -> Unit,
+    onCreateTemplateClick: () -> Unit = {}
 ){
     val selectionColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.surfaceVariant else Color.White
     val tabs = listOf(stringResource(R.string.my_quizzes), stringResource(R.string.my_templates))
@@ -77,7 +78,7 @@ fun QuizzesAbove(
         ) {
             DefaultButton(
                 text = stringResource(R.string.create_template),
-                onClick = {},
+                onClick = onCreateTemplateClick,
                 isButtonEnabled = true,
                 isWidthLimited = false,
                 modifier = Modifier.fillMaxWidth()

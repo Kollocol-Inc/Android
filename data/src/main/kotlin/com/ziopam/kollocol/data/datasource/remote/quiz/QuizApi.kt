@@ -1,6 +1,8 @@
 package com.ziopam.kollocol.data.datasource.remote.quiz
 
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface QuizApi {
@@ -16,4 +18,7 @@ interface QuizApi {
     
     @GET("quizzes/templates")
     suspend fun getTemplates(): GetTemplatesResponseDto
+
+    @POST("quizzes/templates")
+    suspend fun createTemplate(@Body request: CreateTemplateRequestDto): CreateTemplateResponseDto
 }

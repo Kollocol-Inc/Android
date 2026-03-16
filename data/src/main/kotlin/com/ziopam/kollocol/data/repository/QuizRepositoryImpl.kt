@@ -2,7 +2,10 @@ package com.ziopam.kollocol.data.repository
 
 import com.ziopam.kollocol.core.common.AppResult
 import com.ziopam.kollocol.core.network.SafeApiCall
+import com.ziopam.kollocol.data.datasource.remote.quiz.CreateTemplateRequestDto
+import com.ziopam.kollocol.data.datasource.remote.quiz.QuestionInputDto
 import com.ziopam.kollocol.data.datasource.remote.quiz.QuizApi
+import com.ziopam.kollocol.data.datasource.remote.quiz.QuizSettingsDTO
 import com.ziopam.kollocol.data.storage.room.QuizInstanceDao
 import com.ziopam.kollocol.data.storage.room.TemplateDao
 import com.ziopam.kollocol.data.storage.room.toEntity
@@ -90,6 +93,51 @@ class QuizRepositoryImpl @Inject constructor(
                 
                 AppResult.Ok(Unit)
             }
+            is AppResult.Err -> AppResult.Err(result.error)
+        }
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    override suspend fun createTemplate(
+        title: String,
+        quizType: String,
+        questions: List<Map<String, Any?>>,
+        description: String?,
+        randomOrder: Boolean
+    ): AppResult<String> {
+        val questionDtos = questions.mapIndexed { index, q ->
+            QuestionInputDto(
+                text = q["text"] as String,
+                type = q["type"] as String,
+                correctAnswer = q["correct_answer"] as String,
+                maxScore = q["max_score"] as Int,
+                options = q["options"] as? List<String>,
+                timeLimitSec = q["time_limit_sec"] as? Int,
+                orderIndex = index
+            )
+        }
+
+        val settings = QuizSettingsDTO(
+            timeLimitTotal = null,
+            randomOrder = randomOrder,
+            showCorrectAnswers = null,
+            allowReview = null
+        )
+
+        val request = CreateTemplateRequestDto(
+            title = title,
+            quizType = quizType,
+            questions = questionDtos,
+            description = description,
+            settings = settings
+        )
+
+        val result = safeApiCall.call {
+            api.createTemplate(request)
+        }
+
+        return when (result) {
+            is AppResult.Ok -> AppResult.Ok(result.value.templateId)
             is AppResult.Err -> AppResult.Err(result.error)
         }
     }

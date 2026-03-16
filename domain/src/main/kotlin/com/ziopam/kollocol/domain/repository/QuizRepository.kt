@@ -15,4 +15,11 @@ interface QuizRepository {
     suspend fun getParticipatingQuizzes(sessionStatus: String? = null): AppResult<Unit>
     suspend fun getHostingQuizzes(status: String? = null): AppResult<Unit>
     suspend fun getTemplates(): AppResult<Unit>
+    suspend fun createTemplate(
+        title: String,
+        quizType: String,
+        questions: List<Map<String, Any?>>,
+        description: String? = null,
+        randomOrder: Boolean = false
+    ): AppResult<String>
 }
