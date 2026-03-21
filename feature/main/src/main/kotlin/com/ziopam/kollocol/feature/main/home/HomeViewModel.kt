@@ -2,9 +2,10 @@ package com.ziopam.kollocol.feature.main.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ziopam.kollocol.core.common.AppResult
 import com.ziopam.kollocol.domain.model.QuizInfo
 import com.ziopam.kollocol.domain.model.User
-import com.ziopam.kollocol.domain.repository.PersonalOnlineRepository
+import com.ziopam.kollocol.domain.repository.PersonalRepository
 import com.ziopam.kollocol.domain.repository.QuizRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,12 +25,13 @@ data class HomeUiState(
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val quizRepository: QuizRepository,
-    private val personalRepository: PersonalOnlineRepository
+    private val personalRepository: PersonalRepository
 ) : ViewModel() {
+    private val user = MutableStateFlow(User(avatarUrl = null, firstName = "", lastName = ""))
     private val quizCode = MutableStateFlow("")
 
     val uiState = combine(
-        personalRepository.user,
+        user,
         quizCode,
         quizRepository.participatingQuizzes,
         quizRepository.hostingQuizzes,
@@ -46,13 +48,18 @@ class HomeViewModel @Inject constructor(
         initialValue = HomeUiState()
     )
 
+    init {
+        refresh()
+    }
+
     fun onCodeChanged(code: String) {
         quizCode.value = code.take(6)
     }
 
     fun refresh() {
         viewModelScope.launch {
-            personalRepository.getUser()
+            val result = personalRepository.getUser()
+            if (result is AppResult.Ok) user.value = result.value
             quizRepository.getParticipatingQuizzes()
             quizRepository.getHostingQuizzes()
         }

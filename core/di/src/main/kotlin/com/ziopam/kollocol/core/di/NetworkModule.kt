@@ -33,11 +33,12 @@ object NetworkModule {
     @Singleton
     fun provideSafeApiCall(gson: Gson): SafeApiCall = SafeApiCall(gson)
 
-    // TODO Сделать логи только в debug
     @Provides
     @Singleton
-    fun provideLogging(): HttpLoggingInterceptor =
-        HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
+    fun provideLogging(): HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
+            level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY
+                    else HttpLoggingInterceptor.Level.NONE
+        }
 
     @Provides
     @Singleton
