@@ -77,7 +77,7 @@ jobs:
           SHA="${{ github.sha }}"
           REPO="${{ github.repository }}"
           LABELS=$(gh api "repos/$REPO/commits/$SHA/pulls" --jq '.[0].labels[].name' 2>/dev/null || true)
-          if echo "$LABELS" | grep -q "release-major"; then
+          if echo "$LABELS" | grep -q "bump-major"; then
             echo "type=major" >> $GITHUB_OUTPUT
           else
             echo "type=patch" >> $GITHUB_OUTPUT
