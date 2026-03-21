@@ -97,7 +97,6 @@ class QuizRepositoryImpl @Inject constructor(
         }
     }
 
-    @Suppress("UNCHECKED_CAST")
     override suspend fun createTemplate(
         title: String,
         quizType: String,
@@ -105,15 +104,14 @@ class QuizRepositoryImpl @Inject constructor(
         description: String?,
         randomOrder: Boolean
     ): AppResult<String> {
-        val questionDtos = questions.mapIndexed { index, q ->
+        val questionDtos = questions.map { q ->
             QuestionInputDto(
                 text = q["text"] as String,
                 type = q["type"] as String,
-                correctAnswer = q["correct_answer"] as String,
+                correctAnswer = q["correct_answer"]!!,
                 maxScore = q["max_score"] as Int,
                 options = q["options"] as? List<String>,
                 timeLimitSec = q["time_limit_sec"] as? Int,
-                orderIndex = index
             )
         }
 

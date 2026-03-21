@@ -16,3 +16,4 @@ local.properties
 .idea
 .kotlin
 kollocol-release.keystore
+swagger.json

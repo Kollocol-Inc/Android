@@ -141,7 +141,7 @@ data class QuestionInputDto(
     val type: String,
 
     @SerializedName("correct_answer")
-    val correctAnswer: String,
+    val correctAnswer: Any,
 
     @SerializedName("max_score")
     val maxScore: Int,
@@ -151,9 +151,6 @@ data class QuestionInputDto(
 
     @SerializedName("time_limit_sec")
     val timeLimitSec: Int? = null,
-
-    @SerializedName("order_index")
-    val orderIndex: Int
 )
 
 data class CreateTemplateResponseDto(
