@@ -1,0 +1,11 @@
+<resources>
+    <string name="error_no_internet">Нет подключения к интернету</string>
+    <string name="error_timeout">Превышено время ожидания</string>
+    <string name="error_bad_request">Некорректный формат входных данных</string>
+    <string name="error_unauthorized">Требуется авторизация</string>
+    <string name="error_forbidden">Доступ запрещён</string>
+    <string name="error_not_found">Ресурс не найден</string>
+    <string name="error_too_many_requests">Слишком много запросов. Повторите попытку позже</string>
+    <string name="error_server">Возникла ошибка сервера. Повторите попытку позже</string>
+    <string name="error_unknown">Произошла неизвестная ошибка</string>
+</resources>
