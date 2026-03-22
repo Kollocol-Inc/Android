@@ -43,3 +43,7 @@ val DarkMaterialScheme = darkColorScheme(
 
     outline = Color(0xE63A3B45),
 )
+
+object ExtraColors {
+    val affirmative  = Color(0xFF3ECF2E)
+}

@@ -1,11 +1,5 @@
 package com.ziopam.kollocol.feature.main.quizzes
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ziopam.kollocol.core.ui.animations.ExpandedAppearance
 import com.ziopam.kollocol.core.ui.buttons.DefaultButton
 import com.ziopam.kollocol.core.ui.input.SearchBar
 import com.ziopam.kollocol.core.ui.other.SelectiveTabs
@@ -61,20 +56,8 @@ fun QuizzesAbove(
             modifier = Modifier.fillMaxWidth()
         )
 
-        AnimatedVisibility(
+        ExpandedAppearance (
             visible = selectedTabIndex == 1,
-            enter = expandVertically(
-                animationSpec = tween(durationMillis = 300),
-                expandFrom = Alignment.Top
-            ) + fadeIn(
-                animationSpec = tween(durationMillis = 300)
-            ),
-            exit = shrinkVertically(
-                animationSpec = tween(durationMillis = 300),
-                shrinkTowards = Alignment.Top
-            ) + fadeOut(
-                animationSpec = tween(durationMillis = 300)
-            )
         ) {
             DefaultButton(
                 text = stringResource(R.string.create_template),

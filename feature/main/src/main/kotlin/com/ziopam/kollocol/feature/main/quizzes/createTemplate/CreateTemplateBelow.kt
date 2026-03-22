@@ -1,6 +1,5 @@
 package com.ziopam.kollocol.feature.main.quizzes.createTemplate
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -8,20 +7,33 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.ziopam.kollocol.core.common.TimeFormatter
+import com.ziopam.kollocol.core.ui.animations.ExpandedAppearance
 import com.ziopam.kollocol.core.ui.buttons.DefaultButton
+import com.ziopam.kollocol.core.ui.clickableNoIndication
+import com.ziopam.kollocol.core.ui.input.RoundedFocusTextField
+import com.ziopam.kollocol.core.ui.input.Switch
+import com.ziopam.kollocol.core.ui.other.QuizInfoIcon
 import com.ziopam.kollocol.core.ui.theme.AppTheme
+import com.ziopam.kollocol.domain.model.QuizMode
 import com.ziopam.kollocol.feature.main.R
+import com.ziopam.kollocol.core.ui.R as CoreR
 
 @Composable
 internal fun CreateTemplateBelow(
@@ -39,8 +51,10 @@ internal fun CreateTemplateBelow(
 ) {
     val totalPoints = questions.sumOf { it.maxScore }
     val totalTime = questions.sumOf { it.timeLimitSec }
-    val totalMinutes = totalTime / 60
-    val totalSeconds = totalTime % 60
+
+    val focusManager = LocalFocusManager.current
+
+    val bodySmall = MaterialTheme.typography.bodySmall.copy(fontSize = 16.sp)
 
     Column(
         verticalArrangement = Arrangement.spacedBy(12.dp)
@@ -50,78 +64,97 @@ internal fun CreateTemplateBelow(
             style = MaterialTheme.typography.headlineMedium
         )
 
-        OutlinedTextField(
+        RoundedFocusTextField(
             value = title,
             onValueChange = onTitleChange,
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(12.dp),
-            singleLine = true
+            placeholder = "",
+            imeAction = ImeAction.Done,
+            textStyle = bodySmall.copy(fontSize = 14.sp),
+            modifier = Modifier.fillMaxWidth().height(49.dp),
+            onImeAction = { focusManager.clearFocus() }
         )
 
         Text(
             text = stringResource(R.string.parameters),
-            style = MaterialTheme.typography.titleMedium
+            style = MaterialTheme.typography.headlineMedium
+        )
+
+        Column (
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = stringResource(R.string.quiz_type),
+                    style = bodySmall
+                )
+
+                Spacer(modifier = Modifier.weight(1f))
+
+                QuizInfoIcon(
+                    quizMode = if (quizType == "async") QuizMode.ASYNC else QuizMode.SYNC,
+                    size = 20.dp
+                )
+
+                Spacer(modifier = Modifier.width(5.dp))
+
+                Text(
+                    text = if (quizType == "async")
+                        stringResource(R.string.async_short)
+                    else
+                        stringResource(R.string.sync_short),
+                    style = bodySmall,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.clickableNoIndication { onQuizTypeToggle() }
+                )
+            }
+
+            ExpandedAppearance(
+                visible = quizType == "async",
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(R.string.random_order),
+                        style = bodySmall
+                    )
+                    Switch(
+                        isChecked = randomOrder,
+                        onCheckedChange = { onRandomOrderToggle() },
+                        modifier = Modifier.padding(vertical = 0.dp)
+                    )
+                }
+            }
+        }
+
+        HorizontalDivider(modifier =
+            if (quizType == "sync") Modifier.padding(vertical = 5.dp) else Modifier
         )
 
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxWidth().padding(top = 5.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = stringResource(R.string.quiz_type),
-                style = MaterialTheme.typography.bodyMedium
+            TextWithIcon(
+                text = questions.size.toString(),
+                iconResource = CoreR.drawable.question_in_circle_filled,
             )
-            Text(
-                text = if (quizType == "async")
-                    stringResource(R.string.async_short)
-                else
-                    stringResource(R.string.sync_short),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier
-                    .clickable { onQuizTypeToggle() }
-                    .padding(8.dp)
-            )
-        }
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
             Text(
-                text = stringResource(R.string.random_order),
-                style = MaterialTheme.typography.bodyMedium
+                text = "• $totalPoints ${stringResource(R.string.pts_short)}",
+                style = MaterialTheme.typography.headlineSmall
             )
-            Switch(
-                checked = randomOrder,
-                onCheckedChange = { onRandomOrderToggle() }
-            )
-        }
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = stringResource(R.string.questions_count, questions.size),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            Text(
-                text = stringResource(R.string.total_points, totalPoints),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            Text(
-                text = stringResource(
-                    R.string.total_time_label,
-                    "${totalMinutes}:${totalSeconds.toString().padStart(2, '0')}"
-                ),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+            Spacer(modifier = Modifier.width(5.dp))
+
+            TextWithIcon(
+                text = "• ${TimeFormatter.formatTime(totalTime)}",
+                iconResource = CoreR.drawable.clock_filled,
             )
         }
 
@@ -143,6 +176,30 @@ internal fun CreateTemplateBelow(
             modifier = Modifier.fillMaxWidth()
         )
     }
+}
+
+@Composable
+private fun TextWithIcon(
+    text: String,
+    iconResource: Int
+) {
+    val padding = 5.dp
+
+    Text(
+        text = text,
+        style = MaterialTheme.typography.headlineSmall,
+    )
+
+    Spacer(modifier = Modifier.width(padding))
+
+    Icon(
+        painter = painterResource(iconResource),
+        contentDescription = null,
+        tint = MaterialTheme.colorScheme.primary,
+        modifier = Modifier.size(20.dp)
+    )
+
+    Spacer(modifier = Modifier.width(padding))
 }
 
 @Preview(showBackground = true)

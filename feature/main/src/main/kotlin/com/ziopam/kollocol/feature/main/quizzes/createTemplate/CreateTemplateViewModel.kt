@@ -128,7 +128,7 @@ class CreateTemplateViewModel @Inject constructor(
                     QuestionType.OPEN -> q.correctAnswer
                 }
 
-                mapOf<String, Any?>(
+                mapOf (
                     "text" to q.text,
                     "type" to when (q.type) {
                         QuestionType.SINGLE -> "single"

@@ -18,6 +18,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ziopam.kollocol.core.ui.input.RoundedFocusTextField
 import com.ziopam.kollocol.core.ui.theme.AppTheme
 import com.ziopam.kollocol.core.ui.theme.MAX_EDITTEXT_WIDTH
 import com.ziopam.kollocol.core.ui.theme.Typography
