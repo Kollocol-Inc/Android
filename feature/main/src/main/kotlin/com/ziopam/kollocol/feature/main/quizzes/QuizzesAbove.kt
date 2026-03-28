@@ -50,7 +50,6 @@ fun QuizzesAbove(
         )
 
         SearchBar(
-            placeholder = stringResource(R.string.search),
             text = searchString,
             onQueryChange = onSearchStringChange,
             modifier = Modifier.fillMaxWidth()

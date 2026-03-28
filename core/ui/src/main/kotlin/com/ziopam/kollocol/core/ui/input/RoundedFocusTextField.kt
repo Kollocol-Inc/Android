@@ -38,7 +38,7 @@ fun RoundedFocusTextField(
     val isFocused by interactionSource.collectIsFocusedAsState()
 
     val shape = RoundedCornerShape(25.dp)
-    val bg = MaterialTheme.colorScheme.primaryContainer
+    val bg = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
     val border = if (isFocused) MaterialTheme.colorScheme.primary else bg
 
     TextField(

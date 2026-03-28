@@ -14,20 +14,28 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ziopam.kollocol.core.common.TimeFormatter
 import com.ziopam.kollocol.core.ui.animations.ExpandedAppearance
+import com.ziopam.kollocol.core.ui.buttons.CircleIconButton
 import com.ziopam.kollocol.core.ui.buttons.DefaultButton
 import com.ziopam.kollocol.core.ui.clickableNoIndication
 import com.ziopam.kollocol.core.ui.input.RoundedFocusTextField
+import com.ziopam.kollocol.core.ui.input.SearchBar
 import com.ziopam.kollocol.core.ui.input.Switch
 import com.ziopam.kollocol.core.ui.other.QuizInfoIcon
 import com.ziopam.kollocol.core.ui.theme.AppTheme
@@ -49,6 +57,14 @@ internal fun CreateTemplateBelow(
     onEditQuestion: (Int) -> Unit,
     onDeleteQuestion: (Int) -> Unit
 ) {
+    var isSearchVisible by remember { mutableStateOf(false) }
+    var searchQuery by remember { mutableStateOf("") }
+
+    val displayedQuestions = if (isSearchVisible && searchQuery.isNotEmpty())
+        questions.mapIndexed { i, q -> i to q }.filter { (_, q) -> q.text.contains(searchQuery, ignoreCase = true) }
+    else
+        questions.mapIndexed { i, q -> i to q }
+
     val totalPoints = questions.sumOf { it.maxScore }
     val totalTime = questions.sumOf { it.timeLimitSec }
 
@@ -146,24 +162,50 @@ internal fun CreateTemplateBelow(
             )
 
             Text(
-                text = "• $totalPoints ${stringResource(R.string.pts_short)}",
+                text = " •  $totalPoints ${stringResource(R.string.pts_short)}",
                 style = MaterialTheme.typography.headlineSmall
             )
 
             Spacer(modifier = Modifier.width(5.dp))
 
             TextWithIcon(
-                text = "• ${TimeFormatter.formatTime(totalTime)}",
+                text = " •  ${TimeFormatter.formatTime(totalTime)}",
                 iconResource = CoreR.drawable.clock_filled,
+            )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            CircleIconButton(
+                onClick = { isSearchVisible = !isSearchVisible },
+                icon = ImageVector.vectorResource(CoreR.drawable.search),
+                contentDescription = stringResource(CoreR.string.search),
+                size = 40.dp
+            )
+
+            Spacer(modifier = Modifier.width(10.dp))
+
+            CircleIconButton(
+                onClick = onAddQuestionClick,
+                icon = ImageVector.vectorResource(CoreR.drawable.plus),
+                contentDescription = stringResource(R.string.add_question),
+                size = 40.dp
             )
         }
 
-        questions.forEachIndexed { index, question ->
+        ExpandedAppearance(visible = isSearchVisible) {
+            SearchBar(
+                text = searchQuery,
+                onQueryChange = { searchQuery = it },
+                modifier = Modifier.fillMaxWidth()
+            )
+        }
+
+        displayedQuestions.forEach { (originalIndex, question) ->
             QuestionCard(
-                index = index,
+                index = originalIndex,
                 question = question,
-                onEditClick = { onEditQuestion(index) },
-                onDeleteClick = { onDeleteQuestion(index) }
+                onEditClick = { onEditQuestion(originalIndex) },
+                onDeleteClick = { onDeleteQuestion(originalIndex) }
             )
         }
 

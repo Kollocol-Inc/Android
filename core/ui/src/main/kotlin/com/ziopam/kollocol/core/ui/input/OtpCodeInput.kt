@@ -46,7 +46,7 @@ fun OtpCodeInput(
     horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(12.dp),
     shape: RoundedCornerShape = RoundedCornerShape(12.dp),
     borderColor: Color = MaterialTheme.colorScheme.primary,
-    cellColor: Color = MaterialTheme.colorScheme.primaryContainer,
+    cellColor: Color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
     useActive: Boolean = true,
     animateError: Boolean = false
 ) {
@@ -145,7 +145,7 @@ private fun OtpCell(
     size: DpSize,
     shape: RoundedCornerShape,
     borderColor: Color = MaterialTheme.colorScheme.primary,
-    cellColor: Color = MaterialTheme.colorScheme.primaryContainer,
+    cellColor: Color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
     modifier: Modifier = Modifier,
 ) {
     Surface(
