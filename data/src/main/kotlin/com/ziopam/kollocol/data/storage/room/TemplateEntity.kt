@@ -43,6 +43,7 @@ data class TemplateEntity(
 
 fun TemplateEntity.toQuizInfo(): QuizInfo {
     return QuizInfo(
+        id = id,
         title = title,
         accessCode = "",
         totalQuestions = totalQuestions,

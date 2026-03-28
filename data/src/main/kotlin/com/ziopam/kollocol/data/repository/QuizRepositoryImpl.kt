@@ -2,6 +2,7 @@ package com.ziopam.kollocol.data.repository
 
 import com.ziopam.kollocol.core.common.AppResult
 import com.ziopam.kollocol.core.network.SafeApiCall
+import com.ziopam.kollocol.data.datasource.remote.quiz.CreateInstanceRequestDto
 import com.ziopam.kollocol.data.datasource.remote.quiz.CreateTemplateRequestDto
 import com.ziopam.kollocol.data.datasource.remote.quiz.QuestionInputDto
 import com.ziopam.kollocol.data.datasource.remote.quiz.QuizApi
@@ -136,6 +137,23 @@ class QuizRepositoryImpl @Inject constructor(
 
         return when (result) {
             is AppResult.Ok -> AppResult.Ok(result.value.templateId)
+            is AppResult.Err -> AppResult.Err(result.error)
+        }
+    }
+
+    override suspend fun createInstance(
+        templateId: String,
+        title: String,
+        deadline: String?
+    ): AppResult<Unit> {
+        val request = CreateInstanceRequestDto(
+            templateId = templateId,
+            title = title,
+            deadline = deadline
+        )
+        val result = safeApiCall.call { api.createInstance(request) }
+        return when (result) {
+            is AppResult.Ok -> AppResult.Ok(Unit)
             is AppResult.Err -> AppResult.Err(result.error)
         }
     }

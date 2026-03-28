@@ -158,6 +158,28 @@ data class CreateTemplateResponseDto(
     val templateId: String
 )
 
+data class CreateInstanceRequestDto(
+    @SerializedName("template_id")
+    val templateId: String,
+
+    @SerializedName("title")
+    val title: String,
+
+    @SerializedName("deadline")
+    val deadline: String? = null,
+
+    @SerializedName("group_id")
+    val groupId: String? = null
+)
+
+data class CreateInstanceResponseDto(
+    @SerializedName("instance_id")
+    val instanceId: String,
+
+    @SerializedName("access_code")
+    val accessCode: String
+)
+
 data class QuestionDTO(
     @SerializedName("id")
     val id: String,

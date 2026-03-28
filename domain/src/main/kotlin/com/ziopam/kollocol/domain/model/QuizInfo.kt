@@ -1,6 +1,7 @@
 package com.ziopam.kollocol.domain.model
 
 data class QuizInfo(
+    val id: String = "",
     val title: String,
     val accessCode: String,
     val totalQuestions: Int,

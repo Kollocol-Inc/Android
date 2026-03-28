@@ -22,6 +22,7 @@ data class QuizInstanceEntity(
 
 fun QuizInstanceEntity.toQuizInfo(): QuizInfo {
     return QuizInfo(
+        id = id,
         title = title,
         accessCode = accessCode,
         totalQuestions = totalQuestions,
