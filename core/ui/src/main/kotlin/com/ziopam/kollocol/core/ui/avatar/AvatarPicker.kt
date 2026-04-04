@@ -1,6 +1,5 @@
 package com.ziopam.kollocol.core.ui.avatar
 
-import android.net.Uri
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
@@ -18,16 +17,18 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.ziopam.kollocol.core.ui.R
 
 @Composable
 fun AvatarPicker(
-    avatarUri: Uri?,
+    avatarUrl: String?,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     defaultIconSize: Dp = 50.dp,
@@ -40,7 +41,7 @@ fun AvatarPicker(
     ) {
         Box(
             modifier = Modifier
-                .matchParentSize()
+                .fillMaxSize()
                 .clip(CircleShape)
                 .border(
                     width = 2.dp,
@@ -59,9 +60,12 @@ fun AvatarPicker(
                 ),
             contentAlignment = Alignment.Center
         ) {
-            if (avatarUri != null) {
+            if (avatarUrl != null) {
                 AsyncImage(
-                    model = avatarUri,
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(avatarUrl)
+                        .crossfade(true)
+                        .build(),
                     contentDescription = stringResource(R.string.avatar),
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop

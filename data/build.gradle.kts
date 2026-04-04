@@ -22,6 +22,7 @@ dependencies {
     implementation(libs.gson)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.okhttp)
 
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)

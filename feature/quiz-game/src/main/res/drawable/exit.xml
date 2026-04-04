@@ -4,14 +4,21 @@
     android:viewportWidth="24"
     android:viewportHeight="24">
   <path
-      android:pathData="M20,21v-2a4,4 0,0 0,-4 -4H8a4,4 0,0 0,-4 4v2"
+      android:pathData="M15,21H19C19.53,21 20.039,20.789 20.414,20.414C20.789,20.039 21,19.53 21,19V5C21,4.47 20.789,3.961 20.414,3.586C20.039,3.211 19.53,3 19,3H15"
       android:strokeLineJoin="round"
       android:strokeWidth="2"
       android:fillColor="#00000000"
       android:strokeColor="#000000"
       android:strokeLineCap="round"/>
   <path
-      android:pathData="M12,7m-4,0a4,4 0,1 1,8 0a4,4 0,1 1,-8 0"
+      android:pathData="M8,17L3,12L8,7"
+      android:strokeLineJoin="round"
+      android:strokeWidth="2"
+      android:fillColor="#00000000"
+      android:strokeColor="#000000"
+      android:strokeLineCap="round"/>
+  <path
+      android:pathData="M3,12H15"
       android:strokeLineJoin="round"
       android:strokeWidth="2"
       android:fillColor="#00000000"

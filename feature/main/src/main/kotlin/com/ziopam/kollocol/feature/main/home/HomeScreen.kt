@@ -19,7 +19,8 @@ import com.ziopam.kollocol.feature.main.MainScaffoldPreview
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
     onParticipatingQuizClick: (QuizInfo) -> Unit = {},
-    onRunningQuizClick: (QuizInfo) -> Unit = {}
+    onRunningQuizClick: (QuizInfo) -> Unit = {},
+    onJoinQuiz: (String) -> Unit = {}
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -34,7 +35,8 @@ fun HomeScreen(
         onParticipatingQuizClick = onParticipatingQuizClick,
         onRunningQuizClick = onRunningQuizClick,
         code = state.quizCode,
-        codeChanged = viewModel::onCodeChanged
+        codeChanged = viewModel::onCodeChanged,
+        onJoinQuiz = onJoinQuiz
     )
 }
 
@@ -46,10 +48,18 @@ private fun HomeScreenContent(
     participatingQuizzes: List<QuizInfo>,
     runningQuizzes: List<QuizInfo>,
     onParticipatingQuizClick: (QuizInfo) -> Unit,
-    onRunningQuizClick: (QuizInfo) -> Unit
+    onRunningQuizClick: (QuizInfo) -> Unit,
+    onJoinQuiz: (String) -> Unit = {}
 ) {
     LayoutWithLargeBottomCard(
-        contentAbove = { HomeAbove(personName, code, codeChanged) },
+        contentAbove = {
+            HomeAbove(
+                personName = personName,
+                code = code,
+                onCodeChanged = codeChanged,
+                onJoinQuiz = { if (code.length == 6) onJoinQuiz(code) }
+            )
+        },
         content = { HomeBelow(participatingQuizzes, runningQuizzes, onParticipatingQuizClick, onRunningQuizClick) }
     )
 }

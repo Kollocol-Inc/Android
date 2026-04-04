@@ -10,6 +10,9 @@ object MainRoute {
     const val QUIZZES = "quizzes"
     const val PROFILE = "profile"
     const val CREATE_TEMPLATE = "create_template"
+    const val GAME = "game/{accessCode}"
+
+    fun gameRoute(accessCode: String) = "game/$accessCode"
 }
 
 fun NavGraphBuilder.mainGraph() {

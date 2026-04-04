@@ -36,4 +36,5 @@ include(":core:ui")
 include(":feature")
 include(":feature:auth")
 include(":feature:main")
+include(":feature:quiz-game")
  

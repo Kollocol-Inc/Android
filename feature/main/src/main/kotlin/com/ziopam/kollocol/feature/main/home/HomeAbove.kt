@@ -27,6 +27,7 @@ import com.ziopam.kollocol.core.ui.contentPadding
 import com.ziopam.kollocol.core.ui.input.OtpCodeInput
 import com.ziopam.kollocol.core.ui.theme.AppTheme
 import com.ziopam.kollocol.feature.main.R
+import com.ziopam.kollocol.core.ui.R as CoreR
 
 @Composable
 fun HomeAbove(
@@ -34,7 +35,8 @@ fun HomeAbove(
     code: String = "",
     onCodeChanged: (String) -> Unit = {},
     avatarUri: Uri? = null,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
+    onJoinQuiz: () -> Unit = {}
 ){
     Column(
         modifier = Modifier.padding(contentPadding),
@@ -46,7 +48,7 @@ fun HomeAbove(
             modifier = Modifier.fillMaxWidth()
         ) {
             AvatarPicker(
-                avatarUri = avatarUri,
+                avatarUrl = avatarUri?.toString(),
                 onClick = onClick,
                 modifier = Modifier.size(48.dp),
                 defaultIconSize = 24.dp
@@ -59,7 +61,7 @@ fun HomeAbove(
             Spacer(Modifier.weight(1f))
             CircleIconButton(
                 onClick = {},
-                icon = ImageVector.vectorResource(id = R.drawable.bell),
+                icon = ImageVector.vectorResource(id = CoreR.drawable.bell),
                 contentDescription = stringResource(R.string.notification),
             )
 
@@ -82,8 +84,8 @@ fun HomeAbove(
 
         DefaultButton(
             text = stringResource(R.string.start_quiz),
-            onClick = {},
-            isButtonEnabled = true,
+            onClick = onJoinQuiz,
+            isButtonEnabled = code.length == 6,
             modifier = Modifier.fillMaxWidth()
         )
     }

@@ -27,6 +27,7 @@ private val cornerRadius = 30.dp
 @Composable
 fun LargeBottomCard(
     modifier: Modifier = Modifier,
+    scrollable: Boolean = true,
     content: @Composable BoxScope.() -> Unit
 ) {
     val contentPadding = WindowInsets.systemBars.asPaddingValues()
@@ -54,7 +55,7 @@ fun LargeBottomCard(
                     bottom = contentPadding.calculateBottomPadding()
                 )
                 .padding(horizontal = 20.dp, vertical = 24.dp)
-                .verticalScroll(scrollState),
+                .then(if (scrollable) Modifier.verticalScroll(scrollState) else Modifier),
             content = content
         )
     }

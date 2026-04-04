@@ -62,6 +62,7 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":feature:auth"))
     implementation(project(":feature:main"))
+    implementation(project(":feature:quiz-game"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

@@ -16,6 +16,7 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
+import java.util.concurrent.TimeUnit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
@@ -61,6 +62,7 @@ object NetworkModule {
         .addInterceptor(authInterceptor)
         .addInterceptor(logging)
         .authenticator(tokenAuthenticator)
+        .pingInterval(20, TimeUnit.SECONDS)
         .build()
 
     @Provides
