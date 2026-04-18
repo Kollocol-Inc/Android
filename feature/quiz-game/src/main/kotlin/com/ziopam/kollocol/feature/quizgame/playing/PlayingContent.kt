@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.ziopam.kollocol.core.ui.buttons.DefaultButton
 import com.ziopam.kollocol.core.ui.cards.LayoutWithLargeBottomCard
 import com.ziopam.kollocol.core.ui.preview.AppPreview
+import com.ziopam.kollocol.domain.model.AnswerOptionStats
 import com.ziopam.kollocol.domain.model.QuestionType
 import com.ziopam.kollocol.feature.quizgame.GameHeader
 import com.ziopam.kollocol.feature.quizgame.GamePhase
@@ -164,6 +165,9 @@ private fun PlayingStatsPreview() {
             GamePhase.Playing(
                 question = GamePreviewData.question,
                 leaderboard = GamePreviewData.leaderboardEntries,
+                answerOptionStats = listOf(
+                    AnswerOptionStats(GamePreviewData.question.options!!.last(), 10)
+                ),
                 timeRemainingMs = 10000,
                 showStats = true
             ),
