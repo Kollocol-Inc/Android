@@ -29,8 +29,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ziopam.kollocol.core.ui.preview.AppPreview
 import com.ziopam.kollocol.core.ui.uiText.UiText
 import com.ziopam.kollocol.domain.model.GameFinishResult
-import com.ziopam.kollocol.domain.model.GameQuestion
-import com.ziopam.kollocol.domain.model.QuestionType
+import com.ziopam.kollocol.feature.quizgame.finished.FinishedContent
 import com.ziopam.kollocol.feature.quizgame.playing.PlayingContent
 import com.ziopam.kollocol.feature.quizgame.preview.GamePreviewData
 

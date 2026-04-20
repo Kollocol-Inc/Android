@@ -1,14 +1,11 @@
 package com.ziopam.kollocol.feature.quizgame
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
@@ -26,6 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ziopam.kollocol.core.ui.avatar.AvatarPicker
+import com.ziopam.kollocol.core.ui.util.rankToMedalEmoji
 import com.ziopam.kollocol.domain.model.LeaderboardEntry
 import com.ziopam.kollocol.core.ui.R as CoreR
 
@@ -105,13 +103,7 @@ internal fun LeaderboardRow(entry: LeaderboardEntry, modifier: Modifier = Modifi
         Spacer(Modifier.width(8.dp))
 
         Row(verticalAlignment = Alignment.CenterVertically) {
-            val medal = when (entry.rank) {
-                1 -> "\uD83E\uDD47"
-                2 -> "\uD83E\uDD48"
-                3 -> "\uD83E\uDD49"
-                else -> null
-            }
-
+            val medal = entry.rank.rankToMedalEmoji()
             if (medal != null) {
                 Text(text = medal, fontSize = 18.sp)
                 Spacer(Modifier.width(4.dp))

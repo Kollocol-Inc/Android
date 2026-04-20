@@ -14,7 +14,11 @@
     <string name="game_quiz_finished">Квиз завершён</string>
     <string name="game_final_score">Итоговый счёт: %d</string>
     <string name="game_rank">Место: %d</string>
+    <string name="game_your_place">Ваше место: %d</string>
+    <string name="game_your_place_prefix">Ваше место:</string>
+    <string name="game_other_participants">Остальные участники</string>
     <string name="game_return">Вернуться</string>
+    <string name="game_exit">Выйти</string>
     <string name="game_reconnecting">Переподключение…</string>
     <string name="game_connecting">Подключение…</string>
     <string name="game_answer_correct">Верно! +%d</string>
