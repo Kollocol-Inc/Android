@@ -48,7 +48,7 @@ internal fun WaitingAnsweredContent(
             Spacer(Modifier.height(24.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 WaitingChip(
-                    iconResId = CoreR.drawable.user,
+                    iconResId = CoreR.drawable.user_filled,
                     text = "$answeredCount/$totalParticipants"
                 )
                 if (timeRemainingMs > 0) {
@@ -56,7 +56,7 @@ internal fun WaitingAnsweredContent(
                     val mm = totalSeconds / 60
                     val ss = totalSeconds % 60
                     WaitingChip(
-                        iconResId = R.drawable.timer,
+                        iconResId = CoreR.drawable.clock_filled,
                         text = String.format(Locale.ROOT, "%02d:%02d", mm, ss)
                     )
                 }
