@@ -73,7 +73,6 @@ internal fun FinishedContent(
     val density = LocalDensity.current
     val heroInitialOffsetPx = with(density) { 72.dp.toPx() }
 
-    // ── Animation state ───────────────────────────────────────────────────
     val titleAlpha      = remember { Animatable(0f) }
     val titleOffsetY    = remember { Animatable(0f) }
     val headerAlpha     = remember { Animatable(0f) }
@@ -82,40 +81,33 @@ internal fun FinishedContent(
     val heroAlpha       = remember { Animatable(0f) }
     val heroSlideY      = remember { Animatable(heroInitialOffsetPx) }
 
-    // 2nd starts at +250px (right of its left slot) → slides left; 3rd at -250px → slides right
     val secondOffsetX   = remember { Animatable(250f) }
     val secondAlpha     = remember { Animatable(0f) }
     val thirdOffsetX    = remember { Animatable(-250f) }
     val thirdAlpha      = remember { Animatable(0f) }
 
-    // Separate alphas so "Ваше место" appears before "Остальные участники"
     val yourResultAlpha = remember { Animatable(0f) }
     val othersAlpha     = remember { Animatable(0f) }
     val restAlphas      = remember { List(rest.size) { Animatable(0f) } }
 
     var showConfetti by remember { mutableStateOf(false) }
 
-    // ── Position tracking ─────────────────────────────────────────────────
     var rootSize          by remember { mutableStateOf(IntSize.Zero) }
     var headerTitleCenter by remember { mutableStateOf(Offset.Zero) }
 
-    // ── Animation sequence ────────────────────────────────────────────────
     LaunchedEffect(Unit) {
         snapshotFlow { rootSize.width > 0 && headerTitleCenter != Offset.Zero }.first { it }
 
         val centerY = rootSize.height / 2f
 
-        // Phase 1: Title appears at screen center
         titleAlpha.animateTo(1f, tween(600, easing = EaseOutCubic))
         delay(500)
 
-        // Phase 2: Title flies to header position, then cross-fades with real header
         titleOffsetY.animateTo(headerTitleCenter.y - centerY, tween(700, easing = EaseInOutCubic))
         launch { titleAlpha.animateTo(0f, tween(250)) }
         headerAlpha.animateTo(1f, tween(250))
         delay(300)
 
-        // Phase 3: Confetti + hero slides in, stays, then fades out
         showConfetti = true
         if (first != null) {
             launch { heroAlpha.animateTo(1f, tween(500, easing = EaseOutCubic)) }
@@ -124,10 +116,8 @@ internal fun FinishedContent(
             heroAlpha.animateTo(0f, tween(300))
         }
 
-        // Phase 4: Card appears — only AFTER hero has fully faded
         cardAlpha.animateTo(1f, tween(500))
 
-        // Phase 5: 2nd slides right→left, 3rd slides left→right, both fade in
         launch { secondOffsetX.animateTo(0f, tween(500, easing = EaseOutBack)) }
         launch { secondAlpha.animateTo(1f, tween(450)) }
         delay(150)
@@ -135,10 +125,8 @@ internal fun FinishedContent(
         launch { thirdAlpha.animateTo(1f, tween(450)) }
         delay(300)
 
-        // Phase 6a: "Ваше место" fades in
         yourResultAlpha.animateTo(1f, tween(500))
 
-        // Phase 6b: "Остальные участники" header fades in, then items stagger
         othersAlpha.animateTo(1f, tween(500))
         restAlphas.forEachIndexed { i, anim ->
             launch {
@@ -151,14 +139,12 @@ internal fun FinishedContent(
     val topPad = WindowInsets.systemBars.asPaddingValues().calculateTopPadding()
     val scrollState = rememberScrollState()
 
-    // ── Root box ──────────────────────────────────────────────────────────
     Box(
         modifier = Modifier
             .fillMaxSize()
             .onGloballyPositioned { rootSize = it.size }
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
-            // Header: position tracked outside alpha, visibility inside
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -177,7 +163,6 @@ internal fun FinishedContent(
                 }
             }
 
-            // Leaderboard card: non-scrollable so we can pin button to bottom
             LargeBottomCard(
                 modifier = Modifier
                     .weight(1f)
@@ -185,7 +170,6 @@ internal fun FinishedContent(
                 scrollable = false
             ) {
                 Column(modifier = Modifier.fillMaxSize()) {
-                    // Scrollable leaderboard content
                     Column(
                         modifier = Modifier
                             .weight(1f)
@@ -208,22 +192,19 @@ internal fun FinishedContent(
                             thirdAlpha = thirdAlpha.value
                         )
 
-                        // "Ваше место" — appears first, separately
                         finished.result?.let { result ->
-                            Column(modifier = Modifier.alpha(yourResultAlpha.value)) {
-                                Spacer(Modifier.height(12.dp))
-                                HorizontalDivider(
-                                    color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
-                                )
-                                Spacer(Modifier.height(12.dp))
-                                YourResultRow(
-                                    result = result,
-                                    entry = sorted.firstOrNull { it.rank == result.rank }
-                                )
+                            if (finished.result.rank != 0) {
+                                Column(modifier = Modifier.alpha(yourResultAlpha.value)) {
+                                    Spacer(Modifier.height(12.dp))
+                                    HorizontalDivider(
+                                        color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f)
+                                    )
+                                    Spacer(Modifier.height(12.dp))
+                                    YourResultRow(result = result)
+                                }
                             }
                         }
 
-                        // "Остальные участники" — appears after "Ваше место"
                         if (rest.isNotEmpty()) {
                             Column(modifier = Modifier.alpha(othersAlpha.value)) {
                                 Spacer(Modifier.height(12.dp))
@@ -242,7 +223,6 @@ internal fun FinishedContent(
                         Spacer(Modifier.height(16.dp))
                     }
 
-                    // Exit button pinned to bottom — always at bottom of card
                     Spacer(Modifier.height(8.dp))
                     DefaultButton(
                         text = stringResource(R.string.game_exit),
@@ -257,7 +237,6 @@ internal fun FinishedContent(
 
         ConfettiOverlay(visible = showConfetti)
 
-        // Title overlay: appears at center, flies to header position, cross-fades out
         if (titleAlpha.value > 0.01f) {
             Box(
                 modifier = Modifier

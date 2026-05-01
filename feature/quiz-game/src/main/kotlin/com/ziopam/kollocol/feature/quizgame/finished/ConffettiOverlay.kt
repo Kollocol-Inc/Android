@@ -30,7 +30,6 @@ internal fun ConfettiOverlay(visible: Boolean) {
     LaunchedEffect(visible) {
         if (visible) {
             overlayAlpha.snapTo(1f)
-            // Play one full fall cycle, then fade out
             progress.animateTo(1f, tween(3000, easing = LinearEasing))
             overlayAlpha.animateTo(0f, tween(600))
         }
