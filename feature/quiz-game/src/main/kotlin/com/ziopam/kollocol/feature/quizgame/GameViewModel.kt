@@ -117,22 +117,27 @@ class GameViewModel @Inject constructor(
 
     private fun handleConnected(event: GameEvent.Connected) {
         isCreator = event.isCreator
+        val async = event.quizType.equals("async", ignoreCase = true)
 
         when (event.quizStatus) {
             "waiting" -> {
-                _uiState.update {
-                    it.copy(isReconnecting = false, phase = GamePhase.Lobby(isCreator = event.isCreator))
+                val phase = if (async && !event.isCreator) {
+                    GamePhase.AsyncInfo
+                } else {
+                    GamePhase.Lobby(isCreator = event.isCreator)
                 }
+                _uiState.update { it.copy(isReconnecting = false, isAsync = async, phase = phase) }
             }
             "finished" -> {
                 _uiState.update {
-                    it.copy(isReconnecting = false, phase = GamePhase.Finished())
+                    it.copy(isReconnecting = false, isAsync = async, phase = GamePhase.Finished())
                 }
             }
             else -> {
                 _uiState.update {
                     it.copy(
                         isReconnecting = false,
+                        isAsync = async,
                         phase = GamePhase.Playing(
                             isCreator = event.isCreator,
                             showStats = event.isCreator,
@@ -188,11 +193,13 @@ class GameViewModel @Inject constructor(
         val nonCreatorCount = knownParticipants.size
         _uiState.update { state ->
             val quizName = event.quizTitle.ifBlank { state.quizName }
+            val deadline = event.quizDeadline ?: state.quizDeadline
             when (val phase = state.phase) {
                 is GamePhase.Lobby -> {
                     val selfId = findSelfId(event.participants)
                     state.copy(
                         quizName = quizName,
+                        quizDeadline = deadline,
                         totalParticipants = nonCreatorCount,
                         selfUserId = selfId ?: state.selfUserId,
                         phase = phase.copy(
@@ -201,7 +208,7 @@ class GameViewModel @Inject constructor(
                         )
                     )
                 }
-                else -> state.copy(quizName = quizName, totalParticipants = nonCreatorCount)
+                else -> state.copy(quizName = quizName, quizDeadline = deadline, totalParticipants = nonCreatorCount)
             }
         }
     }
@@ -265,13 +272,6 @@ class GameViewModel @Inject constructor(
                 )
             )
         }
-
-        val toastMsg = if (result.isCorrect) {
-            UiText.StringRes(R.string.game_answer_correct, listOf(result.score))
-        } else {
-            UiText.StringRes(R.string.game_answer_incorrect)
-        }
-        viewModelScope.launch { _events.emit(GameUiEvent.ShowToast(toastMsg)) }
     }
 
     private fun handleAnswerProgress(event: GameEvent.AnswerProgress) {
@@ -436,6 +436,11 @@ class GameViewModel @Inject constructor(
     }
 
     fun startQuiz() {
+        gameRepository.sendStartQuiz()
+    }
+
+    fun startAsyncQuiz() {
+        _uiState.update { it.copy(phase = GamePhase.Playing(isCreator = false, showStats = false)) }
         gameRepository.sendStartQuiz()
     }
 

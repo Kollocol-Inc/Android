@@ -26,9 +26,11 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ziopam.kollocol.core.common.TimeFormatter
 import com.ziopam.kollocol.core.ui.preview.AppPreview
 import com.ziopam.kollocol.core.ui.uiText.UiText
 import com.ziopam.kollocol.domain.model.GameFinishResult
+import com.ziopam.kollocol.feature.quizgame.finished.AsyncFinishedContent
 import com.ziopam.kollocol.feature.quizgame.finished.FinishedContent
 import com.ziopam.kollocol.feature.quizgame.playing.PlayingContent
 import com.ziopam.kollocol.feature.quizgame.preview.GamePreviewData
@@ -59,6 +61,7 @@ fun GameScreen(
     GameScreen(
         state = state,
         onStartQuiz = viewModel::startQuiz,
+        onStartAsyncQuiz = viewModel::startAsyncQuiz,
         onSelectAnswer = viewModel::selectAnswer,
         onSubmitAnswer = viewModel::submitAnswer,
         onSetOpenAnswer = viewModel::setOpenAnswer,
@@ -73,6 +76,7 @@ fun GameScreen(
 fun GameScreen(
     state: GameUiState,
     onStartQuiz: () -> Unit = {},
+    onStartAsyncQuiz: () -> Unit = {},
     onSelectAnswer: (Int) -> Unit = {},
     onSubmitAnswer: () -> Unit = {},
     onSetOpenAnswer: (String) -> Unit = {},
@@ -84,6 +88,13 @@ fun GameScreen(
     Box(modifier = Modifier.fillMaxSize()) {
         when (val phase = state.phase) {
             is GamePhase.Connecting -> ConnectingContent()
+            is GamePhase.AsyncInfo -> AsyncInfoContent(
+                quizName = state.quizName,
+                accessCode = state.accessCode,
+                deadline = TimeFormatter.formatDeadline(state.quizDeadline),
+                onStart = onStartAsyncQuiz,
+                onNavigateBack = onNavigateBack
+            )
             is GamePhase.Lobby -> LobbyContent(
                 quizName = state.quizName,
                 accessCode = state.accessCode,
@@ -99,17 +110,25 @@ fun GameScreen(
                 totalParticipants = state.totalParticipants,
                 playing = phase,
                 isReconnecting = state.isReconnecting,
+                isAsync = state.isAsync,
                 onSelectAnswer = onSelectAnswer,
                 onSubmitAnswer = onSubmitAnswer,
                 onSetOpenAnswer = onSetOpenAnswer,
                 onNextQuestion = onNextQuestion,
                 onNavigateBack = onNavigateBack
             )
-            is GamePhase.Finished -> FinishedContent(
-                finished = phase,
-                quizName = state.quizName,
-                onNavigateBack = onNavigateBack
-            )
+            is GamePhase.Finished -> if (state.isAsync) {
+                AsyncFinishedContent(
+                    quizName = state.quizName,
+                    onNavigateBack = onNavigateBack
+                )
+            } else {
+                FinishedContent(
+                    finished = phase,
+                    quizName = state.quizName,
+                    onNavigateBack = onNavigateBack
+                )
+            }
             is GamePhase.Error -> ErrorContent(
                 message = phase.message,
                 onRetry = onRetry,

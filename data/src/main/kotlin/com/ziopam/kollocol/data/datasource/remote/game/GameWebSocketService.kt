@@ -263,7 +263,8 @@ class GameWebSocketService @Inject constructor(
                             isCreator = participant.isCreator
                         )
                     },
-                    quizTitle = p.quiz?.title ?: ""
+                    quizTitle = p.quiz?.title ?: "",
+                    quizDeadline = p.quiz?.deadline
                 )
             }
 

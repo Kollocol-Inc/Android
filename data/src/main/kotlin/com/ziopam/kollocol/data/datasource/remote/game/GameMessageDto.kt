@@ -61,7 +61,10 @@ data class ParticipantDto(
 
 data class ParticipantsListQuizDto(
     @SerializedName("title")
-    val title: String = ""
+    val title: String = "",
+
+    @SerializedName("deadline")
+    val deadline: String? = null
 )
 
 data class ParticipantsListPayloadDto(

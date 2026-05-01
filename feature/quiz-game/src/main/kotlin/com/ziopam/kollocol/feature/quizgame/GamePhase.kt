@@ -12,6 +12,8 @@ import com.ziopam.kollocol.domain.model.LeaderboardEntry
 sealed interface GamePhase {
     data object Connecting : GamePhase
 
+    data object AsyncInfo : GamePhase
+
     data class Lobby(
         val participants: List<GameParticipant> = emptyList(),
         val participantCount: Int = 0,
@@ -52,7 +54,9 @@ data class GameUiState(
     val accessCode: String = "",
     val isReconnecting: Boolean = false,
     val totalParticipants: Int = 0,
-    val selfUserId: String = ""
+    val selfUserId: String = "",
+    val isAsync: Boolean = false,
+    val quizDeadline: String? = null
 )
 
 sealed interface GameUiEvent {

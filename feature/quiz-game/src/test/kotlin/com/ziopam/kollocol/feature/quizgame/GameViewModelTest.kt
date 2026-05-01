@@ -204,7 +204,7 @@ class GameViewModelTest {
     }
 
     @Test
-    fun `AnswerResultReceived emits ShowToast event`() = runTest {
+    fun `AnswerResultReceived sets hasAnswered`() = runTest {
         // Given
         eventsFlow.emit(GameEvent.Connected("s1", "sync", "active", false))
         advanceUntilIdle()
@@ -219,9 +219,11 @@ class GameViewModelTest {
             advanceUntilIdle()
 
             // Then
-            val event = awaitItem()
-            assertTrue(event is GameUiEvent.ShowToast)
+            expectNoEvents()
         }
+
+        val phase = viewModel.uiState.value.phase as GamePhase.Playing
+        assertTrue(phase.hasAnswered)
     }
 
     @Test

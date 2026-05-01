@@ -16,7 +16,8 @@ sealed interface GameEvent {
 
     data class ParticipantsList(
         val participants: List<GameParticipant>,
-        val quizTitle: String
+        val quizTitle: String,
+        val quizDeadline: String? = null
     ) : GameEvent
 
     data object QuizStarted : GameEvent

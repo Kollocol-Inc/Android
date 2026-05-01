@@ -39,4 +39,9 @@
     <string name="game_error_session_replaced">Ваша сессия прервана другим устройством</string>
     <string name="game_error_kicked">Вас исключили из игры</string>
     <string name="game_not_enough_participants">Недостаточно участников</string>
+    <string name="game_async_about">О квизе</string>
+    <string name="game_async_deadline">до %s</string>
+    <string name="game_async_start">Приступить к выполнению</string>
+    <string name="game_async_completed">Квиз успешно пройден</string>
+    <string name="game_async_await_result">Ожидайте получения оценки</string>
 </resources>

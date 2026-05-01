@@ -35,6 +35,7 @@ internal fun PlayingContent(
     totalParticipants: Int,
     playing: GamePhase.Playing,
     isReconnecting: Boolean,
+    isAsync: Boolean = false,
     onSelectAnswer: (Int) -> Unit,
     onSubmitAnswer: () -> Unit,
     onSetOpenAnswer: (String) -> Unit,
@@ -42,8 +43,8 @@ internal fun PlayingContent(
     onNavigateBack: () -> Unit = {}
 ) {
     val isLastQuestion = playing.question?.let { it.questionIndex + 1 == it.totalQuestions } == true
-    val waitingForStats = !playing.isCreator && playing.hasAnswered && !playing.showStats
-    val awaitingFinalResults = !playing.isCreator && isLastQuestion && playing.showStats
+    val waitingForStats = !isAsync && !playing.isCreator && playing.hasAnswered && !playing.showStats
+    val awaitingFinalResults = !isAsync && !playing.isCreator && isLastQuestion && playing.showStats
 
     if (waitingForStats || awaitingFinalResults) {
         WaitingAnsweredContent(
@@ -156,14 +157,17 @@ internal fun PlayingContent(
 private fun PlayingContentPreview() {
     AppPreview {
         PlayingContent(
-            "Hello World",
-            10,
-            GamePhase.Playing(
+            quizName = "Hello World",
+            totalParticipants = 10,
+            playing = GamePhase.Playing(
                 selectedAnswers = setOf(0),
                 question = GamePreviewData.question
             ),
             isReconnecting = false,
-            {}, {}, {}, {}
+            onSelectAnswer = {},
+            onSubmitAnswer = {},
+            onSetOpenAnswer = {},
+            onNextQuestion = {}
         )
     }
 }
@@ -173,9 +177,9 @@ private fun PlayingContentPreview() {
 private fun PlayingStatsPreview() {
     AppPreview {
         PlayingContent(
-            "Hello World",
-            10,
-            GamePhase.Playing(
+            quizName = "Hello World",
+            totalParticipants = 10,
+            playing = GamePhase.Playing(
                 question = GamePreviewData.question,
                 leaderboard = GamePreviewData.leaderboardEntries,
                 answerOptionStats = listOf(
@@ -185,7 +189,10 @@ private fun PlayingStatsPreview() {
                 showStats = true
             ),
             isReconnecting = false,
-            {}, {}, {}, {}
+            onSelectAnswer = {},
+            onSubmitAnswer = {},
+            onSetOpenAnswer = {},
+            onNextQuestion = {}
         )
     }
 }

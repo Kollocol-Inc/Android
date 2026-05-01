@@ -97,7 +97,10 @@ fun QuizCard(
                 ) {
                     StatLine(text = quizInfo.totalQuestions.toString(), icon = ImageVector.vectorResource(R.drawable.question_in_circle_filled))
                     StatLine(text = quizInfo.totalTime, icon = ImageVector.vectorResource(R.drawable.clock_filled))
-                    StatLine(text = quizInfo.deadline, icon = ImageVector.vectorResource(R.drawable.calendar))
+                    StatLine(
+                        text = quizInfo.deadline?.let { stringResource(R.string.quiz_deadline, it) },
+                        icon = ImageVector.vectorResource(R.drawable.calendar)
+                    )
                 }
             }
 
