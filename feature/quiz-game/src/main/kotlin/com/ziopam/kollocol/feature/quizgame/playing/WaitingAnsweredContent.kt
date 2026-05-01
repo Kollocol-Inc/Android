@@ -32,7 +32,8 @@ import com.ziopam.kollocol.core.ui.R as CoreR
 internal fun WaitingAnsweredContent(
     answeredCount: Int,
     totalParticipants: Int,
-    timeRemainingMs: Long
+    timeRemainingMs: Long,
+    title: String = stringResource(R.string.game_waiting_others)
 ) {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Column(
@@ -40,7 +41,7 @@ internal fun WaitingAnsweredContent(
             modifier = Modifier.padding(horizontal = 32.dp)
         ) {
             Text(
-                text = stringResource(R.string.game_waiting_others),
+                text = title,
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center

@@ -34,17 +34,26 @@ internal fun PlayingContent(
     quizName: String,
     totalParticipants: Int,
     playing: GamePhase.Playing,
+    isReconnecting: Boolean,
     onSelectAnswer: (Int) -> Unit,
     onSubmitAnswer: () -> Unit,
     onSetOpenAnswer: (String) -> Unit,
     onNextQuestion: () -> Unit,
     onNavigateBack: () -> Unit = {}
 ) {
-    if (!playing.isCreator && playing.hasAnswered && !playing.showStats) {
+    val isLastQuestion = playing.question?.let { it.questionIndex + 1 == it.totalQuestions } == true
+    val waitingForStats = !playing.isCreator && playing.hasAnswered && !playing.showStats
+    val awaitingFinalResults = !playing.isCreator && isLastQuestion && playing.showStats
+
+    if (waitingForStats || awaitingFinalResults) {
         WaitingAnsweredContent(
             answeredCount = playing.answerProgress?.participantsAnswered ?: 0,
             totalParticipants = totalParticipants,
-            timeRemainingMs = playing.timeRemainingMs
+            timeRemainingMs = playing.timeRemainingMs,
+            title = stringResource(
+                if (awaitingFinalResults) R.string.game_waiting_quiz_finish
+                else R.string.game_waiting_others
+            )
         )
         return
     }
@@ -104,7 +113,10 @@ internal fun PlayingContent(
 
             if (playing.isCreator) {
                 DefaultButton(
-                    text = stringResource(R.string.game_next_question),
+                    text = stringResource(
+                        if (isLastQuestion) R.string.game_finish_quiz
+                        else R.string.game_next_question
+                    ),
                     onClick = onNextQuestion,
                     isButtonEnabled = playing.canContinue,
                     isWidthLimited = false,
@@ -112,7 +124,7 @@ internal fun PlayingContent(
                 )
             } else {
                 if (!playing.hasAnswered && !playing.timeExpired) {
-                    val canSubmit = when (question?.type) {
+                    val canSubmit = !isReconnecting && when (question?.type) {
                         QuestionType.SINGLE -> playing.selectedAnswers.isNotEmpty()
                         QuestionType.MULTIPLE -> playing.selectedAnswers.isNotEmpty()
                         QuestionType.OPEN -> playing.openAnswer.isNotBlank()
@@ -150,6 +162,7 @@ private fun PlayingContentPreview() {
                 selectedAnswers = setOf(0),
                 question = GamePreviewData.question
             ),
+            isReconnecting = false,
             {}, {}, {}, {}
         )
     }
@@ -171,6 +184,7 @@ private fun PlayingStatsPreview() {
                 timeRemainingMs = 10000,
                 showStats = true
             ),
+            isReconnecting = false,
             {}, {}, {}, {}
         )
     }

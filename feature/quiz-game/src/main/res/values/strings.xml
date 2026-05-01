@@ -7,8 +7,10 @@
     <string name="game_you_label">Вы</string>
     <string name="game_leaderboard">Таблица лидеров</string>
     <string name="game_next_question">Следующий вопрос</string>
+    <string name="game_finish_quiz">Завершить квиз</string>
     <string name="game_waiting_next_question">Ожидаем следующего вопроса…</string>
     <string name="game_waiting_others">Ждем пока\nостальные ответят…</string>
+    <string name="game_waiting_quiz_finish">Ожидаем завершение\nквиза создателем</string>
     <string name="game_question_format">%1$d/%2$d</string>
     <string name="game_pts_format">%d б.</string>
     <string name="game_quiz_finished">Квиз завершён</string>

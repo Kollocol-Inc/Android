@@ -98,6 +98,7 @@ fun GameScreen(
                 quizName = state.quizName,
                 totalParticipants = state.totalParticipants,
                 playing = phase,
+                isReconnecting = state.isReconnecting,
                 onSelectAnswer = onSelectAnswer,
                 onSubmitAnswer = onSubmitAnswer,
                 onSetOpenAnswer = onSetOpenAnswer,

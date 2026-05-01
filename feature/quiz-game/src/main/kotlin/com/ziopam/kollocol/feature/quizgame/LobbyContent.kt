@@ -86,7 +86,7 @@ internal fun LobbyContent(
                     )
                     Spacer(Modifier.width(4.dp))
                     Icon(
-                        imageVector = ImageVector.vectorResource(id = CoreR.drawable.user),
+                        imageVector = ImageVector.vectorResource(id = CoreR.drawable.user_filled),
                         contentDescription = null,
                         modifier = Modifier.size(24.dp)
                     )
