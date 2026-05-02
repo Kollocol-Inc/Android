@@ -65,4 +65,12 @@
     <string name="template_deleted">Шаблон удалён</string>
     <string name="generate_more_questions">Дополнить с ИИ</string>
     <string name="generation_error">Ошибка генерации. Попробуйте снова.</string>
+
+    <string name="start_quiz_title">Запуск квиза</string>
+    <string name="deadline">Дедлайн</string>
+    <string name="date">Дата</string>
+    <string name="group">Группа</string>
+    <string name="no_group">Без группы</string>
+    <string name="launch">Запустить</string>
+    <string name="ok">OK</string>
 </resources>
