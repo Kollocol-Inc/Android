@@ -1,5 +1,6 @@
 package com.ziopam.kollocol.feature.main.quizzes.createTemplate
 
+import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -116,30 +117,34 @@ fun CreateTemplateScreen(
     )
 }
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @PreviewLightDark
 @Composable
 private fun CreateTemplateEmptyPreview() {
     var title by remember { mutableStateOf("") }
 
     AppTheme {
-        CreateTemplateScreen(
-            title = title,
-            quizType = "async",
-            randomOrder = false,
-            questions = emptyList(),
-            isLoading = false,
-            onNavigateBack = {},
-            onTitleChange = { title = it },
-            onQuizTypeToggle = {},
-            onRandomOrderToggle = {},
-            onAddQuestionClick = {},
-            onEditQuestion = {},
-            onDeleteQuestion = {},
-            onSaveClick = {}
-        )
+        Scaffold {
+            CreateTemplateScreen(
+                title = title,
+                quizType = "async",
+                randomOrder = false,
+                questions = emptyList(),
+                isLoading = false,
+                onNavigateBack = {},
+                onTitleChange = { title = it },
+                onQuizTypeToggle = {},
+                onRandomOrderToggle = {},
+                onAddQuestionClick = {},
+                onEditQuestion = {},
+                onDeleteQuestion = {},
+                onSaveClick = {}
+            )
+        }
     }
 }
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @PreviewLightDark
 @Composable
 private fun CreateTemplateWithQuestionsPreview() {

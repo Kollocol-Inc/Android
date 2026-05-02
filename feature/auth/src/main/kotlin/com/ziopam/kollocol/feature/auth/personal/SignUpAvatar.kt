@@ -37,7 +37,7 @@ fun SignUpAvatar(
         onError = onAvatarError
     )
     AvatarPicker(
-        avatarUri = state.avatarUri,
+        avatarUrl = state.avatarUri?.toString(),
         onClick = pickAvatar,
         overlay = {
             if (state.avatarUri != null) {

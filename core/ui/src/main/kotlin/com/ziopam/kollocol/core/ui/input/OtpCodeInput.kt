@@ -28,8 +28,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import com.ziopam.kollocol.core.ui.clickableNoIndication
@@ -46,7 +48,7 @@ fun OtpCodeInput(
     horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(12.dp),
     shape: RoundedCornerShape = RoundedCornerShape(12.dp),
     borderColor: Color = MaterialTheme.colorScheme.primary,
-    cellColor: Color = MaterialTheme.colorScheme.primaryContainer,
+    cellColor: Color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
     useActive: Boolean = true,
     animateError: Boolean = false
 ) {
@@ -89,14 +91,18 @@ fun OtpCodeInput(
         keyboardController?.show()
     }
 
+    val textFieldValue = remember(code) {
+        TextFieldValue(text = code, selection = TextRange(code.length))
+    }
+
     Box(
         modifier = modifier
             .clickableNoIndication { focusAndShowKeyboard() },
         contentAlignment = Alignment.Center
     ) {
         TextField(
-            value = code,
-            onValueChange = onCodeChange,
+            value = textFieldValue,
+            onValueChange = { newValue -> onCodeChange(newValue.text) },
             modifier = Modifier
                 .focusRequester(focusRequester)
                 .widthIn(max = MAX_EDITTEXT_WIDTH.dp)
@@ -145,7 +151,7 @@ private fun OtpCell(
     size: DpSize,
     shape: RoundedCornerShape,
     borderColor: Color = MaterialTheme.colorScheme.primary,
-    cellColor: Color = MaterialTheme.colorScheme.primaryContainer,
+    cellColor: Color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
     modifier: Modifier = Modifier,
 ) {
     Surface(

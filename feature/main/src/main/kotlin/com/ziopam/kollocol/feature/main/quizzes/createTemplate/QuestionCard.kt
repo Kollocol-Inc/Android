@@ -40,14 +40,13 @@ fun QuestionCard(
     Surface(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
+        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.8f),
         tonalElevation = 1.dp
     ) {
         Column(
             modifier = Modifier.padding(12.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            // Header row
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -102,7 +101,6 @@ fun QuestionCard(
                 }
             }
 
-            // Question text
             Text(
                 text = question.text,
                 style = MaterialTheme.typography.bodyMedium,
@@ -110,7 +108,6 @@ fun QuestionCard(
                 overflow = TextOverflow.Ellipsis
             )
 
-            // Answer preview
             when (question.type) {
                 QuestionType.SINGLE -> {
                     question.options.forEachIndexed { idx, option ->

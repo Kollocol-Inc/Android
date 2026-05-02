@@ -11,11 +11,13 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.ziopam.kollocol.core.ui.R
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.ziopam.kollocol.core.ui.R
 import com.ziopam.kollocol.core.ui.theme.AppTheme
 
 @Composable
@@ -24,10 +26,12 @@ fun CircleIconButton(
     icon: ImageVector,
     contentDescription: String?,
     modifier: Modifier = Modifier,
+    size: Dp = 48.dp,
     enabled: Boolean = true,
+    tint : Color = MaterialTheme.colorScheme.primary
 ) {
     Surface(
-        modifier = modifier.size(48.dp),
+        modifier = modifier.size(size),
         shape = CircleShape,
         color = MaterialTheme.colorScheme.surface,
         shadowElevation = 6.dp,
@@ -41,8 +45,8 @@ fun CircleIconButton(
             Icon(
                 imageVector = icon,
                 contentDescription = contentDescription,
-                tint = MaterialTheme.colorScheme.primary,
-                modifier = Modifier.size(24.dp)
+                tint = tint,
+                modifier = Modifier.size(size / 2)
             )
         }
     }

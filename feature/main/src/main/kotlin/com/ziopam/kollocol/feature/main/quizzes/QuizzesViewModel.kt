@@ -2,14 +2,23 @@ package com.ziopam.kollocol.feature.main.quizzes
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ziopam.kollocol.core.common.AppError
+import com.ziopam.kollocol.core.common.AppResult
 import com.ziopam.kollocol.domain.model.QuizInfo
 import com.ziopam.kollocol.domain.repository.QuizRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.Instant
+import java.time.ZoneId
+import java.time.ZonedDateTime
 import javax.inject.Inject
 
 data class MyQuizzesState(
@@ -24,12 +33,32 @@ data class TemplatesState(
     val templates: List<QuizInfo> = emptyList()
 )
 
+data class StartQuizSheetState(
+    val template: QuizInfo? = null,
+    val title: String = "",
+    val deadlineDateMillis: Long? = null,
+    val deadlineHour: Int? = null,
+    val deadlineMinute: Int? = null,
+    val isLoading: Boolean = false
+)
+
+sealed class QuizzesEvent {
+    data class ShowError(val message: String) : QuizzesEvent()
+    object QuizStarted : QuizzesEvent()
+}
+
 @HiltViewModel
 class QuizzesViewModel @Inject constructor(
     private val quizRepository: QuizRepository
 ) : ViewModel() {
     private val searchQuery = MutableStateFlow("")
     private val selectedTabIndex = MutableStateFlow(0)
+
+    private val _startQuizState = MutableStateFlow(StartQuizSheetState())
+    val startQuizState = _startQuizState.asStateFlow()
+
+    private val _events = Channel<QuizzesEvent>()
+    val events = _events.receiveAsFlow()
 
     val myQuizzesState = combine(
         searchQuery,
@@ -83,6 +112,72 @@ class QuizzesViewModel @Inject constructor(
         viewModelScope.launch {
             quizRepository.getTemplates()
         }
+    }
+
+    fun onStartClick(template: QuizInfo) {
+        _startQuizState.value = StartQuizSheetState(template = template, title = template.title)
+    }
+
+    fun onDismissStartQuiz() {
+        _startQuizState.value = StartQuizSheetState()
+    }
+
+    fun onStartQuizTitleChange(title: String) {
+        _startQuizState.update { it.copy(title = title) }
+    }
+
+    fun onStartQuizDeadlineDateChange(millis: Long) {
+        _startQuizState.update { it.copy(deadlineDateMillis = millis) }
+    }
+
+    fun onStartQuizDeadlineTimeChange(hour: Int, minute: Int) {
+        _startQuizState.update { it.copy(deadlineHour = hour, deadlineMinute = minute) }
+    }
+
+    fun startQuiz() {
+        val state = _startQuizState.value
+        val template = state.template ?: return
+
+        viewModelScope.launch {
+            _startQuizState.update { it.copy(isLoading = true) }
+
+            val deadline = buildDeadline(state)
+
+            val result = quizRepository.createInstance(
+                templateId = template.id,
+                title = state.title,
+                deadline = deadline
+            )
+
+            when (result) {
+                is AppResult.Ok -> {
+                    _startQuizState.value = StartQuizSheetState()
+                    _events.send(QuizzesEvent.QuizStarted)
+                    refresh()
+                }
+                is AppResult.Err -> {
+                    _startQuizState.update { it.copy(isLoading = false) }
+                    val message = when (val err = result.error) {
+                        is AppError.BadRequest -> err.message ?: "Ошибка запроса"
+                        AppError.NoInternet -> "Нет подключения к интернету"
+                        AppError.Timeout -> "Превышено время ожидания"
+                        else -> "Не удалось запустить квиз"
+                    }
+                    _events.send(QuizzesEvent.ShowError(message))
+                }
+            }
+        }
+    }
+
+    private fun buildDeadline(state: StartQuizSheetState): String? {
+        val dateMillis = state.deadlineDateMillis ?: return null
+        val hour = state.deadlineHour ?: return null
+        val minute = state.deadlineMinute ?: return null
+        val localDate = Instant.ofEpochMilli(dateMillis).atZone(ZoneId.of("UTC")).toLocalDate()
+        return ZonedDateTime.of(
+            localDate.atTime(hour, minute),
+            ZoneId.systemDefault()
+        ).toInstant().toString()
     }
 
     private fun filterQuizzesByQuery(quizzes: List<QuizInfo>, query: String): List<QuizInfo> {

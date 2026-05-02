@@ -25,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -39,7 +40,7 @@ private val shape = RoundedCornerShape(24.dp)
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun SearchBar(
-    placeholder: String,
+    placeholder: String = stringResource(R.string.search),
     text: String,
     onQueryChange: (String) -> Unit,
     modifier: Modifier = Modifier
@@ -49,7 +50,7 @@ fun SearchBar(
 
     val focusManager = LocalFocusManager.current
 
-    val bg = MaterialTheme.colorScheme.primaryContainer
+    val bg = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
     val borderColor = if (isFocused) MaterialTheme.colorScheme.primary else bg
 
     val isImeVisible = WindowInsets.isImeVisible
@@ -119,7 +120,6 @@ private fun SearchBarPreview(){
 
     AppTheme {
         SearchBar(
-            placeholder = "Поиск",
             text = text,
             onQueryChange = { text = it },
             modifier = Modifier.fillMaxWidth()

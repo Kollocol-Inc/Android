@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.ziopam.kollocol.core.ui.buttons.CircleIconButton
 import com.ziopam.kollocol.core.ui.contentPadding
 import com.ziopam.kollocol.core.ui.theme.AppTheme
+import com.ziopam.kollocol.core.ui.theme.ExtraColors
 import com.ziopam.kollocol.feature.main.R
 import com.ziopam.kollocol.core.ui.R as CoreR
 
@@ -41,7 +42,8 @@ internal fun CreateTemplateAbove(
         CircleIconButton(
             onClick = onNavigateBack,
             icon = ImageVector.vectorResource(CoreR.drawable.arrow_back),
-            contentDescription = null
+            contentDescription = stringResource(CoreR.string.back),
+            tint = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
         Text(
@@ -55,7 +57,8 @@ internal fun CreateTemplateAbove(
             CircleIconButton(
                 onClick = onSaveClick,
                 icon = ImageVector.vectorResource(CoreR.drawable.check),
-                contentDescription = null
+                tint = ExtraColors.affirmative,
+                contentDescription = stringResource(R.string.create_template)
             )
         }
     }

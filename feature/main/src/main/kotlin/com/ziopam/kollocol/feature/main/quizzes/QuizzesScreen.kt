@@ -1,5 +1,6 @@
 package com.ziopam.kollocol.feature.main.quizzes
 
+import android.widget.Toast
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
@@ -8,6 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -25,10 +27,32 @@ fun QuizzesScreen(
 ) {
     val state by viewModel.myQuizzesState.collectAsStateWithLifecycle()
     val templatesState by viewModel.templatesState.collectAsStateWithLifecycle()
+    val startQuizState by viewModel.startQuizState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         viewModel.refresh()
         viewModel.refreshTemplates()
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.events.collect { event ->
+            when (event) {
+                is QuizzesEvent.ShowError -> Toast.makeText(context, event.message, Toast.LENGTH_SHORT).show()
+                is QuizzesEvent.QuizStarted -> Toast.makeText(context, "Квиз запущен!", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    if (startQuizState.template != null) {
+        StartQuizSheet(
+            state = startQuizState,
+            onDismiss = viewModel::onDismissStartQuiz,
+            onTitleChange = viewModel::onStartQuizTitleChange,
+            onDeadlineDateChange = viewModel::onStartQuizDeadlineDateChange,
+            onDeadlineTimeChange = viewModel::onStartQuizDeadlineTimeChange,
+            onStartClick = viewModel::startQuiz
+        )
     }
 
     QuizzesScreen(
@@ -42,7 +66,7 @@ fun QuizzesScreen(
         onTabSelected = viewModel::onTabSelected,
         onQuizClick = onQuizClick,
         onTemplateClick = onQuizClick,
-        onStartClick = {},
+        onStartClick = viewModel::onStartClick,
         onCreateTemplateClick = onCreateTemplateClick
     )
 }

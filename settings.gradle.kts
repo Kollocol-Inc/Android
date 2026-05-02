@@ -1,4 +1,5 @@
 pluginManagement {
+    includeBuild("build-logic")
     repositories {
         google {
             content {
@@ -35,4 +36,5 @@ include(":core:ui")
 include(":feature")
 include(":feature:auth")
 include(":feature:main")
+include(":feature:quiz-game")
  

@@ -9,6 +9,7 @@ import com.ziopam.kollocol.data.datasource.remote.user.UserApi
 import com.ziopam.kollocol.data.storage.datastore.UserDataStoreKeys
 import com.ziopam.kollocol.domain.model.User
 import com.ziopam.kollocol.domain.repository.PersonalRepository
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 class PersonalRepositoryImpl @Inject constructor(
@@ -28,7 +29,20 @@ class PersonalRepositoryImpl @Inject constructor(
                 updateUser(user)
                 AppResult.Ok(user)
             }
-            is AppResult.Err -> result
+            is AppResult.Err -> {
+                val prefs = dataStore.data.first()
+                val firstName = prefs[UserDataStoreKeys.FIRST_NAME]
+                val lastName = prefs[UserDataStoreKeys.LAST_NAME]
+                if (firstName != null && lastName != null) {
+                    AppResult.Ok(User(
+                        firstName = firstName,
+                        lastName = lastName,
+                        avatarUrl = prefs[UserDataStoreKeys.AVATAR_URL]
+                    ))
+                } else {
+                    result
+                }
+            }
         }
     }
 

@@ -34,7 +34,7 @@ class HomeViewModel @Inject constructor(
         user,
         quizCode,
         quizRepository.participatingQuizzes,
-        quizRepository.hostingQuizzes,
+        quizRepository.runningQuizzes,
     ) { user, quizCode, participating, hosting ->
         HomeUiState(
             personName = formatPersonName(user),

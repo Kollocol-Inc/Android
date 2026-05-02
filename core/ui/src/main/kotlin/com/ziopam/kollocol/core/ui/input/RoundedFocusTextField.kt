@@ -1,10 +1,11 @@
-package com.ziopam.kollocol.feature.auth.personal
+package com.ziopam.kollocol.core.ui.input
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -16,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
@@ -27,6 +29,7 @@ fun RoundedFocusTextField(
     onValueChange: (String) -> Unit,
     placeholder: String,
     modifier: Modifier = Modifier,
+    textStyle: TextStyle = MaterialTheme.typography.bodyMedium,
     focusRequester: FocusRequester? = null,
     imeAction: ImeAction = ImeAction.Next,
     onImeAction: () -> Unit = {},
@@ -35,8 +38,7 @@ fun RoundedFocusTextField(
     val isFocused by interactionSource.collectIsFocusedAsState()
 
     val shape = RoundedCornerShape(25.dp)
-    val textStyle = MaterialTheme.typography.bodyMedium
-    val bg = MaterialTheme.colorScheme.primaryContainer
+    val bg = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
     val border = if (isFocused) MaterialTheme.colorScheme.primary else bg
 
     TextField(
@@ -59,7 +61,7 @@ fun RoundedFocusTextField(
             capitalization = KeyboardCapitalization.Words,
             imeAction = imeAction
         ),
-        keyboardActions = androidx.compose.foundation.text.KeyboardActions(
+        keyboardActions = KeyboardActions(
             onNext = { if (imeAction == ImeAction.Next) onImeAction() },
             onDone = { if (imeAction == ImeAction.Done) onImeAction() }
         ),

@@ -6,6 +6,7 @@ import com.ziopam.kollocol.core.common.TimeFormatter
 import com.ziopam.kollocol.domain.model.QuizInfo
 import com.ziopam.kollocol.domain.model.QuizMode
 
+
 @Entity(tableName = "quiz_instances")
 data class QuizInstanceEntity(
     @PrimaryKey
@@ -17,11 +18,12 @@ data class QuizInstanceEntity(
     val totalTime: Int?,
     val deadline: String?,
     val instanceType: String, // "participating" or "hosting"
-    val status: String? = null // quiz status from server
+    val status: String? = null
 )
 
 fun QuizInstanceEntity.toQuizInfo(): QuizInfo {
     return QuizInfo(
+        id = id,
         title = title,
         accessCode = accessCode,
         totalQuestions = totalQuestions,
@@ -30,7 +32,7 @@ fun QuizInstanceEntity.toQuizInfo(): QuizInfo {
             "async" -> QuizMode.ASYNC
             else -> QuizMode.ASYNC
         },
-        deadline = deadline,
+        deadline = TimeFormatter.formatDeadline(deadline),
         totalTime = totalTime?.let { TimeFormatter.formatTime(it) }
     )
 }

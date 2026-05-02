@@ -2,6 +2,7 @@ package com.ziopam.kollocol.data.repository
 
 import com.ziopam.kollocol.core.common.AppResult
 import com.ziopam.kollocol.core.network.SafeApiCall
+import com.ziopam.kollocol.data.datasource.remote.quiz.CreateInstanceRequestDto
 import com.ziopam.kollocol.data.datasource.remote.quiz.CreateTemplateRequestDto
 import com.ziopam.kollocol.data.datasource.remote.quiz.QuestionInputDto
 import com.ziopam.kollocol.data.datasource.remote.quiz.QuizApi
@@ -97,7 +98,6 @@ class QuizRepositoryImpl @Inject constructor(
         }
     }
 
-    @Suppress("UNCHECKED_CAST")
     override suspend fun createTemplate(
         title: String,
         quizType: String,
@@ -105,15 +105,14 @@ class QuizRepositoryImpl @Inject constructor(
         description: String?,
         randomOrder: Boolean
     ): AppResult<String> {
-        val questionDtos = questions.mapIndexed { index, q ->
+        val questionDtos = questions.map { q ->
             QuestionInputDto(
                 text = q["text"] as String,
                 type = q["type"] as String,
-                correctAnswer = q["correct_answer"] as String,
+                correctAnswer = q["correct_answer"]!!,
                 maxScore = q["max_score"] as Int,
                 options = q["options"] as? List<String>,
                 timeLimitSec = q["time_limit_sec"] as? Int,
-                orderIndex = index
             )
         }
 
@@ -138,6 +137,23 @@ class QuizRepositoryImpl @Inject constructor(
 
         return when (result) {
             is AppResult.Ok -> AppResult.Ok(result.value.templateId)
+            is AppResult.Err -> AppResult.Err(result.error)
+        }
+    }
+
+    override suspend fun createInstance(
+        templateId: String,
+        title: String,
+        deadline: String?
+    ): AppResult<Unit> {
+        val request = CreateInstanceRequestDto(
+            templateId = templateId,
+            title = title,
+            deadline = deadline
+        )
+        val result = safeApiCall.call { api.createInstance(request) }
+        return when (result) {
+            is AppResult.Ok -> AppResult.Ok(Unit)
             is AppResult.Err -> AppResult.Err(result.error)
         }
     }

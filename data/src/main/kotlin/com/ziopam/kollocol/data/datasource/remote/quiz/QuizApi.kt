@@ -21,4 +21,7 @@ interface QuizApi {
 
     @POST("quizzes/templates")
     suspend fun createTemplate(@Body request: CreateTemplateRequestDto): CreateTemplateResponseDto
+
+    @POST("quizzes/instances")
+    suspend fun createInstance(@Body request: CreateInstanceRequestDto): CreateInstanceResponseDto
 }

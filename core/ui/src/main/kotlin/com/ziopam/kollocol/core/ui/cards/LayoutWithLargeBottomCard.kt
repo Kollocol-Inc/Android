@@ -19,6 +19,7 @@ import com.ziopam.kollocol.core.ui.contentPadding
 @Composable
 fun LayoutWithLargeBottomCard(
     contentAbove: @Composable BoxScope.() -> Unit = {},
+    scrollable: Boolean = true,
     content: @Composable BoxScope.() -> Unit,
 ) {
     val padding  = WindowInsets.systemBars.asPaddingValues()
@@ -42,6 +43,7 @@ fun LayoutWithLargeBottomCard(
 
         LargeBottomCard(
             modifier = Modifier.weight(1f),
+            scrollable = scrollable,
             content = content
         )
     }

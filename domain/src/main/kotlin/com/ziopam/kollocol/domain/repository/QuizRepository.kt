@@ -22,4 +22,10 @@ interface QuizRepository {
         description: String? = null,
         randomOrder: Boolean = false
     ): AppResult<String>
+
+    suspend fun createInstance(
+        templateId: String,
+        title: String,
+        deadline: String? = null
+    ): AppResult<Unit>
 }

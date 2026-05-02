@@ -1,5 +1,6 @@
 package com.ziopam.kollocol
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -22,6 +23,10 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            window.isNavigationBarContrastEnforced = false
+        }
 
         var startGraph: String? = null
         splashScreen.setKeepOnScreenCondition {
@@ -37,7 +42,6 @@ class MainActivity : ComponentActivity() {
                 Graph.AUTH
             }
 
-            enableEdgeToEdge()
             setContent {
                 AppTheme { AppRoot(startGraph) }
             }

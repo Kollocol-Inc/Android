@@ -1,6 +1,5 @@
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
+    id("android-application-convention")
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt.android)
@@ -8,16 +7,11 @@ plugins {
 
 android {
     namespace = "com.ziopam.kollocol"
-    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.ziopam.kollocol"
-        minSdk = 26
-        targetSdk = 36
-        versionCode = 1
-        versionName = "0.01"
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        versionCode = 2
+        versionName = "0.02"
     }
 
     signingConfigs {
@@ -44,18 +38,6 @@ android {
             }
         }
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-
-    kotlin {
-        compilerOptions {
-            jvmTarget.set(
-                org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11
-            )
-        }
-    }
 
     buildFeatures {
         compose = true
@@ -80,7 +62,8 @@ dependencies {
     implementation(project(":domain"))
     implementation(project(":feature:auth"))
     implementation(project(":feature:main"))
-    
+    implementation(project(":feature:quiz-game"))
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

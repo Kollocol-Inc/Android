@@ -122,17 +122,13 @@ class CreateTemplateViewModel @Inject constructor(
 
         viewModelScope.launch {
             val questionMaps = state.questions.map { q ->
-                val correctAnswer = when (q.type) {
-                    QuestionType.SINGLE -> {
-                        q.correctOptionIndices.firstOrNull()?.toString() ?: "0"
-                    }
-                    QuestionType.MULTIPLE -> {
-                        "[${q.correctOptionIndices.sorted().joinToString(",")}]"
-                    }
+                val correctAnswer: Any = when (q.type) {
+                    QuestionType.SINGLE -> q.correctOptionIndices.firstOrNull() ?: 0
+                    QuestionType.MULTIPLE -> q.correctOptionIndices.sorted()
                     QuestionType.OPEN -> q.correctAnswer
                 }
 
-                mapOf<String, Any?>(
+                mapOf (
                     "text" to q.text,
                     "type" to when (q.type) {
                         QuestionType.SINGLE -> "single"

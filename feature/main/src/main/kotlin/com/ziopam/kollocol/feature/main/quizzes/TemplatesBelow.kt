@@ -35,7 +35,7 @@ fun TemplatesBelow(
         )
     } else {
         Column(
-            modifier = Modifier.padding(top = 1.dp),
+            modifier = Modifier.padding(top = 1.dp, bottom = 10.dp),
             verticalArrangement = Arrangement.spacedBy(15.dp)
         ) {
             templates.forEach { template ->
