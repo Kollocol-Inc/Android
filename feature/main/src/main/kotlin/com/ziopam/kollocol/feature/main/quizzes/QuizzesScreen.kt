@@ -22,7 +22,7 @@ import com.ziopam.kollocol.feature.main.MainScaffoldPreview
 @Composable
 fun QuizzesScreen(
     viewModel: QuizzesViewModel = hiltViewModel(),
-    onQuizClick: (QuizInfo) -> Unit = {},
+    onRunningQuizClick: (QuizInfo) -> Unit = {},
     onCreateTemplateClick: () -> Unit = {}
 ) {
     val state by viewModel.myQuizzesState.collectAsStateWithLifecycle()
@@ -64,8 +64,9 @@ fun QuizzesScreen(
         selectedTabIndex = state.selectedTabIndex,
         onSearchQueryChange = viewModel::onSearchQueryChange,
         onTabSelected = viewModel::onTabSelected,
-        onQuizClick = onQuizClick,
-        onTemplateClick = onQuizClick,
+        onRunningQuizClick = onRunningQuizClick,
+        onQuizClick = {},
+        onTemplateClick = {},
         onStartClick = viewModel::onStartClick,
         onCreateTemplateClick = onCreateTemplateClick
     )
@@ -81,6 +82,7 @@ private fun QuizzesScreen(
     selectedTabIndex: Int,
     onSearchQueryChange: (String) -> Unit,
     onTabSelected: (Int) -> Unit,
+    onRunningQuizClick: (QuizInfo) -> Unit,
     onQuizClick: (QuizInfo) -> Unit,
     onTemplateClick: (QuizInfo) -> Unit,
     onStartClick: (QuizInfo) -> Unit,
@@ -107,6 +109,7 @@ private fun QuizzesScreen(
                         runningQuizzes = runningQuizzes,
                         pendingQuizzes = pendingQuizzes,
                         reviewedQuizzes = reviewedQuizzes,
+                        onRunningQuizClick = onRunningQuizClick,
                         onQuizClick = onQuizClick
                     )
                     1 -> TemplatesBelow(
@@ -118,6 +121,7 @@ private fun QuizzesScreen(
                         runningQuizzes = runningQuizzes,
                         pendingQuizzes = pendingQuizzes,
                         reviewedQuizzes = reviewedQuizzes,
+                        onRunningQuizClick = onRunningQuizClick,
                         onQuizClick = onQuizClick
                     )
                 }
@@ -141,6 +145,7 @@ private fun MyQuizzesPreview() {
             selectedTabIndex = 0,
             onSearchQueryChange = { text = it },
             onTabSelected = {},
+            onRunningQuizClick = {},
             onQuizClick = {},
             onTemplateClick = {},
             onStartClick = {}
@@ -163,6 +168,7 @@ private fun TemplatesPreview() {
             selectedTabIndex = 1,
             onSearchQueryChange = { text = it },
             onTabSelected = {},
+            onRunningQuizClick = {},
             onQuizClick = {},
             onTemplateClick = {},
             onStartClick = {}

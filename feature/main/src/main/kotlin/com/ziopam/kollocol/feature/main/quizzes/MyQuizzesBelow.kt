@@ -16,6 +16,7 @@ fun MyQuizzesBelow(
     runningQuizzes: List<QuizInfo>,
     pendingQuizzes: List<QuizInfo>,
     reviewedQuizzes: List<QuizInfo>,
+    onRunningQuizClick: (QuizInfo) -> Unit,
     onQuizClick: (QuizInfo) -> Unit
 ) {
 
@@ -27,7 +28,7 @@ fun MyQuizzesBelow(
             headlineText = stringResource(R.string.currently_running),
             quizzesMissingText = stringResource(R.string.no_running_quizzes),
             quizzes = runningQuizzes,
-            onQuizClick = onQuizClick
+            onQuizClick = onRunningQuizClick
         )
 
         QuizCardSection(

@@ -97,7 +97,8 @@ fun MainRootScreen() {
             composable(
                 route = MainRoute.QUIZZES,
                 exitTransition = {
-                    if (targetState.destination.route == MainRoute.CREATE_TEMPLATE) {
+                    val target = targetState.destination.route
+                    if (target == MainRoute.CREATE_TEMPLATE || target == MainRoute.GAME) {
                         slideOutHorizontally(
                             targetOffsetX = { -it },
                             animationSpec = tween(300)
@@ -107,7 +108,8 @@ fun MainRootScreen() {
                     }
                 },
                 popEnterTransition = {
-                    if (initialState.destination.route == MainRoute.CREATE_TEMPLATE) {
+                    val initial = initialState.destination.route
+                    if (initial == MainRoute.CREATE_TEMPLATE || initial == MainRoute.GAME) {
                         slideInHorizontally(
                             initialOffsetX = { -it },
                             animationSpec = tween(300)
@@ -118,6 +120,11 @@ fun MainRootScreen() {
                 }
             ) {
                 QuizzesScreen(
+                    onRunningQuizClick = { quiz ->
+                        tabNavController.navigate(MainRoute.gameRoute(quiz.accessCode)) {
+                            launchSingleTop = true
+                        }
+                    },
                     onCreateTemplateClick = {
                         tabNavController.navigate(MainRoute.CREATE_TEMPLATE)
                     }

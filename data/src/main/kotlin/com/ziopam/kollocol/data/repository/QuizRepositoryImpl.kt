@@ -58,8 +58,11 @@ class QuizRepositoryImpl @Inject constructor(
                 val entities = result.value.instances.map { participatingDto ->
                     participatingDto.instance.toEntity("participating")
                 }
-                quizDao.insertQuizzes(entities)
-
+                if (sessionStatus == null) {
+                    quizDao.syncQuizzesByType("participating", entities)
+                } else {
+                    quizDao.syncQuizzesByTypeAndStatus("participating", sessionStatus, entities)
+                }
                 AppResult.Ok(Unit)
             }
             is AppResult.Err -> AppResult.Err(result.error)
@@ -74,8 +77,11 @@ class QuizRepositoryImpl @Inject constructor(
         return when (result) {
             is AppResult.Ok -> {
                 val entities = result.value.instances.map { it.toEntity("hosting") }
-                quizDao.insertQuizzes(entities)
-
+                if (status == null) {
+                    quizDao.syncQuizzesByType("hosting", entities)
+                } else {
+                    quizDao.syncQuizzesByTypeAndStatus("hosting", status, entities)
+                }
                 AppResult.Ok(Unit)
             }
             is AppResult.Err -> AppResult.Err(result.error)
@@ -90,8 +96,8 @@ class QuizRepositoryImpl @Inject constructor(
         return when (result) {
             is AppResult.Ok -> {
                 val entities = result.value.templates.map { it.toEntity() }
-                templateDao.insertAll(entities)
-                
+                templateDao.syncAllTemplates(entities)
+
                 AppResult.Ok(Unit)
             }
             is AppResult.Err -> AppResult.Err(result.error)
