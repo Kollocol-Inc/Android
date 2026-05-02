@@ -1,6 +1,5 @@
 package com.ziopam.kollocol.feature.main
 
-import android.annotation.SuppressLint
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -10,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavType
@@ -18,12 +18,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.ziopam.kollocol.core.ui.cards.LocalExtraBottomPadding
 import com.ziopam.kollocol.feature.main.home.HomeScreen
 import com.ziopam.kollocol.feature.main.quizzes.QuizzesScreen
 import com.ziopam.kollocol.feature.main.quizzes.createTemplate.CreateTemplateScreen
 import com.ziopam.kollocol.feature.quizgame.GameScreen
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MainRootScreen() {
     val tabNavController = rememberNavController()
@@ -33,18 +33,21 @@ fun MainRootScreen() {
     val showBottomBar = currentRoute !in listOf(MainRoute.CREATE_TEMPLATE) &&
             currentRoute?.startsWith("game/") != true
 
-    Scaffold (
+    Scaffold(
         bottomBar = {
             if (showBottomBar) {
                 MainBottomBar(navController = tabNavController)
             }
         }
-    ) { _ ->
-        NavHost(
-            navController = tabNavController,
-            startDestination = MainRoute.HOME,
-            modifier = Modifier.fillMaxSize()
+    ) { paddingValues ->
+        CompositionLocalProvider(
+            LocalExtraBottomPadding provides paddingValues.calculateBottomPadding()
         ) {
+            NavHost(
+                navController = tabNavController,
+                startDestination = MainRoute.HOME,
+                modifier = Modifier.fillMaxSize()
+            ) {
             composable(
                 route = MainRoute.HOME,
                 exitTransition = {
@@ -189,6 +192,7 @@ fun MainRootScreen() {
                     onNavigateBack = { tabNavController.popBackStack() }
                 )
             }
+        }
         }
     }
 }
