@@ -222,7 +222,7 @@ internal fun CreateTemplateBelow(
             }
         }
 
-        Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+        Column(verticalArrangement = Arrangement.spacedBy(1.dp)) {
             DefaultButton(
                 text = stringResource(R.string.add_question),
                 onClick = onAddQuestionClick,
@@ -244,7 +244,7 @@ internal fun CreateTemplateBelow(
                 Spacer(Modifier.width(8.dp))
                 Text(
                     text = stringResource(R.string.generate_more_questions),
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.labelLarge
                 )
             }
         }

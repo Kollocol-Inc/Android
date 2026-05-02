@@ -34,7 +34,7 @@ fun RoundedMultilineTextField(
 
     val shape = RoundedCornerShape(16.dp)
     val bg = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-    val border = if (isFocused) MaterialTheme.colorScheme.primary else bg
+    val border = if (isFocused) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant
 
     TextField(
         value = value,
