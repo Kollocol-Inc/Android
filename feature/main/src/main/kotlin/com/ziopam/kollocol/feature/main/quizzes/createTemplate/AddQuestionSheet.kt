@@ -19,7 +19,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -38,6 +37,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.ziopam.kollocol.core.ui.buttons.CircleIconButton
+import com.ziopam.kollocol.core.ui.input.RoundedFocusTextField
+import com.ziopam.kollocol.core.ui.input.RoundedMultilineTextField
 import com.ziopam.kollocol.core.ui.other.SelectiveTabs
 import com.ziopam.kollocol.feature.main.R
 import com.ziopam.kollocol.core.ui.R as CoreR
@@ -147,11 +148,11 @@ fun AddQuestionSheet(
                 text = stringResource(R.string.question_label),
                 style = MaterialTheme.typography.titleMedium
             )
-            OutlinedTextField(
+            RoundedMultilineTextField(
                 value = questionText,
                 onValueChange = { questionText = it },
+                placeholder = "",
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(12.dp),
                 minLines = 2
             )
 
@@ -222,17 +223,13 @@ fun AddQuestionSheet(
                                     }
                                 )
                             }
-                            OutlinedTextField(
+                            RoundedFocusTextField(
                                 value = option,
                                 onValueChange = { newVal ->
                                     options = options.toMutableList().apply { this[idx] = newVal }
                                 },
-                                modifier = Modifier.weight(1f),
-                                shape = RoundedCornerShape(12.dp),
-                                placeholder = {
-                                    Text(stringResource(R.string.option_hint, idx + 1))
-                                },
-                                singleLine = true
+                                placeholder = stringResource(R.string.option_hint, idx + 1),
+                                modifier = Modifier.weight(1f)
                             )
                         }
                     }
@@ -253,11 +250,11 @@ fun AddQuestionSheet(
                         text = stringResource(R.string.answer_optional),
                         style = MaterialTheme.typography.titleMedium
                     )
-                    OutlinedTextField(
+                    RoundedMultilineTextField(
                         value = correctAnswer,
                         onValueChange = { correctAnswer = it },
+                        placeholder = "",
                         modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(12.dp),
                         minLines = 2
                     )
                 }

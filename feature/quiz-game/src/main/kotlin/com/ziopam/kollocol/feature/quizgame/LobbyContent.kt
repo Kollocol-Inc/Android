@@ -194,11 +194,11 @@ private fun ParticipantRow(
                 )
                 isCreatorView && !participant.isCreator -> Icon(
                     imageVector = ImageVector.vectorResource(
-                        id = com.ziopam.kollocol.core.ui.R.drawable.delete
+                        id = CoreR.drawable.delete
                     ),
                     contentDescription = null,
                     tint = ExtraColors.negative,
-                    modifier = Modifier.clickableNoIndication(onKick)
+                    modifier = Modifier.clickableNoIndication(onClick = onKick)
                 )
                 participant.isCreator -> Text(
                     text = "\uD83D\uDC51",

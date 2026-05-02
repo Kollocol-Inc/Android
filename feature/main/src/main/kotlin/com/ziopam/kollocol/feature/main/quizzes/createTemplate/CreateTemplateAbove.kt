@@ -17,6 +17,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ziopam.kollocol.core.ui.buttons.CircleIconButton
+import com.ziopam.kollocol.core.ui.buttons.DoubleCircleIconButton
 import com.ziopam.kollocol.core.ui.contentPadding
 import com.ziopam.kollocol.core.ui.theme.AppTheme
 import com.ziopam.kollocol.core.ui.theme.ExtraColors
@@ -26,8 +27,10 @@ import com.ziopam.kollocol.core.ui.R as CoreR
 @Composable
 internal fun CreateTemplateAbove(
     isLoading: Boolean,
-    onNavigateBack: () -> Unit,
-    onSaveClick: () -> Unit
+    isEditMode: Boolean,
+    onBackAttempt: () -> Unit,
+    onSaveClick: () -> Unit,
+    onDeleteClick: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -40,19 +43,31 @@ internal fun CreateTemplateAbove(
         verticalAlignment = Alignment.CenterVertically
     ) {
         CircleIconButton(
-            onClick = onNavigateBack,
+            onClick = onBackAttempt,
             icon = ImageVector.vectorResource(CoreR.drawable.arrow_back),
             contentDescription = stringResource(CoreR.string.back),
             tint = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
         Text(
-            text = stringResource(R.string.template_creation),
-            style = MaterialTheme.typography.headlineMedium
+            text = if (isEditMode) stringResource(R.string.template_editing) else stringResource(R.string.template_creation),
+            style = MaterialTheme.typography.headlineMedium,
+            modifier = Modifier.padding(horizontal = 5.dp)
         )
 
         if (isLoading) {
             CircularProgressIndicator(modifier = Modifier.padding(end = 12.dp).size(24.dp))
+        } else if (isEditMode) {
+            DoubleCircleIconButton(
+                onLeftClick = onDeleteClick,
+                leftIcon = ImageVector.vectorResource(CoreR.drawable.delete),
+                leftContentDescription = stringResource(R.string.delete_template),
+                leftTint = MaterialTheme.colorScheme.error,
+                onRightClick = onSaveClick,
+                rightIcon = ImageVector.vectorResource(CoreR.drawable.check),
+                rightContentDescription = stringResource(R.string.create_template),
+                rightTint = ExtraColors.affirmative
+            )
         } else {
             CircleIconButton(
                 onClick = onSaveClick,
@@ -70,20 +85,38 @@ private fun CreateTemplateAbovePreview() {
     AppTheme {
         CreateTemplateAbove(
             isLoading = false,
-            onNavigateBack = {},
-            onSaveClick = {}
+            isEditMode = false,
+            onBackAttempt = {},
+            onSaveClick = {},
+            onDeleteClick = {}
         )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun CreateTemplateAbovePreviewLoading() {
+private fun CreateTemplateAboveEditPreview() {
+    AppTheme {
+        CreateTemplateAbove(
+            isLoading = false,
+            isEditMode = true,
+            onBackAttempt = {},
+            onSaveClick = {},
+            onDeleteClick = {}
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun CreateTemplateAboveLoadingPreview() {
     AppTheme {
         CreateTemplateAbove(
             isLoading = true,
-            onNavigateBack = {},
-            onSaveClick = {}
+            isEditMode = false,
+            onBackAttempt = {},
+            onSaveClick = {},
+            onDeleteClick = {}
         )
     }
 }

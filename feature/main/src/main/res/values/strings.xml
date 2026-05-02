@@ -46,4 +46,23 @@
     <string name="add_question_error">Добавьте хотя бы один вопрос</string>
     <string name="template_created">Шаблон создан</string>
     <string name="option_hint">Вариант %d</string>
+
+    <string name="template_editing">Редактирование</string>
+    <string name="delete_template">Удалить шаблон</string>
+    <string name="delete_template_confirm_title">Удалить шаблон?</string>
+    <string name="delete_template_confirm_message">Шаблон будет удалён безвозратно</string>
+    <string name="delete">Удалить</string>
+    <string name="cancel">Отмена</string>
+    <string name="discard_changes_title">Несохранённые изменения</string>
+    <string name="discard_changes_message">Вы уверены, что хотите выйти? Изменения не сохранятся</string>
+    <string name="discard_changes_confirm">Выйти</string>
+    <string name="create_from_scratch">С нуля</string>
+    <string name="create_with_ai">С ИИ</string>
+    <string name="ai_prompt_title">Опишите квиз</string>
+    <string name="ai_prompt_hint">Например: квиз по истории России, 10 вопросов</string>
+    <string name="generate">Сгенерировать</string>
+    <string name="template_saved">Шаблон сохранён</string>
+    <string name="template_deleted">Шаблон удалён</string>
+    <string name="generate_more_questions">Дополнить с ИИ</string>
+    <string name="generation_error">Ошибка генерации. Попробуйте снова.</string>
 </resources>

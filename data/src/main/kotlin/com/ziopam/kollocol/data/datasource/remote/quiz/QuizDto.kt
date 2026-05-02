@@ -104,7 +104,7 @@ data class QuizSettingsDTO(
     @SerializedName("time_limit_total")
     val timeLimitTotal: Int?,
     
-    @SerializedName("random_order")
+    @SerializedName("questions_random_order")
     val randomOrder: Boolean?,
     
     @SerializedName("show_correct_answers")
@@ -183,29 +183,76 @@ data class CreateInstanceResponseDto(
 data class QuestionDTO(
     @SerializedName("id")
     val id: String,
-    
+
     @SerializedName("text")
     val text: String,
-    
+
     @SerializedName("type")
     val type: String,
-    
+
     @SerializedName("options")
     val options: List<String>?,
-    
+
     @SerializedName("correct_answer")
     @JsonAdapter(CorrectAnswerDeserializer::class)
     val correctAnswer: String,
-    
+
     @SerializedName("max_score")
     val maxScore: Int,
-    
+
     @SerializedName("time_limit_sec")
     val timeLimitSec: Int?,
-    
+
     @SerializedName("order_index")
     val orderIndex: Int,
-    
+
     @SerializedName("ai_answer")
     val aiAnswer: String?
+)
+
+data class GenerateTemplateRequestDto(
+    @SerializedName("text")
+    val text: String
+)
+
+data class GeneratedQuestionDto(
+    @SerializedName("text")
+    val text: String,
+
+    @SerializedName("type")
+    val type: String,
+
+    @SerializedName("correct_answer")
+    @JsonAdapter(CorrectAnswerDeserializer::class)
+    val correctAnswer: String,
+
+    @SerializedName("options")
+    val options: List<String>?,
+
+    @SerializedName("max_score")
+    val maxScore: Int,
+
+    @SerializedName("time_limit_sec")
+    val timeLimitSec: Int?
+)
+
+data class GeneratedTemplateResponseDto(
+    @SerializedName("title")
+    val title: String,
+
+    @SerializedName("questions")
+    val questions: List<GeneratedQuestionDto>
+)
+
+data class GenerateQuestionsRequestDto(
+    @SerializedName("text")
+    val text: String,
+
+    @SerializedName("questions")
+    val questions: List<QuestionInputDto>? = null
+)
+
+data class GenerateQuestionsResponseDto(
+    @SerializedName("questions")
+    val questions: List<GeneratedQuestionDto>
 )

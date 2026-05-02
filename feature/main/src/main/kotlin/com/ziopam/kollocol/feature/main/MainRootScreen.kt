@@ -30,7 +30,7 @@ fun MainRootScreen() {
     val navBackStackEntry by tabNavController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    val showBottomBar = currentRoute !in listOf(MainRoute.CREATE_TEMPLATE) &&
+    val showBottomBar = currentRoute?.startsWith("create_template") != true &&
             currentRoute?.startsWith("game/") != true
 
     Scaffold(
@@ -97,8 +97,8 @@ fun MainRootScreen() {
             composable(
                 route = MainRoute.QUIZZES,
                 exitTransition = {
-                    val target = targetState.destination.route
-                    if (target == MainRoute.CREATE_TEMPLATE || target == MainRoute.GAME) {
+                    val target = targetState.destination.route ?: ""
+                    if (target.startsWith("create_template") || target.startsWith("game/")) {
                         slideOutHorizontally(
                             targetOffsetX = { -it },
                             animationSpec = tween(300)
@@ -108,8 +108,8 @@ fun MainRootScreen() {
                     }
                 },
                 popEnterTransition = {
-                    val initial = initialState.destination.route
-                    if (initial == MainRoute.CREATE_TEMPLATE || initial == MainRoute.GAME) {
+                    val initial = initialState.destination.route ?: ""
+                    if (initial.startsWith("create_template") || initial.startsWith("game/")) {
                         slideInHorizontally(
                             initialOffsetX = { -it },
                             animationSpec = tween(300)
@@ -126,7 +126,13 @@ fun MainRootScreen() {
                         }
                     },
                     onCreateTemplateClick = {
-                        tabNavController.navigate(MainRoute.CREATE_TEMPLATE)
+                        tabNavController.navigate(MainRoute.createTemplateRoute())
+                    },
+                    onCreateTemplateAiClick = { prompt ->
+                        tabNavController.navigate(MainRoute.createTemplateAiRoute(prompt))
+                    },
+                    onEditTemplateClick = { template ->
+                        tabNavController.navigate(MainRoute.editTemplateRoute(template.id))
                     }
                 )
             }
@@ -137,29 +143,21 @@ fun MainRootScreen() {
 
             composable(
                 route = MainRoute.CREATE_TEMPLATE,
+                arguments = listOf(
+                    navArgument("templateId") { type = NavType.StringType; nullable = true; defaultValue = null },
+                    navArgument("aiPrompt") { type = NavType.StringType; nullable = true; defaultValue = null }
+                ),
                 enterTransition = {
-                    slideInHorizontally(
-                        initialOffsetX = { it },
-                        animationSpec = tween(300)
-                    )
+                    slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(300))
                 },
                 exitTransition = {
-                    slideOutHorizontally(
-                        targetOffsetX = { it },
-                        animationSpec = tween(300)
-                    )
+                    slideOutHorizontally(targetOffsetX = { it }, animationSpec = tween(300))
                 },
                 popEnterTransition = {
-                    slideInHorizontally(
-                        initialOffsetX = { it },
-                        animationSpec = tween(300)
-                    )
+                    slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(300))
                 },
                 popExitTransition = {
-                    slideOutHorizontally(
-                        targetOffsetX = { it },
-                        animationSpec = tween(300)
-                    )
+                    slideOutHorizontally(targetOffsetX = { it }, animationSpec = tween(300))
                 }
             ) {
                 CreateTemplateScreen(

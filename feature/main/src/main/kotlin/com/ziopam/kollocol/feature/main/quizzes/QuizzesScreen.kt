@@ -23,7 +23,9 @@ import com.ziopam.kollocol.feature.main.MainScaffoldPreview
 fun QuizzesScreen(
     viewModel: QuizzesViewModel = hiltViewModel(),
     onRunningQuizClick: (QuizInfo) -> Unit = {},
-    onCreateTemplateClick: () -> Unit = {}
+    onCreateTemplateClick: () -> Unit = {},
+    onCreateTemplateAiClick: (String) -> Unit = {},
+    onEditTemplateClick: (QuizInfo) -> Unit = {}
 ) {
     val state by viewModel.myQuizzesState.collectAsStateWithLifecycle()
     val templatesState by viewModel.templatesState.collectAsStateWithLifecycle()
@@ -66,9 +68,10 @@ fun QuizzesScreen(
         onTabSelected = viewModel::onTabSelected,
         onRunningQuizClick = onRunningQuizClick,
         onQuizClick = {},
-        onTemplateClick = {},
+        onTemplateClick = onEditTemplateClick,
         onStartClick = viewModel::onStartClick,
-        onCreateTemplateClick = onCreateTemplateClick
+        onCreateTemplateClick = onCreateTemplateClick,
+        onCreateTemplateAiClick = onCreateTemplateAiClick
     )
 }
 
@@ -86,7 +89,8 @@ private fun QuizzesScreen(
     onQuizClick: (QuizInfo) -> Unit,
     onTemplateClick: (QuizInfo) -> Unit,
     onStartClick: (QuizInfo) -> Unit,
-    onCreateTemplateClick: () -> Unit = {}
+    onCreateTemplateClick: () -> Unit = {},
+    onCreateTemplateAiClick: (String) -> Unit = {}
 ) {
     LayoutWithLargeBottomCard(
         contentAbove = {
@@ -95,7 +99,8 @@ private fun QuizzesScreen(
                 selectedTabIndex = selectedTabIndex,
                 onSearchStringChange = onSearchQueryChange,
                 onTabSelected = onTabSelected,
-                onCreateTemplateClick = onCreateTemplateClick
+                onCreateTemplateClick = onCreateTemplateClick,
+                onCreateTemplateAiClick = onCreateTemplateAiClick
             )
         },
         content = {

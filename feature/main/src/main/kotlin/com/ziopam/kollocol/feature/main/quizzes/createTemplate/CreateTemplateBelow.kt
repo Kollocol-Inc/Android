@@ -9,9 +9,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -26,11 +28,13 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ziopam.kollocol.core.common.TimeFormatter
 import com.ziopam.kollocol.core.ui.animations.ExpandedAppearance
+import com.ziopam.kollocol.core.ui.animations.ShimmerQuestionCard
 import com.ziopam.kollocol.core.ui.buttons.CircleIconButton
 import com.ziopam.kollocol.core.ui.buttons.DefaultButton
 import com.ziopam.kollocol.core.ui.clickableNoIndication
@@ -50,12 +54,14 @@ internal fun CreateTemplateBelow(
     randomOrder: Boolean,
     questions: List<QuestionUiModel>,
     isLoading: Boolean,
+    isGeneratingQuestions: Boolean = false,
     onTitleChange: (String) -> Unit,
     onQuizTypeToggle: () -> Unit,
     onRandomOrderToggle: () -> Unit,
     onAddQuestionClick: () -> Unit,
     onEditQuestion: (Int) -> Unit,
-    onDeleteQuestion: (Int) -> Unit
+    onDeleteQuestion: (Int) -> Unit,
+    onGenerateQuestionsClick: () -> Unit = {}
 ) {
     var isSearchVisible by remember { mutableStateOf(false) }
     var searchQuery by remember { mutableStateOf("") }
@@ -87,6 +93,7 @@ internal fun CreateTemplateBelow(
             imeAction = ImeAction.Done,
             textStyle = bodySmall.copy(fontSize = 14.sp),
             modifier = Modifier.fillMaxWidth().height(49.dp),
+            capitalization = KeyboardCapitalization.Sentences,
             onImeAction = { focusManager.clearFocus() }
         )
 
@@ -209,14 +216,38 @@ internal fun CreateTemplateBelow(
             )
         }
 
-        Spacer(Modifier.height(4.dp))
-        DefaultButton(
-            text = stringResource(R.string.add_question),
-            onClick = onAddQuestionClick,
-            isButtonEnabled = !isLoading,
-            isWidthLimited = false,
-            modifier = Modifier.fillMaxWidth()
-        )
+        if (isGeneratingQuestions) {
+            repeat(2) {
+                ShimmerQuestionCard()
+            }
+        }
+
+        Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+            DefaultButton(
+                text = stringResource(R.string.add_question),
+                onClick = onAddQuestionClick,
+                isButtonEnabled = !isLoading,
+                isWidthLimited = false,
+                modifier = Modifier.fillMaxWidth()
+            )
+            OutlinedButton(
+                onClick = onGenerateQuestionsClick,
+                enabled = !isLoading && !isGeneratingQuestions,
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(50)
+            ) {
+                Icon(
+                    imageVector = ImageVector.vectorResource(CoreR.drawable.sparkle),
+                    contentDescription = null,
+                    modifier = Modifier.size(16.dp)
+                )
+                Spacer(Modifier.width(8.dp))
+                Text(
+                    text = stringResource(R.string.generate_more_questions),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+        }
     }
 }
 

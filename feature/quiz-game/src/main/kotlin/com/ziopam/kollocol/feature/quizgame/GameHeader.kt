@@ -45,7 +45,10 @@ internal fun GameHeader(
             tint = ExtraColors.negative
         )
 
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(
+            modifier = Modifier.padding(horizontal = 5.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Text(
                 text = quizName,
                 style = MaterialTheme.typography.headlineMedium,
