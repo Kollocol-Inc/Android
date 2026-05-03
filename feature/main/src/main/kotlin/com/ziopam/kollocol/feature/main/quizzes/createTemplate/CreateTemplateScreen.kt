@@ -87,6 +87,7 @@ fun CreateTemplateScreen(
         onAddQuestionClick = { viewModel.showAddQuestionSheet() },
         onEditQuestion = { index -> viewModel.showAddQuestionSheet(index) },
         onDeleteQuestion = viewModel::deleteQuestion,
+        onMoveQuestion = viewModel::moveQuestion,
         onSaveClick = viewModel::saveTemplate,
         onDeleteClick = viewModel::onShowDeleteConfirmDialog,
         onConfirmDelete = viewModel::deleteTemplate,
@@ -122,6 +123,7 @@ fun CreateTemplateScreen(
     onAddQuestionClick: () -> Unit,
     onEditQuestion: (Int) -> Unit,
     onDeleteQuestion: (Int) -> Unit,
+    onMoveQuestion: (from: Int, to: Int) -> Unit,
     onSaveClick: () -> Unit,
     onDeleteClick: () -> Unit,
     onConfirmDelete: () -> Unit,
@@ -167,6 +169,7 @@ fun CreateTemplateScreen(
     }
 
     LayoutWithLargeBottomCard(
+        scrollable = false,
         contentAbove = {
             CreateTemplateAbove(
                 isLoading = isLoading,
@@ -193,6 +196,7 @@ fun CreateTemplateScreen(
                     onAddQuestionClick = onAddQuestionClick,
                     onEditQuestion = onEditQuestion,
                     onDeleteQuestion = onDeleteQuestion,
+                    onMoveQuestion = onMoveQuestion,
                     onGenerateQuestionsClick = onGenerateQuestionsClick
                 )
             }
@@ -229,6 +233,7 @@ private fun CreateTemplateEmptyPreview() {
                 onAddQuestionClick = {},
                 onEditQuestion = {},
                 onDeleteQuestion = {},
+                onMoveQuestion = { _, _ -> },
                 onSaveClick = {},
                 onDeleteClick = {},
                 onConfirmDelete = {},
@@ -282,6 +287,7 @@ private fun CreateTemplateEditModePreview() {
                 onAddQuestionClick = {},
                 onEditQuestion = {},
                 onDeleteQuestion = {},
+                onMoveQuestion = { _, _ -> },
                 onSaveClick = {},
                 onDeleteClick = {},
                 onConfirmDelete = {},

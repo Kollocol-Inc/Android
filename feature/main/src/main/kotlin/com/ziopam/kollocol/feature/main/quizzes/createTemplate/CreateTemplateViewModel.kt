@@ -197,6 +197,11 @@ class CreateTemplateViewModel @Inject constructor(
         _uiState.update { it.copy(questions = newQuestions, hasUnsavedChanges = computeHasChangesWith(questions = newQuestions)) }
     }
 
+    fun moveQuestion(from: Int, to: Int) {
+        val newQuestions = _uiState.value.questions.toMutableList().apply { add(to, removeAt(from)) }.toList()
+        _uiState.update { it.copy(questions = newQuestions, hasUnsavedChanges = computeHasChangesWith(questions = newQuestions)) }
+    }
+
     fun saveTemplate() {
         val state = _uiState.value
         if (state.title.isBlank()) {
