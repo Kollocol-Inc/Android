@@ -45,6 +45,7 @@ import com.ziopam.kollocol.core.ui.other.QuizInfoIcon
 import com.ziopam.kollocol.core.ui.theme.AppTheme
 import com.ziopam.kollocol.domain.model.QuizMode
 import com.ziopam.kollocol.feature.main.R
+import com.ziopam.kollocol.feature.main.quizzes.createTemplate.components.QuestionCard
 import com.ziopam.kollocol.core.ui.R as CoreR
 
 @Composable

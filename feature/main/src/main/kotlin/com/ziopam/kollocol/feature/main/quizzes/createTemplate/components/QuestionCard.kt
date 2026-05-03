@@ -1,4 +1,4 @@
-package com.ziopam.kollocol.feature.main.quizzes.createTemplate
+package com.ziopam.kollocol.feature.main.quizzes.createTemplate.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -27,6 +27,8 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.ziopam.kollocol.feature.main.R
+import com.ziopam.kollocol.feature.main.quizzes.createTemplate.QuestionType
+import com.ziopam.kollocol.feature.main.quizzes.createTemplate.QuestionUiModel
 import com.ziopam.kollocol.core.ui.R as CoreR
 
 @Composable

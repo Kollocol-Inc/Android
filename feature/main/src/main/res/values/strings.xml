@@ -73,4 +73,10 @@
     <string name="no_group">Без группы</string>
     <string name="launch">Запустить</string>
     <string name="ok">OK</string>
+
+    <string name="error_dialog_title">Ошибка</string>
+    <string name="question_text_empty_error">Введите текст вопроса</string>
+    <string name="no_options_error">Добавьте хотя бы один вариант ответа</string>
+    <string name="no_correct_answer_error">Укажите правильный ответ</string>
+    <string name="blank_option_selected_error">Выбранный вариант ответа не может быть пустым</string>
 </resources>

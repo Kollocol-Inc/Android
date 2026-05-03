@@ -5,12 +5,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.Hyphens
 import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import com.ziopam.kollocol.core.ui.R
 import com.ziopam.kollocol.core.ui.theme.AppTheme
 
 @Composable
@@ -18,12 +16,12 @@ fun DefaultDialog(
     title: String,
     message: String,
     confirmText: String,
-    cancelText: String = stringResource(R.string.cancel),
+    cancelText: String? = null,
     onConfirm: () -> Unit,
-    onCancel: () -> Unit
+    onCancel: (() -> Unit)? = null
 ) {
     AlertDialog(
-        onDismissRequest = onCancel,
+        onDismissRequest = { onCancel?.invoke() ?: onConfirm() },
         title = { Text(title) },
         text = {
             Text(
@@ -40,11 +38,13 @@ fun DefaultDialog(
                 Text(confirmText)
             }
         },
-        dismissButton = {
-            TextButton(onClick = onCancel) {
-                Text(cancelText)
+        dismissButton = if (onCancel != null && cancelText != null) {
+            {
+                TextButton(onClick = onCancel) {
+                    Text(cancelText)
+                }
             }
-        }
+        } else null
     )
 }
 
