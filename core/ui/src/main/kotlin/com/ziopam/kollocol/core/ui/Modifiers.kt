@@ -6,9 +6,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 
-fun Modifier.clickableNoIndication(onClick: () -> Unit): Modifier = composed {
+fun Modifier.clickableNoIndication(
+    enabled: Boolean = true,
+    onClick: () -> Unit
+): Modifier = composed {
     clickable(
         indication = null,
+        enabled = enabled,
         interactionSource = remember { MutableInteractionSource() },
         onClick = onClick
     )

@@ -1,6 +1,7 @@
 package com.ziopam.kollocol.feature.main.quizzes.createTemplate
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import com.ziopam.kollocol.core.common.AppError
 import com.ziopam.kollocol.core.common.AppResult
@@ -37,6 +38,7 @@ class CreateTemplateViewModelTest {
 
     private val testDispatcher = StandardTestDispatcher()
     private lateinit var quizRepository: QuizRepository
+    private lateinit var savedStateHandle: SavedStateHandle
     private lateinit var viewModel: CreateTemplateViewModel
 
     private fun makeQuestion(
@@ -52,7 +54,8 @@ class CreateTemplateViewModelTest {
         every { quizRepository.pendingQuizzes } returns MutableStateFlow(emptyList())
         every { quizRepository.reviewedQuizzes } returns MutableStateFlow(emptyList())
         every { quizRepository.templates } returns MutableStateFlow(emptyList())
-        viewModel = CreateTemplateViewModel(quizRepository)
+        savedStateHandle = SavedStateHandle()
+        viewModel = CreateTemplateViewModel(quizRepository, savedStateHandle)
     }
 
     @After
@@ -226,28 +229,34 @@ class CreateTemplateViewModelTest {
     }
 
     @Test
-    fun `saveTemplate sets error when title is blank`() {
+    fun `saveTemplate emits ShowToast when title is blank`() = runTest {
         // Given
         viewModel.onTitleChange("")
         viewModel.addQuestion(makeQuestion())
 
         // When
-        viewModel.saveTemplate()
+        viewModel.events.test {
+            viewModel.saveTemplate()
+            advanceUntilIdle()
 
-        // Then
-        assertEquals("fill_title", viewModel.uiState.value.errorMessage)
+            // Then
+            assertTrue(awaitItem() is CreateTemplateEvent.ShowToast)
+        }
     }
 
     @Test
-    fun `saveTemplate sets error when questions list is empty`() {
+    fun `saveTemplate emits ShowToast when questions list is empty`() = runTest {
         // Given
         viewModel.onTitleChange("My Template")
 
         // When
-        viewModel.saveTemplate()
+        viewModel.events.test {
+            viewModel.saveTemplate()
+            advanceUntilIdle()
 
-        // Then
-        assertEquals("add_question", viewModel.uiState.value.errorMessage)
+            // Then
+            assertTrue(awaitItem() is CreateTemplateEvent.ShowToast)
+        }
     }
 
     @Test
@@ -324,7 +333,7 @@ class CreateTemplateViewModelTest {
     }
 
     @Test
-    fun `saveTemplate sets errorMessage on failure`() = runTest {
+    fun `saveTemplate emits ShowToast on failure`() = runTest {
         // Given
         viewModel.onTitleChange("Template")
         viewModel.addQuestion(makeQuestion())
@@ -332,11 +341,13 @@ class CreateTemplateViewModelTest {
             AppResult.Err(AppError.NoInternet)
 
         // When
-        viewModel.saveTemplate()
-        advanceUntilIdle()
+        viewModel.events.test {
+            viewModel.saveTemplate()
+            advanceUntilIdle()
 
-        // Then
-        assertTrue(viewModel.uiState.value.errorMessage != null)
+            // Then
+            assertTrue(awaitItem() is CreateTemplateEvent.ShowToast)
+        }
     }
 
     @Test
@@ -355,34 +366,4 @@ class CreateTemplateViewModelTest {
         assertFalse(viewModel.uiState.value.isLoading)
     }
 
-    @Test
-    fun `clearError clears errorMessage`() {
-        // Given
-        viewModel.saveTemplate()
-
-        // When
-        viewModel.clearError()
-
-        // Then
-        assertNull(viewModel.uiState.value.errorMessage)
-    }
-
-    @Test
-    fun `saveTemplate clears errorMessage before calling repository`() = runTest {
-        // Given
-        viewModel.onTitleChange("Template")
-        viewModel.addQuestion(makeQuestion())
-        viewModel.saveTemplate()
-
-        coEvery { quizRepository.createTemplate(any(), any(), any(), any(), any()) } returns
-            AppResult.Ok("id")
-
-        // When
-        viewModel.onTitleChange("Template 2")
-        viewModel.saveTemplate()
-        advanceUntilIdle()
-
-        // Then
-        assertNull(viewModel.uiState.value.errorMessage)
-    }
 }

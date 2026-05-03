@@ -3,9 +3,7 @@ package com.ziopam.kollocol.core.ui.input
 import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -15,41 +13,35 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.dp
-import com.ziopam.kollocol.core.ui.theme.MAX_EDITTEXT_WIDTH
 
 @Composable
-fun RoundedFocusTextField(
+fun RoundedMultilineTextField(
     value: String,
     onValueChange: (String) -> Unit,
     placeholder: String,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    minLines: Int = 3,
     textStyle: TextStyle = MaterialTheme.typography.bodyMedium,
-    focusRequester: FocusRequester? = null,
-    imeAction: ImeAction = ImeAction.Next,
-    capitalization: KeyboardCapitalization = KeyboardCapitalization.Words,
-    onImeAction: () -> Unit = {},
+    capitalization: KeyboardCapitalization = KeyboardCapitalization.Sentences,
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     val isFocused by interactionSource.collectIsFocusedAsState()
 
-    val shape = RoundedCornerShape(25.dp)
+    val shape = RoundedCornerShape(16.dp)
     val bg = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-    val border = if (isFocused) MaterialTheme.colorScheme.primary else bg
+    val border = if (isFocused) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant
 
     TextField(
         value = value,
         onValueChange = onValueChange,
-        modifier = (if (focusRequester != null) Modifier.focusRequester(focusRequester) else Modifier)
-            .widthIn(max = MAX_EDITTEXT_WIDTH.dp)
-            .then(modifier)
-            .border(width = 2.dp, color = border, shape = shape),
-        singleLine = true,
+        modifier = modifier.border(width = 2.dp, color = border, shape = shape),
+        enabled = enabled,
+        minLines = minLines,
         interactionSource = interactionSource,
         placeholder = {
             Text(
@@ -60,11 +52,7 @@ fun RoundedFocusTextField(
         },
         keyboardOptions = KeyboardOptions(
             capitalization = capitalization,
-            imeAction = imeAction
-        ),
-        keyboardActions = KeyboardActions(
-            onNext = { if (imeAction == ImeAction.Next) onImeAction() },
-            onDone = { if (imeAction == ImeAction.Done) onImeAction() }
+            imeAction = ImeAction.Default
         ),
         shape = shape,
         textStyle = textStyle,
@@ -72,11 +60,9 @@ fun RoundedFocusTextField(
             focusedContainerColor = bg,
             unfocusedContainerColor = bg,
             disabledContainerColor = bg,
-
             focusedIndicatorColor = bg,
             unfocusedIndicatorColor = bg,
             disabledIndicatorColor = bg,
-
             cursorColor = MaterialTheme.colorScheme.primary
         ),
     )

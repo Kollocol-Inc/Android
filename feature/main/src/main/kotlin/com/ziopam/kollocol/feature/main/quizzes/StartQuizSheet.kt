@@ -18,6 +18,7 @@ import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
@@ -37,15 +38,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ziopam.kollocol.core.ui.buttons.CircleIconButton
 import com.ziopam.kollocol.core.ui.buttons.DefaultButton
 import com.ziopam.kollocol.core.ui.clickableNoIndication
 import com.ziopam.kollocol.core.ui.input.RoundedFocusTextField
+import com.ziopam.kollocol.core.ui.theme.AppTheme
+import com.ziopam.kollocol.domain.model.QuizInfo
 import com.ziopam.kollocol.domain.model.QuizMode
+import com.ziopam.kollocol.feature.main.R
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -63,6 +69,8 @@ fun StartQuizSheet(
     onStartClick: () -> Unit
 ) {
     val template = state.template ?: return
+
+    val shipShape = RoundedCornerShape(12.dp)
 
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val focusManager = LocalFocusManager.current
@@ -102,10 +110,10 @@ fun StartQuizSheet(
                 TextButton(onClick = {
                     datePickerState.selectedDateMillis?.let { onDeadlineDateChange(it) }
                     showDatePicker = false
-                }) { Text("OK") }
+                }) { Text(stringResource(R.string.ok)) }
             },
             dismissButton = {
-                TextButton(onClick = { showDatePicker = false }) { Text("Отмена") }
+                TextButton(onClick = { showDatePicker = false }) { Text(stringResource(R.string.cancel)) }
             }
         ) {
             DatePicker(state = datePickerState)
@@ -128,12 +136,12 @@ fun StartQuizSheet(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.End
                     ) {
-                        TextButton(onClick = { showTimePicker = false }) { Text("Отмена") }
+                        TextButton(onClick = { showTimePicker = false }) { Text(stringResource(R.string.cancel)) }
                         Spacer(Modifier.width(8.dp))
                         TextButton(onClick = {
                             onDeadlineTimeChange(timePickerState.hour, timePickerState.minute)
                             showTimePicker = false
-                        }) { Text("OK") }
+                        }) { Text(stringResource(R.string.ok)) }
                     }
                 }
             }
@@ -159,20 +167,17 @@ fun StartQuizSheet(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                CircleIconButton(
-                    onClick = onDismiss,
-                    icon = ImageVector.vectorResource(CoreR.drawable.close),
-                    contentDescription = null
-                )
+                HorizontalDivider(Modifier.weight(0.5f))
                 Text(
-                    text = "Запуск квиза",
-                    style = MaterialTheme.typography.titleLarge
+                    text = stringResource(R.string.start_quiz_title),
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.padding(horizontal = 16.dp)
                 )
-                Spacer(Modifier.size(48.dp))
+                HorizontalDivider(Modifier.weight(0.5f))
             }
 
             Text(
-                text = "Название",
+                text = stringResource(R.string.template_name),
                 style = MaterialTheme.typography.headlineMedium
             )
 
@@ -185,11 +190,12 @@ fun StartQuizSheet(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(49.dp),
-                onImeAction = { focusManager.clearFocus() }
+                onImeAction = { focusManager.clearFocus() },
+                capitalization = KeyboardCapitalization.Sentences
             )
 
             Text(
-                text = "Параметры",
+                text = stringResource(R.string.parameters),
                 style = MaterialTheme.typography.headlineMedium
             )
 
@@ -204,13 +210,13 @@ fun StartQuizSheet(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(text = "Дедлайн", style = bodySmall)
+                        Text(text = stringResource(R.string.deadline), style = bodySmall)
                         Spacer(Modifier.weight(1f))
                         val dateLabel = state.deadlineDateMillis?.let {
                             Instant.ofEpochMilli(it)
                                 .atZone(ZoneId.systemDefault())
                                 .format(DateTimeFormatter.ofPattern("d MMM yyyy", Locale("ru")))
-                        } ?: "Дата"
+                        } ?: stringResource(R.string.date)
                         AssistChip(
                             onClick = { showDatePicker = true },
                             label = { Text(dateLabel) },
@@ -218,12 +224,13 @@ fun StartQuizSheet(
                                 containerColor = MaterialTheme.colorScheme.primary,
                                 labelColor = MaterialTheme.colorScheme.onPrimary
                             ),
+                            shape = shipShape,
                             border = null
                         )
                         Spacer(Modifier.width(8.dp))
                         val timeLabel = if (state.deadlineHour != null && state.deadlineMinute != null) {
                             "%02d:%02d".format(state.deadlineHour, state.deadlineMinute)
-                        } else "Время"
+                        } else stringResource(R.string.time)
                         AssistChip(
                             onClick = { showTimePicker = true },
                             label = { Text(timeLabel) },
@@ -231,6 +238,7 @@ fun StartQuizSheet(
                                 containerColor = MaterialTheme.colorScheme.primary,
                                 labelColor = MaterialTheme.colorScheme.onPrimary
                             ),
+                            shape = shipShape,
                             border = null
                         )
                     }
@@ -240,10 +248,10 @@ fun StartQuizSheet(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = "Группа", style = bodySmall)
+                    Text(text = stringResource(R.string.group), style = bodySmall)
                     Spacer(Modifier.weight(1f))
                     Text(
-                        text = "Без группы",
+                        text = stringResource(R.string.no_group),
                         style = bodySmall,
                         color = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.clickableNoIndication { }
@@ -259,12 +267,59 @@ fun StartQuizSheet(
 
             Spacer(Modifier.height(4.dp))
             DefaultButton(
-                text = "Запустить",
+                text = stringResource(R.string.launch),
                 onClick = onStartClick,
                 isButtonEnabled = !state.isLoading,
                 isWidthLimited = false,
                 modifier = Modifier.fillMaxWidth()
             )
         }
+    }
+}
+
+
+@PreviewLightDark
+@Composable
+private fun StartQuizSheetPreviewAsync() {
+    AppTheme {
+        StartQuizSheet(
+            state = StartQuizSheetState(
+                title = "Тестовый квиз",
+                template = QuizInfo(
+                    "","","",10, QuizMode.ASYNC, ""
+                ),
+                deadlineDateMillis = null,
+                deadlineHour = null,
+                deadlineMinute = null
+            ),
+            onDismiss = {},
+            onTitleChange = {},
+            onDeadlineDateChange = {},
+            onDeadlineTimeChange = { _, _ -> {} },
+            onStartClick = {},
+        )
+    }
+}
+
+@PreviewLightDark
+@Composable
+private fun StartQuizSheetPreviewSync() {
+    AppTheme {
+        StartQuizSheet(
+            state = StartQuizSheetState(
+                title = "Тестовый квиз",
+                template = QuizInfo(
+                    "","","",10, QuizMode.SYNC, ""
+                ),
+                deadlineDateMillis = null,
+                deadlineHour = null,
+                deadlineMinute = null
+            ),
+            onDismiss = {},
+            onTitleChange = {},
+            onDeadlineDateChange = {},
+            onDeadlineTimeChange = { _, _ -> {} },
+            onStartClick = {},
+        )
     }
 }

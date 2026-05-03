@@ -18,8 +18,6 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,6 +37,7 @@ import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.ziopam.kollocol.core.ui.input.RoundedMultilineTextField
 import com.ziopam.kollocol.core.ui.theme.AppTheme
 import com.ziopam.kollocol.domain.model.AnswerOptionStats
 import com.ziopam.kollocol.domain.model.GameQuestion
@@ -73,26 +72,13 @@ internal fun QuestionCard(
         when (question.type) {
             QuestionType.OPEN -> {
                 if (!playing.isCreator) {
-                    OutlinedTextField(
+                    RoundedMultilineTextField(
                         value = playing.openAnswer,
                         onValueChange = onSetOpenAnswer,
+                        placeholder = stringResource(R.string.game_enter_answer),
                         modifier = Modifier.fillMaxWidth().height(160.dp),
                         enabled = !playing.hasAnswered && !playing.timeExpired,
-                        placeholder = {
-                            Text(
-                                text = stringResource(R.string.game_enter_answer),
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                        },
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-                            unfocusedContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-                            disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-
-                            focusedBorderColor = MaterialTheme.colorScheme.primary,
-                            unfocusedBorderColor = Color.Transparent,
-                        ),
-                        shape = RoundedCornerShape(18.dp)
+                        minLines = 1
                     )
                 }
             }

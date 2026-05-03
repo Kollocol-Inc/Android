@@ -77,7 +77,7 @@ class QuizRepositoryImplTest {
         repository.getParticipatingQuizzes()
 
         // Then
-        coVerify { quizDao.insertQuizzes(any()) }
+        coVerify { quizDao.syncQuizzesByType("participating", any()) }
     }
 
     @Test
@@ -118,7 +118,7 @@ class QuizRepositoryImplTest {
         repository.getParticipatingQuizzes()
 
         // Then
-        coVerify(exactly = 0) { quizDao.insertQuizzes(any()) }
+        coVerify(exactly = 0) { quizDao.syncQuizzesByType(any(), any()) }
     }
 
     @Test
@@ -132,7 +132,7 @@ class QuizRepositoryImplTest {
         repository.getHostingQuizzes()
 
         // Then
-        coVerify { quizDao.insertQuizzes(any()) }
+        coVerify { quizDao.syncQuizzesByType("hosting", any()) }
     }
 
     @Test
@@ -174,7 +174,7 @@ class QuizRepositoryImplTest {
         repository.getTemplates()
 
         // Then
-        coVerify { templateDao.insertAll(any()) }
+        coVerify { templateDao.syncAllTemplates(any()) }
     }
 
     @Test

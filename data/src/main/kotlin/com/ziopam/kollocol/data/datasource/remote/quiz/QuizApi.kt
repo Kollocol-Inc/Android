@@ -1,8 +1,11 @@
 package com.ziopam.kollocol.data.datasource.remote.quiz
 
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface QuizApi {
@@ -24,4 +27,19 @@ interface QuizApi {
 
     @POST("quizzes/instances")
     suspend fun createInstance(@Body request: CreateInstanceRequestDto): CreateInstanceResponseDto
+
+    @GET("quizzes/templates/{id}")
+    suspend fun getTemplate(@Path("id") id: String): TemplateDTO
+
+    @PUT("quizzes/templates/{id}")
+    suspend fun updateTemplate(@Path("id") id: String, @Body request: CreateTemplateRequestDto)
+
+    @DELETE("quizzes/templates/{id}")
+    suspend fun deleteTemplate(@Path("id") id: String)
+
+    @POST("ml/generate/template")
+    suspend fun generateTemplate(@Body request: GenerateTemplateRequestDto): GeneratedTemplateResponseDto
+
+    @POST("ml/generate/template/questions")
+    suspend fun generateQuestions(@Body request: GenerateQuestionsRequestDto): GenerateQuestionsResponseDto
 }

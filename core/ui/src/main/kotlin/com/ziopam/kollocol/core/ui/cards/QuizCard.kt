@@ -57,7 +57,7 @@ fun QuizCard(
     ) {
         Column(
             modifier = Modifier
-                .clickableNoIndication(onClick)
+                .clickableNoIndication(onClick = onClick)
                 .padding(15.dp)
         ) {
             Row(
