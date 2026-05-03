@@ -74,6 +74,42 @@
     <string name="launch">Запустить</string>
     <string name="ok">OK</string>
 
+    <string name="profile">Профиль</string>
+    <string name="logout">Выйти</string>
+    <string name="logout_confirm_title">Выйти из аккаунта?</string>
+    <string name="logout_confirm_message">Вы уверены, что хотите выйти из аккаунта?</string>
+    <string name="delete_account">Удалить аккаунт</string>
+    <string name="delete_account_confirm_title">Удалить аккаунт?</string>
+    <string name="delete_account_confirm_message">Это действие необратимо. Все ваши данные будут удалены навсегда.</string>
+
+    <string name="notifications_section">Уведомления</string>
+    <string name="new_quiz_notification">Новый квиз</string>
+    <string name="quiz_results_notification">Результаты квиза</string>
+    <string name="group_invite_notification">Приглашение в группу</string>
+    <string name="deadline_reminder">Дедлайн</string>
+    <string name="deadline_never">Никогда</string>
+    <string name="deadline_1h">За 1 час</string>
+    <string name="deadline_3h">За 3 часа</string>
+    <string name="deadline_6h">За 6 часов</string>
+    <string name="deadline_12h">За 12 часов</string>
+    <string name="deadline_24h">За 24 часа</string>
+
+    <string name="settings_section">Настройки</string>
+    <string name="theme">Тема</string>
+    <string name="theme_light">Светлая</string>
+    <string name="theme_dark">Тёмная</string>
+    <string name="theme_system">Системная</string>
+
+    <string name="danger_zone_section">Опасная зона</string>
+
+    <string name="edit_name_title">Изменить имя или фамилию</string>
+    <string name="first_name">Имя</string>
+    <string name="last_name">Фамилия</string>
+    <string name="change_avatar">Аватарка</string>
+    <string name="pick_from_gallery">Галерея</string>
+    <string name="take_photo">Сделать фото</string>
+    <string name="delete_photo">Удалить фото</string>
+
     <string name="error_dialog_title">Ошибка</string>
     <string name="question_text_empty_error">Введите текст вопроса</string>
     <string name="no_options_error">Добавьте хотя бы один вариант ответа</string>

@@ -72,6 +72,7 @@ class PersonalRepositoryImplTest {
         every { prefs[UserDataStoreKeys.FIRST_NAME] } returns "Cached"
         every { prefs[UserDataStoreKeys.LAST_NAME] } returns "Name"
         every { prefs[UserDataStoreKeys.AVATAR_URL] } returns null
+        every { prefs[UserDataStoreKeys.EMAIL] } returns null
         every { dataStore.data } returns flowOf(prefs)
 
         // When
@@ -92,6 +93,7 @@ class PersonalRepositoryImplTest {
         every { prefs[UserDataStoreKeys.FIRST_NAME] } returns "Jane"
         every { prefs[UserDataStoreKeys.LAST_NAME] } returns "Doe"
         every { prefs[UserDataStoreKeys.AVATAR_URL] } returns "https://example.com/avatar.png"
+        every { prefs[UserDataStoreKeys.EMAIL] } returns null
         every { dataStore.data } returns flowOf(prefs)
 
         // When

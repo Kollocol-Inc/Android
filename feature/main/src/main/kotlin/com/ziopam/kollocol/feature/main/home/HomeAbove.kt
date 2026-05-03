@@ -1,6 +1,5 @@
 package com.ziopam.kollocol.feature.main.home
 
-import android.net.Uri
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -34,7 +33,7 @@ fun HomeAbove(
     personName: String,
     code: String = "",
     onCodeChanged: (String) -> Unit = {},
-    avatarUri: Uri? = null,
+    avatarUrl: String? = null,
     onClick: () -> Unit = {},
     onJoinQuiz: () -> Unit = {}
 ){
@@ -48,7 +47,7 @@ fun HomeAbove(
             modifier = Modifier.fillMaxWidth()
         ) {
             AvatarPicker(
-                avatarUrl = avatarUri?.toString(),
+                avatarUrl = avatarUrl,
                 onClick = onClick,
                 modifier = Modifier.size(48.dp),
                 defaultIconSize = 24.dp

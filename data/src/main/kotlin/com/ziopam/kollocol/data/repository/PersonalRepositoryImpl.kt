@@ -7,9 +7,12 @@ import com.ziopam.kollocol.core.common.AppResult
 import com.ziopam.kollocol.core.network.SafeApiCall
 import com.ziopam.kollocol.data.datasource.remote.user.UserApi
 import com.ziopam.kollocol.data.storage.datastore.UserDataStoreKeys
+import com.ziopam.kollocol.domain.model.ThemeMode
 import com.ziopam.kollocol.domain.model.User
 import com.ziopam.kollocol.domain.repository.PersonalRepository
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class PersonalRepositoryImpl @Inject constructor(
@@ -37,7 +40,8 @@ class PersonalRepositoryImpl @Inject constructor(
                     AppResult.Ok(User(
                         firstName = firstName,
                         lastName = lastName,
-                        avatarUrl = prefs[UserDataStoreKeys.AVATAR_URL]
+                        avatarUrl = prefs[UserDataStoreKeys.AVATAR_URL],
+                        email = prefs[UserDataStoreKeys.EMAIL].orEmpty()
                     ))
                 } else {
                     result
@@ -50,6 +54,7 @@ class PersonalRepositoryImpl @Inject constructor(
         dataStore.edit { prefs ->
             prefs[UserDataStoreKeys.FIRST_NAME] = user.firstName
             prefs[UserDataStoreKeys.LAST_NAME] = user.lastName
+            prefs[UserDataStoreKeys.EMAIL] = user.email
 
             val avatarUrl = user.avatarUrl
             if (avatarUrl == null) {
@@ -65,6 +70,35 @@ class PersonalRepositoryImpl @Inject constructor(
             prefs.remove(UserDataStoreKeys.AVATAR_URL)
             prefs.remove(UserDataStoreKeys.FIRST_NAME)
             prefs.remove(UserDataStoreKeys.LAST_NAME)
+            prefs.remove(UserDataStoreKeys.EMAIL)
         }
     }
+
+    override fun getUserFlow(): Flow<User> = dataStore.data.map { prefs ->
+        User(
+            firstName = prefs[UserDataStoreKeys.FIRST_NAME].orEmpty(),
+            lastName = prefs[UserDataStoreKeys.LAST_NAME].orEmpty(),
+            avatarUrl = prefs[UserDataStoreKeys.AVATAR_URL],
+            email = prefs[UserDataStoreKeys.EMAIL].orEmpty()
+        )
+    }
+
+    override fun getThemeMode(): Flow<ThemeMode> = dataStore.data.map { prefs ->
+        when (prefs[UserDataStoreKeys.THEME_MODE]) {
+            "dark" -> ThemeMode.DARK
+            "system" -> ThemeMode.SYSTEM
+            else -> ThemeMode.LIGHT
+        }
+    }
+
+    override suspend fun setThemeMode(mode: ThemeMode) {
+        dataStore.edit { prefs ->
+            prefs[UserDataStoreKeys.THEME_MODE] = when (mode) {
+                ThemeMode.DARK -> "dark"
+                ThemeMode.LIGHT -> "light"
+                ThemeMode.SYSTEM -> "system"
+            }
+        }
+    }
+
 }

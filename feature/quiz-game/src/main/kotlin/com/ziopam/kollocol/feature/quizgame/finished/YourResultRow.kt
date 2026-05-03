@@ -1,6 +1,5 @@
 package com.ziopam.kollocol.feature.quizgame.finished
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.ziopam.kollocol.core.ui.theme.isDarkTheme
 import com.ziopam.kollocol.core.ui.util.rankToMedalEmoji
 import com.ziopam.kollocol.domain.model.GameFinishResult
 import com.ziopam.kollocol.feature.quizgame.R
@@ -25,7 +25,7 @@ import com.ziopam.kollocol.feature.quizgame.R
 internal fun YourResultRow(
     result: GameFinishResult
 ) {
-    val cardColor = if (isSystemInDarkTheme())
+    val cardColor = if (isDarkTheme())
         MaterialTheme.colorScheme.surfaceVariant
     else
         MaterialTheme.colorScheme.surface

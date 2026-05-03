@@ -108,6 +108,10 @@ class PersonalViewModel @Inject constructor(
                     _uiState.update { it.copy(error = null) }
                 }
             } else if (result is AppResult.Ok){
+                val avatarUri = _uiState.value.avatarUri
+                if (avatarUri != null) {
+                    userRepository.uploadAvatar(avatarUri)
+                }
                 _events.update { PersonalUiEvent.NavigateToMain }
             }
         }

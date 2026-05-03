@@ -1,6 +1,5 @@
 package com.ziopam.kollocol.feature.main.quizzes
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,6 +30,7 @@ import com.ziopam.kollocol.core.ui.buttons.DefaultButton
 import com.ziopam.kollocol.core.ui.input.SearchBar
 import com.ziopam.kollocol.core.ui.other.SelectiveTabs
 import com.ziopam.kollocol.core.ui.theme.AppTheme
+import com.ziopam.kollocol.core.ui.theme.isDarkTheme
 import com.ziopam.kollocol.feature.main.R
 import com.ziopam.kollocol.feature.main.common.AiPromptDialog
 
@@ -44,7 +44,7 @@ fun QuizzesAbove(
     onCreateTemplateClick: () -> Unit = {},
     onCreateTemplateAiClick: (String) -> Unit = {}
 ) {
-    val selectionColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.surfaceVariant else Color.White
+    val selectionColor = if (isDarkTheme()) MaterialTheme.colorScheme.surfaceVariant else Color.White
     val tabs = listOf(stringResource(R.string.my_quizzes), stringResource(R.string.my_templates))
     var showCreateMenu by remember { mutableStateOf(false) }
     var showAiDialog by remember { mutableStateOf(false) }

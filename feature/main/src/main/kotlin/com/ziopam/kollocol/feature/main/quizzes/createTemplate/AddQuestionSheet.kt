@@ -1,6 +1,5 @@
 package com.ziopam.kollocol.feature.main.quizzes.createTemplate
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -40,6 +39,7 @@ import com.ziopam.kollocol.core.ui.input.Switch
 import com.ziopam.kollocol.core.ui.other.SelectiveTabs
 import com.ziopam.kollocol.core.ui.theme.AppTheme
 import com.ziopam.kollocol.core.ui.theme.ExtraColors
+import com.ziopam.kollocol.core.ui.theme.isDarkTheme
 import com.ziopam.kollocol.feature.main.R
 import com.ziopam.kollocol.feature.main.quizzes.createTemplate.components.PointsChip
 import com.ziopam.kollocol.feature.main.quizzes.createTemplate.components.ScoreInputDialog
@@ -81,7 +81,7 @@ fun AddQuestionSheet(
         else -> QuestionType.OPEN
     }
 
-    val selectionColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.surfaceVariant else Color.White
+    val selectionColor = if (isDarkTheme()) MaterialTheme.colorScheme.surfaceVariant else Color.White
 
     val errorDialogTitle = stringResource(R.string.error_dialog_title)
     val okText = stringResource(R.string.ok)

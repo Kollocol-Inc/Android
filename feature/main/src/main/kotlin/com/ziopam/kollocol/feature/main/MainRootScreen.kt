@@ -20,6 +20,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.ziopam.kollocol.core.ui.cards.LocalExtraBottomPadding
 import com.ziopam.kollocol.feature.main.home.HomeScreen
+import com.ziopam.kollocol.feature.main.profile.ProfileScreen
 import com.ziopam.kollocol.feature.main.quizzes.QuizzesScreen
 import com.ziopam.kollocol.feature.main.quizzes.createTemplate.CreateTemplateScreen
 import com.ziopam.kollocol.feature.quizgame.GameScreen
@@ -138,7 +139,7 @@ fun MainRootScreen() {
             }
 
             composable(MainRoute.PROFILE) {
-                Text("Profile screen")
+                ProfileScreen()
             }
 
             composable(

@@ -1,7 +1,6 @@
 package com.ziopam.kollocol.feature.main.quizzes.createTemplate.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import com.ziopam.kollocol.core.common.TimeFormatter
 import com.ziopam.kollocol.core.ui.clickableNoIndication
 import com.ziopam.kollocol.core.ui.theme.ExtraColors
+import com.ziopam.kollocol.core.ui.theme.isDarkTheme
 import com.ziopam.kollocol.feature.main.R
 import com.ziopam.kollocol.feature.main.quizzes.createTemplate.QuestionType
 import com.ziopam.kollocol.feature.main.quizzes.createTemplate.QuestionUiModel
@@ -46,7 +46,7 @@ fun QuestionCard(
     modifier: Modifier = Modifier,
     dragHandleModifier: Modifier = Modifier
 ) {
-    val cardColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.surfaceVariant
+    val cardColor = if (isDarkTheme()) MaterialTheme.colorScheme.surfaceVariant
     else MaterialTheme.colorScheme.surface
 
     Card(

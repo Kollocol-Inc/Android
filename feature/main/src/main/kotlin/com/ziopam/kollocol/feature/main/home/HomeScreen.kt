@@ -30,6 +30,7 @@ fun HomeScreen(
 
     HomeScreenContent(
         personName = state.personName,
+        avatarUrl = state.avatarUrl,
         participatingQuizzes = state.participatingQuizzes,
         runningQuizzes = state.hostingQuizzes,
         onParticipatingQuizClick = onParticipatingQuizClick,
@@ -43,6 +44,7 @@ fun HomeScreen(
 @Composable
 private fun HomeScreenContent(
     personName: String,
+    avatarUrl: String?,
     code: String,
     codeChanged: (String) -> Unit,
     participatingQuizzes: List<QuizInfo>,
@@ -55,6 +57,7 @@ private fun HomeScreenContent(
         contentAbove = {
             HomeAbove(
                 personName = personName,
+                avatarUrl = avatarUrl,
                 code = code,
                 onCodeChanged = codeChanged,
                 onJoinQuiz = { if (code.length == 6) onJoinQuiz(code) }
@@ -72,6 +75,7 @@ private fun HomeScreenPreview() {
     MainScaffoldPreview {
         HomeScreenContent(
             personName = "Павел Попов",
+            avatarUrl = null,
             code = code,
             codeChanged = { code = it },
             participatingQuizzes = quizzesInfoExample,

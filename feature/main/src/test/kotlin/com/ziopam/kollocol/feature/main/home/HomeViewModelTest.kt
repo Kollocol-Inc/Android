@@ -43,6 +43,7 @@ class HomeViewModelTest {
 
     private val participatingFlow = MutableStateFlow<List<QuizInfo>>(emptyList())
     private val runningFlow = MutableStateFlow<List<QuizInfo>>(emptyList())
+    private val userFlow = MutableStateFlow(User(avatarUrl = null, firstName = "John", lastName = "Doe"))
 
     @Before
     fun setup() {
@@ -52,6 +53,7 @@ class HomeViewModelTest {
 
         every { quizRepository.participatingQuizzes } returns participatingFlow
         every { quizRepository.runningQuizzes } returns runningFlow
+        every { personalRepository.getUserFlow() } returns userFlow
         coEvery { personalRepository.getUser() } returns AppResult.Ok(
             User(avatarUrl = null, firstName = "John", lastName = "Doe")
         )
@@ -125,9 +127,7 @@ class HomeViewModelTest {
     @Test
     fun `uiState personName combines firstName and lastName`() = runTest {
         // Given
-        coEvery { personalRepository.getUser() } returns AppResult.Ok(
-            User(avatarUrl = null, firstName = "Jane", lastName = "Smith")
-        )
+        userFlow.value = User(avatarUrl = null, firstName = "Jane", lastName = "Smith")
         viewModel = HomeViewModel(quizRepository, personalRepository)
         backgroundScope.launch { viewModel.uiState.collect {} }
 
@@ -141,9 +141,7 @@ class HomeViewModelTest {
     @Test
     fun `uiState personName trims when lastName is empty`() = runTest {
         // Given
-        coEvery { personalRepository.getUser() } returns AppResult.Ok(
-            User(avatarUrl = null, firstName = "Jane", lastName = "")
-        )
+        userFlow.value = User(avatarUrl = null, firstName = "Jane", lastName = "")
         viewModel = HomeViewModel(quizRepository, personalRepository)
         backgroundScope.launch { viewModel.uiState.collect {} }
 
@@ -185,16 +183,13 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun `refresh updates personName on success`() = runTest {
+    fun `uiState personName updates when getUserFlow emits new user`() = runTest {
         // Given
-        coEvery { personalRepository.getUser() } returns AppResult.Ok(
-            User(avatarUrl = null, firstName = "Alice", lastName = "Wonder")
-        )
-        viewModel = HomeViewModel(quizRepository, personalRepository)
         backgroundScope.launch { viewModel.uiState.collect {} }
+        advanceUntilIdle()
 
         // When
-        viewModel.refresh()
+        userFlow.value = User(avatarUrl = null, firstName = "Alice", lastName = "Wonder")
         advanceUntilIdle()
 
         // Then
@@ -204,14 +199,10 @@ class HomeViewModelTest {
     @Test
     fun `refresh does not update personName when getUser fails`() = runTest {
         // Given
-        coEvery { personalRepository.getUser() } returns AppResult.Ok(
-            User(avatarUrl = null, firstName = "Initial", lastName = "Name")
-        )
+        userFlow.value = User(avatarUrl = null, firstName = "Initial", lastName = "Name")
         viewModel = HomeViewModel(quizRepository, personalRepository)
         backgroundScope.launch { viewModel.uiState.collect {} }
         advanceUntilIdle()
-
-        // Second refresh fails
         coEvery { personalRepository.getUser() } returns AppResult.Err(AppError.NoInternet)
 
         // When
