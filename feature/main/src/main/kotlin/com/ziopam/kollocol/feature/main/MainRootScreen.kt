@@ -19,10 +19,13 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.ziopam.kollocol.core.ui.cards.LocalExtraBottomPadding
+import com.ziopam.kollocol.domain.model.QuizMode
 import com.ziopam.kollocol.feature.main.home.HomeScreen
 import com.ziopam.kollocol.feature.main.profile.ProfileScreen
 import com.ziopam.kollocol.feature.main.quizzes.QuizzesScreen
 import com.ziopam.kollocol.feature.main.quizzes.createTemplate.CreateTemplateScreen
+import com.ziopam.kollocol.feature.main.quizzes.review.ParticipantReviewScreen
+import com.ziopam.kollocol.feature.main.quizzes.review.QuizReviewScreen
 import com.ziopam.kollocol.feature.quizgame.GameScreen
 
 @Composable
@@ -32,7 +35,9 @@ fun MainRootScreen() {
     val currentRoute = navBackStackEntry?.destination?.route
 
     val showBottomBar = currentRoute?.startsWith("create_template") != true &&
-            currentRoute?.startsWith("game/") != true
+            currentRoute?.startsWith("game/") != true &&
+            currentRoute?.startsWith("quiz_review/") != true &&
+            currentRoute?.startsWith("participant_review/") != true
 
     Scaffold(
         bottomBar = {
@@ -84,8 +89,12 @@ fun MainRootScreen() {
                         }
                     },
                     onRunningQuizClick = { quiz ->
-                        tabNavController.navigate(MainRoute.gameRoute(quiz.accessCode)) {
-                            launchSingleTop = true
+                        if (quiz.mode == QuizMode.ASYNC) {
+                            tabNavController.navigate(MainRoute.quizReviewRoute(quiz.id))
+                        } else {
+                            tabNavController.navigate(MainRoute.gameRoute(quiz.accessCode)) {
+                                launchSingleTop = true
+                            }
                         }
                     }
                 )
@@ -96,10 +105,71 @@ fun MainRootScreen() {
             }
 
             composable(
+                route = MainRoute.QUIZ_REVIEW,
+                arguments = listOf(navArgument("instanceId") { type = NavType.StringType }),
+                enterTransition = {
+                    slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(300))
+                },
+                exitTransition = {
+                    slideOutHorizontally(targetOffsetX = { -it }, animationSpec = tween(300))
+                },
+                popEnterTransition = {
+                    slideInHorizontally(initialOffsetX = { -it }, animationSpec = tween(300))
+                },
+                popExitTransition = {
+                    slideOutHorizontally(targetOffsetX = { it }, animationSpec = tween(300))
+                }
+            ) {
+                QuizReviewScreen(
+                    onNavigateBack = { tabNavController.popBackStack() },
+                    onParticipantClick = { instanceId, participant ->
+                        tabNavController.navigate(
+                            MainRoute.participantReviewRoute(
+                                instanceId = instanceId,
+                                userId = participant.userId,
+                                name = "${participant.firstName} ${participant.lastName}",
+                                email = participant.email
+                            )
+                        )
+                    }
+                )
+            }
+
+            composable(
+                route = MainRoute.PARTICIPANT_REVIEW,
+                arguments = listOf(
+                    navArgument("instanceId") { type = NavType.StringType },
+                    navArgument("userId") { type = NavType.StringType },
+                    navArgument("name") { type = NavType.StringType; defaultValue = "" },
+                    navArgument("email") { type = NavType.StringType; defaultValue = "" }
+                ),
+                enterTransition = {
+                    slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(300))
+                },
+                exitTransition = {
+                    slideOutHorizontally(targetOffsetX = { it }, animationSpec = tween(300))
+                },
+                popEnterTransition = {
+                    slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(300))
+                },
+                popExitTransition = {
+                    slideOutHorizontally(targetOffsetX = { it }, animationSpec = tween(300))
+                }
+            ) { backStackEntry ->
+                val name = backStackEntry.arguments?.getString("name") ?: ""
+                val email = backStackEntry.arguments?.getString("email") ?: ""
+                ParticipantReviewScreen(
+                    participantName = name,
+                    participantEmail = email,
+                    onNavigateBack = { tabNavController.popBackStack() }
+                )
+            }
+
+            composable(
                 route = MainRoute.QUIZZES,
                 exitTransition = {
                     val target = targetState.destination.route ?: ""
-                    if (target.startsWith("create_template") || target.startsWith("game/")) {
+                    if (target.startsWith("create_template") || target.startsWith("game/") || target.startsWith("quiz_review/")) {
                         slideOutHorizontally(
                             targetOffsetX = { -it },
                             animationSpec = tween(300)
@@ -110,7 +180,7 @@ fun MainRootScreen() {
                 },
                 popEnterTransition = {
                     val initial = initialState.destination.route ?: ""
-                    if (initial.startsWith("create_template") || initial.startsWith("game/")) {
+                    if (initial.startsWith("create_template") || initial.startsWith("game/") || initial.startsWith("quiz_review/") || initial.startsWith("participant_review/")) {
                         slideInHorizontally(
                             initialOffsetX = { -it },
                             animationSpec = tween(300)
@@ -122,9 +192,16 @@ fun MainRootScreen() {
             ) {
                 QuizzesScreen(
                     onRunningQuizClick = { quiz ->
-                        tabNavController.navigate(MainRoute.gameRoute(quiz.accessCode)) {
-                            launchSingleTop = true
+                        if (quiz.mode == QuizMode.ASYNC) {
+                            tabNavController.navigate(MainRoute.quizReviewRoute(quiz.id))
+                        } else {
+                            tabNavController.navigate(MainRoute.gameRoute(quiz.accessCode)) {
+                                launchSingleTop = true
+                            }
                         }
+                    },
+                    onReviewQuizClick = { quiz ->
+                        tabNavController.navigate(MainRoute.quizReviewRoute(quiz.id))
                     },
                     onCreateTemplateClick = {
                         tabNavController.navigate(MainRoute.createTemplateRoute())

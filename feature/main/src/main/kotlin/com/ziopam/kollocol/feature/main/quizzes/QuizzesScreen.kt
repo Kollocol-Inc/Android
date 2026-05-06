@@ -23,6 +23,7 @@ import com.ziopam.kollocol.feature.main.MainScaffoldPreview
 fun QuizzesScreen(
     viewModel: QuizzesViewModel = hiltViewModel(),
     onRunningQuizClick: (QuizInfo) -> Unit = {},
+    onReviewQuizClick: (QuizInfo) -> Unit = {},
     onCreateTemplateClick: () -> Unit = {},
     onCreateTemplateAiClick: (String) -> Unit = {},
     onEditTemplateClick: (QuizInfo) -> Unit = {}
@@ -67,7 +68,7 @@ fun QuizzesScreen(
         onSearchQueryChange = viewModel::onSearchQueryChange,
         onTabSelected = viewModel::onTabSelected,
         onRunningQuizClick = onRunningQuizClick,
-        onQuizClick = {},
+        onQuizClick = onReviewQuizClick,
         onTemplateClick = onEditTemplateClick,
         onStartClick = viewModel::onStartClick,
         onCreateTemplateClick = onCreateTemplateClick,
@@ -89,8 +90,8 @@ private fun QuizzesScreen(
     onQuizClick: (QuizInfo) -> Unit,
     onTemplateClick: (QuizInfo) -> Unit,
     onStartClick: (QuizInfo) -> Unit,
-    onCreateTemplateClick: () -> Unit = {},
-    onCreateTemplateAiClick: (String) -> Unit = {}
+    onCreateTemplateClick: () -> Unit,
+    onCreateTemplateAiClick: (String) -> Unit
 ) {
     LayoutWithLargeBottomCard(
         contentAbove = {
@@ -153,7 +154,9 @@ private fun MyQuizzesPreview() {
             onRunningQuizClick = {},
             onQuizClick = {},
             onTemplateClick = {},
-            onStartClick = {}
+            onStartClick = {},
+            onCreateTemplateClick = {},
+            onCreateTemplateAiClick = {}
         )
     }
 }
@@ -176,7 +179,9 @@ private fun TemplatesPreview() {
             onRunningQuizClick = {},
             onQuizClick = {},
             onTemplateClick = {},
-            onStartClick = {}
+            onStartClick = {},
+            onCreateTemplateClick = {},
+            onCreateTemplateAiClick = {}
         )
     }
 }

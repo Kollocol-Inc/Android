@@ -46,5 +46,5 @@ val DarkMaterialScheme = darkColorScheme(
 
 object ExtraColors {
     val affirmative  = Color(0xFF3ECF2E)
-    val negative = Color(0xFFFF0000)
+    val negative = Color(0xFFC92E2E)
 }

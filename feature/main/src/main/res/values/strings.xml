@@ -115,4 +115,24 @@
     <string name="no_options_error">Добавьте хотя бы один вариант ответа</string>
     <string name="no_correct_answer_error">Укажите правильный ответ</string>
     <string name="blank_option_selected_error">Выбранный вариант ответа не может быть пустым</string>
+
+    <string name="quiz_review_title">Проверка квиза</string>
+    <string name="participants_passed">Прошли</string>
+    <string name="participants_not_started">Не приступили</string>
+    <string name="cancel_quiz">Отменить квиз</string>
+    <string name="cancel_quiz_confirm_title">Отменить квиз?</string>
+    <string name="cancel_quiz_confirm_message">Квиз будет удалён безвозвратно</string>
+    <string name="publish_results">Опубликовать</string>
+    <string name="search_participants">Поиск участников</string>
+    <string name="grade_action">Оценить</string>
+    <string name="correct_answer_label">Правильный ответ</string>
+    <string name="participant_answer_label">Ответ участника</string>
+    <string name="no_answer">Нет ответа</string>
+    <string name="quiz_canceled">Квиз отменён</string>
+    <string name="results_published">Результаты опубликованы</string>
+    <string name="results_already_published">Результаты уже опубликованы</string>
+    <string name="publish_before_deadline_error">Нельзя публиковать результаты до окончания дедлайна</string>
+    <string name="publish_not_all_reviewed_error">Необходимо проверить всех участников</string>
+    <string name="participant_not_finished">Участник ещё не завершил квиз</string>
+    <string name="grade_saved">Оценка сохранена</string>
 </resources>
