@@ -21,6 +21,7 @@ import androidx.navigation.navArgument
 import com.ziopam.kollocol.core.ui.cards.LocalExtraBottomPadding
 import com.ziopam.kollocol.domain.model.QuizMode
 import com.ziopam.kollocol.feature.main.home.HomeScreen
+import com.ziopam.kollocol.feature.main.notifications.NotificationsScreen
 import com.ziopam.kollocol.feature.main.profile.ProfileScreen
 import com.ziopam.kollocol.feature.main.quizzes.QuizzesScreen
 import com.ziopam.kollocol.feature.main.quizzes.createTemplate.CreateTemplateScreen
@@ -37,7 +38,8 @@ fun MainRootScreen() {
     val showBottomBar = currentRoute?.startsWith("create_template") != true &&
             currentRoute?.startsWith("game/") != true &&
             currentRoute?.startsWith("quiz_review/") != true &&
-            currentRoute?.startsWith("participant_review/") != true
+            currentRoute?.startsWith("participant_review/") != true &&
+            currentRoute != MainRoute.NOTIFICATIONS
 
     Scaffold(
         bottomBar = {
@@ -96,7 +98,30 @@ fun MainRootScreen() {
                                 launchSingleTop = true
                             }
                         }
+                    },
+                    onNotificationsClick = {
+                        tabNavController.navigate(MainRoute.NOTIFICATIONS)
                     }
+                )
+            }
+
+            composable(
+                route = MainRoute.NOTIFICATIONS,
+                enterTransition = {
+                    slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(300))
+                },
+                exitTransition = {
+                    slideOutHorizontally(targetOffsetX = { it }, animationSpec = tween(300))
+                },
+                popEnterTransition = {
+                    slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(300))
+                },
+                popExitTransition = {
+                    slideOutHorizontally(targetOffsetX = { it }, animationSpec = tween(300))
+                }
+            ) {
+                NotificationsScreen(
+                    onNavigateBack = { tabNavController.popBackStack() }
                 )
             }
 

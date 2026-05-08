@@ -20,7 +20,8 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
     onParticipatingQuizClick: (QuizInfo) -> Unit = {},
     onRunningQuizClick: (QuizInfo) -> Unit = {},
-    onJoinQuiz: (String) -> Unit = {}
+    onJoinQuiz: (String) -> Unit = {},
+    onNotificationsClick: () -> Unit = {}
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -37,7 +38,9 @@ fun HomeScreen(
         onRunningQuizClick = onRunningQuizClick,
         code = state.quizCode,
         codeChanged = viewModel::onCodeChanged,
-        onJoinQuiz = onJoinQuiz
+        onJoinQuiz = onJoinQuiz,
+        onNotificationsClick = onNotificationsClick,
+        unreadNotificationsCount = state.unreadNotificationsCount
     )
 }
 
@@ -51,7 +54,9 @@ private fun HomeScreenContent(
     runningQuizzes: List<QuizInfo>,
     onParticipatingQuizClick: (QuizInfo) -> Unit,
     onRunningQuizClick: (QuizInfo) -> Unit,
-    onJoinQuiz: (String) -> Unit = {}
+    onJoinQuiz: (String) -> Unit = {},
+    onNotificationsClick: () -> Unit = {},
+    unreadNotificationsCount: Int = 0
 ) {
     LayoutWithLargeBottomCard(
         contentAbove = {
@@ -60,7 +65,9 @@ private fun HomeScreenContent(
                 avatarUrl = avatarUrl,
                 code = code,
                 onCodeChanged = codeChanged,
-                onJoinQuiz = { if (code.length == 6) onJoinQuiz(code) }
+                onJoinQuiz = { if (code.length == 6) onJoinQuiz(code) },
+                onNotificationsClick = onNotificationsClick,
+                unreadNotificationsCount = unreadNotificationsCount
             )
         },
         content = { HomeBelow(participatingQuizzes, runningQuizzes, onParticipatingQuizClick, onRunningQuizClick) }

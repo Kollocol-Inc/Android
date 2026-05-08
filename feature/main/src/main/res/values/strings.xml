@@ -135,4 +135,10 @@
     <string name="publish_not_all_reviewed_error">Необходимо проверить всех участников</string>
     <string name="participant_not_finished">Участник ещё не завершил квиз</string>
     <string name="grade_saved">Оценка сохранена</string>
+
+    <string name="notifications_screen_title">Уведомления</string>
+    <string name="mark_all_read">Прочитать все</string>
+    <string name="no_notifications">Уведомлений нет</string>
+    <string name="accept_invite">Принять</string>
+    <string name="decline_invite">Отклонить</string>
 </resources>

@@ -9,6 +9,7 @@ object MainRoute {
     const val GROUPS = "groups"
     const val QUIZZES = "quizzes"
     const val PROFILE = "profile"
+    const val NOTIFICATIONS = "notifications"
     const val CREATE_TEMPLATE = "create_template?templateId={templateId}&aiPrompt={aiPrompt}"
     const val GAME = "game/{accessCode}"
     const val QUIZ_REVIEW = "quiz_review/{instanceId}"
