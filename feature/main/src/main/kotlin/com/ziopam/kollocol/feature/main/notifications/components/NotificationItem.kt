@@ -8,16 +8,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -28,7 +26,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
-import com.ziopam.kollocol.core.ui.theme.ExtraColors
+import androidx.compose.ui.unit.sp
 import com.ziopam.kollocol.domain.model.Notification
 import com.ziopam.kollocol.domain.model.NotificationType
 import com.ziopam.kollocol.feature.main.R
@@ -52,67 +50,56 @@ fun NotificationItem(
         }.getOrElse { "" }
     }
 
-    Box(modifier = modifier) {
-        Surface(
-            shape = RoundedCornerShape(16.dp),
-            color = MaterialTheme.colorScheme.surface,
-            shadowElevation = 2.dp,
-            modifier = Modifier.fillMaxWidth()
+    Column(modifier = modifier.padding(12.dp).padding(vertical = 5.dp)) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(14.dp)
         ) {
-            Column(modifier = Modifier.padding(12.dp)) {
+            NotificationIcon(type = notification.type)
+
+            Column(modifier = Modifier.weight(1f)) {
                 Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    NotificationIcon(type = notification.type)
-
-                    Column(modifier = Modifier.weight(1f)) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = notification.title,
-                                style = MaterialTheme.typography.bodyMedium,
-                                modifier = Modifier.weight(1f, fill = false)
-                            )
-                            Text(
-                                text = formattedDate,
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
-                                modifier = Modifier.padding(start = 8.dp)
-                            )
-                        }
-
-                        Spacer(Modifier.height(2.dp))
-
-                        Text(
-                            text = notification.content,
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                    if (!notification.isRead){
+                        Box(Modifier
+                            .size(6.dp)
+                            .background(MaterialTheme.colorScheme.primary, CircleShape)
                         )
+                        Spacer(Modifier.width(5.dp))
                     }
-                }
 
-                val groupId = notification.referenceId
-                if (notification.type == NotificationType.GROUP_INVITE && groupId != null) {
-                    Spacer(Modifier.height(10.dp))
-                    GroupInviteActions(
-                        onAccept = { onAcceptInvite(groupId) },
-                        onDecline = { onDeclineInvite(groupId) }
+                    Text(
+                        text = notification.title,
+                        style = MaterialTheme.typography.headlineSmall,
+                        modifier = Modifier.weight(1f)
+                    )
+                    Text(
+                        text = formattedDate,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
+                        modifier = Modifier
                     )
                 }
+
+                Spacer(Modifier.height(4.dp))
+
+                Text(
+                    text = notification.content,
+                    style = MaterialTheme.typography.bodySmall.copy(fontSize = 14.sp),
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                )
             }
         }
 
-        if (!notification.isRead) {
-            Box(
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .offset(x = 4.dp, y = (-4).dp)
-                    .size(10.dp)
-                    .background(MaterialTheme.colorScheme.primary, CircleShape)
+        val groupId = notification.referenceId
+        if (notification.type == NotificationType.GROUP_INVITE && groupId != null) {
+            Spacer(Modifier.height(10.dp))
+            GroupInviteActions(
+                onAccept = { onAcceptInvite(groupId) },
+                onDecline = { onDeclineInvite(groupId) }
             )
         }
     }
@@ -121,10 +108,9 @@ fun NotificationItem(
 @Composable
 private fun NotificationIcon(type: NotificationType) {
     val iconRes = when (type) {
-        NotificationType.GROUP_INVITE -> CoreR.drawable.groups
+        NotificationType.GROUP_INVITE -> CoreR.drawable.groups_filled
         NotificationType.QUIZ_CREATED -> CoreR.drawable.play
-        NotificationType.QUIZ_RESULTS -> CoreR.drawable.question_in_circle_filled
-        NotificationType.GRADE_CHANGED -> CoreR.drawable.check
+        NotificationType.QUIZ_RESULTS,NotificationType.GRADE_CHANGED   -> CoreR.drawable.question_in_circle_filled
         NotificationType.DEADLINE_REMINDER -> CoreR.drawable.clock_filled
         NotificationType.UNKNOWN -> CoreR.drawable.bell
     }
@@ -132,20 +118,13 @@ private fun NotificationIcon(type: NotificationType) {
     val iconTint = when (type) {
         NotificationType.GROUP_INVITE -> MaterialTheme.colorScheme.primary
         NotificationType.QUIZ_CREATED -> Color(0xFF4CAF50)
-        NotificationType.QUIZ_RESULTS -> MaterialTheme.colorScheme.primary
-        NotificationType.GRADE_CHANGED -> ExtraColors.affirmative
+        NotificationType.QUIZ_RESULTS, NotificationType.GRADE_CHANGED   -> MaterialTheme.colorScheme.primary
         NotificationType.DEADLINE_REMINDER -> Color(0xFFE53935)
         NotificationType.UNKNOWN -> MaterialTheme.colorScheme.primary
     }
 
     Box(
         contentAlignment = Alignment.Center,
-        modifier = Modifier
-            .size(40.dp)
-            .background(
-                color = iconTint.copy(alpha = 0.12f),
-                shape = CircleShape
-            )
     ) {
         Icon(
             imageVector = ImageVector.vectorResource(iconRes),
@@ -171,9 +150,15 @@ private fun GroupInviteActions(
         ) {
             Text(stringResource(R.string.accept_invite))
         }
-        OutlinedButton(
+        Button(
             onClick = onDecline,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
+            colors = ButtonColors(
+                containerColor = Color(0xFF6D6B6B),
+                disabledContainerColor = Color(0xFF6D6B6B),
+                contentColor = MaterialTheme.colorScheme.onPrimary,
+                disabledContentColor = MaterialTheme.colorScheme.onPrimary
+            )
         ) {
             Text(stringResource(R.string.decline_invite))
         }

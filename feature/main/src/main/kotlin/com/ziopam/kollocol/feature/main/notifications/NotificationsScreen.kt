@@ -1,14 +1,12 @@
 package com.ziopam.kollocol.feature.main.notifications
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,14 +19,13 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
-import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ziopam.kollocol.core.ui.buttons.CircleIconButton
 import com.ziopam.kollocol.core.ui.cards.LayoutWithLargeBottomCard
+import com.ziopam.kollocol.core.ui.preview.AppPreview
 import com.ziopam.kollocol.domain.model.Notification
 import com.ziopam.kollocol.domain.model.NotificationType
-import com.ziopam.kollocol.feature.main.MainScaffoldPreview
 import com.ziopam.kollocol.feature.main.R
 import com.ziopam.kollocol.feature.main.notifications.components.NotificationItem
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -94,12 +91,10 @@ fun NotificationsScreen(
         } else {
             LazyColumn(
                 state = listState,
-                contentPadding = PaddingValues(vertical = 12.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 4.dp)
             ) {
+                var number = 1
                 items(
                     items = notifications,
                     key = { it.id }
@@ -109,6 +104,10 @@ fun NotificationsScreen(
                         onAcceptInvite = { groupId -> onAcceptInvite(groupId, notification.id) },
                         onDeclineInvite = { groupId -> onDeclineInvite(groupId, notification.id) }
                     )
+                    if (number < notifications.size){
+                        HorizontalDivider()
+                    }
+                    ++number
                 }
             }
         }
@@ -169,7 +168,7 @@ private val previewNotifications = listOf(
         id = "3",
         userId = "u1",
         type = NotificationType.QUIZ_RESULTS,
-        title = "Результаты квиза · Коллоквиум An...",
+        title = "Результаты квиза · Коллоквиум Android",
         content = "Оценка: 100% · 10/10 б.",
         isRead = true,
         createdAt = "2026-05-07T18:00:00Z"
@@ -197,7 +196,7 @@ private val previewNotifications = listOf(
 @PreviewLightDark
 @Composable
 private fun NotificationsScreenWithItemsPreview() {
-    MainScaffoldPreview {
+    AppPreview {
         NotificationsScreen(
             notifications = previewNotifications,
             onNavigateBack = {},
@@ -212,7 +211,7 @@ private fun NotificationsScreenWithItemsPreview() {
 @PreviewLightDark
 @Composable
 private fun NotificationsScreenEmptyPreview() {
-    MainScaffoldPreview {
+    AppPreview {
         NotificationsScreen(
             notifications = emptyList(),
             onNavigateBack = {},
