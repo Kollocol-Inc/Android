@@ -10,8 +10,8 @@ android {
 
     defaultConfig {
         applicationId = "com.ziopam.kollocol"
-        versionCode = 5
-        versionName = "1.00"
+        versionCode = 6
+        versionName = "1.01"
     }
 
     signingConfigs {
