@@ -61,6 +61,12 @@ fun AvatarPicker(
                 ),
             contentAlignment = Alignment.Center
         ) {
+            Icon(
+                imageVector = ImageVector.vectorResource(defaultIcon),
+                contentDescription = stringResource(R.string.pick_a_photo),
+                modifier = Modifier.size(defaultIconSize),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
+            )
             if (avatarUrl != null) {
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
@@ -70,13 +76,6 @@ fun AvatarPicker(
                     contentDescription = stringResource(R.string.avatar),
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop
-                )
-            } else {
-                Icon(
-                    imageVector = ImageVector.vectorResource(defaultIcon),
-                    contentDescription = stringResource(R.string.pick_a_photo),
-                    modifier = Modifier.size(defaultIconSize),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }

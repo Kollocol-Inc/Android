@@ -92,6 +92,7 @@ class UserRepositoryImpl @Inject constructor(
 
         val user = (uploadResult as AppResult.Ok).value.toUser()
         personalRepository.updateUser(user)
+        personalRepository.bumpAvatarVersion()
         return AppResult.Ok(user.avatarUrl)
     }
 

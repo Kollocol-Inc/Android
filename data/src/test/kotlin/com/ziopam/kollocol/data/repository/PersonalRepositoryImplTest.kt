@@ -1,5 +1,6 @@
 package com.ziopam.kollocol.data.repository
 
+import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import com.ziopam.kollocol.core.common.AppError
@@ -15,24 +16,40 @@ import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
+import okhttp3.OkHttpClient
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import java.io.File
 
 class PersonalRepositoryImplTest {
 
     private lateinit var dataStore: DataStore<Preferences>
     private lateinit var safeApiCall: SafeApiCall
     private lateinit var api: UserApi
+    private lateinit var context: Context
+    private lateinit var okHttpClient: OkHttpClient
     private lateinit var repository: PersonalRepositoryImpl
+
+    private val testFilesDir = File(System.getProperty("java.io.tmpdir"), "personalRepTest")
 
     @Before
     fun setup() {
+        testFilesDir.mkdirs()
         dataStore = mockk(relaxed = true)
         safeApiCall = mockk(relaxed = true)
         api = mockk(relaxed = true)
-        repository = PersonalRepositoryImpl(dataStore, safeApiCall, api)
+        context = mockk()
+        okHttpClient = mockk(relaxed = true)
+        every { context.filesDir } returns testFilesDir
+        repository = PersonalRepositoryImpl(dataStore, safeApiCall, api, context, okHttpClient)
+    }
+
+    @After
+    fun tearDown() {
+        testFilesDir.deleteRecursively()
     }
 
     @Test

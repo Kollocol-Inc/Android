@@ -9,6 +9,7 @@ interface PersonalRepository {
     suspend fun getUser(): AppResult<User>
     fun getUserFlow(): Flow<User>
     suspend fun updateUser(user: User)
+    suspend fun bumpAvatarVersion()
     suspend fun clear()
     fun getThemeMode(): Flow<ThemeMode>
     suspend fun setThemeMode(mode: ThemeMode)

@@ -16,7 +16,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -50,24 +49,18 @@ class ProfileViewModel @Inject constructor(
     private val _events = Channel<ProfileEvent>()
     val events = _events.receiveAsFlow()
 
-    private val _avatarCacheBuster = MutableStateFlow(System.currentTimeMillis())
-
     init {
         viewModelScope.launch {
-            combine(
-                personalRepository.getUserFlow(),
-                _avatarCacheBuster
-            ) { user, buster -> user to buster }
-                .collect { (user, buster) ->
-                    _state.update {
-                        it.copy(
-                            firstName = user.firstName,
-                            lastName = user.lastName,
-                            avatarUrl = user.avatarUrl?.let { url -> "$url?t=$buster" },
-                            email = user.email
-                        )
-                    }
+            personalRepository.getUserFlow().collect { user ->
+                _state.update {
+                    it.copy(
+                        firstName = user.firstName,
+                        lastName = user.lastName,
+                        avatarUrl = user.avatarUrl,
+                        email = user.email
+                    )
                 }
+            }
         }
         viewModelScope.launch {
             personalRepository.getThemeMode().collect { mode ->
@@ -85,9 +78,7 @@ class ProfileViewModel @Inject constructor(
 
             _state.update { it.copy(isLoading = false) }
 
-            if (userResult is AppResult.Ok) {
-                _avatarCacheBuster.value = System.currentTimeMillis()
-            } else if (userResult is AppResult.Err) {
+            if (userResult is AppResult.Err) {
                 _events.send(ProfileEvent.ShowError(userResult.error.toUiText()))
             }
             if (notifResult is AppResult.Ok) {
@@ -141,9 +132,8 @@ class ProfileViewModel @Inject constructor(
     fun onUploadAvatar(uri: Uri) {
         viewModelScope.launch {
             val result = userRepository.uploadAvatar(uri)
-            when (result) {
-                is AppResult.Ok -> _avatarCacheBuster.value = System.currentTimeMillis()
-                is AppResult.Err -> _events.send(ProfileEvent.ShowError(result.error.toUiText()))
+            if (result is AppResult.Err) {
+                _events.send(ProfileEvent.ShowError(result.error.toUiText()))
             }
         }
     }

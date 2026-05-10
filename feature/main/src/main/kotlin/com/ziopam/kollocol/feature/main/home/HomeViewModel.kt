@@ -31,7 +31,6 @@ class HomeViewModel @Inject constructor(
     private val notificationRepository: NotificationRepository
 ) : ViewModel() {
     private val quizCode = MutableStateFlow("")
-    private val _avatarCacheBuster = MutableStateFlow(System.currentTimeMillis())
     private val _unreadCount = MutableStateFlow(0)
 
     val uiState = combine(
@@ -39,11 +38,11 @@ class HomeViewModel @Inject constructor(
         quizCode,
         quizRepository.participatingQuizzes,
         quizRepository.runningQuizzes,
-        combine(_avatarCacheBuster, _unreadCount) { buster, unread -> buster to unread }
-    ) { user, quizCode, participating, hosting, (buster, unread) ->
+        _unreadCount
+    ) { user, quizCode, participating, hosting, unread ->
         HomeUiState(
             personName = "${user.firstName} ${user.lastName}".trim(),
-            avatarUrl = user.avatarUrl?.let { url -> "$url?t=$buster" },
+            avatarUrl = user.avatarUrl,
             quizCode = quizCode,
             participatingQuizzes = participating,
             hostingQuizzes = hosting,
@@ -65,10 +64,7 @@ class HomeViewModel @Inject constructor(
 
     fun refresh() {
         viewModelScope.launch {
-            val userResult = personalRepository.getUser()
-            if (userResult is AppResult.Ok) {
-                _avatarCacheBuster.value = System.currentTimeMillis()
-            }
+            personalRepository.getUser()
             quizRepository.getParticipatingQuizzes()
             quizRepository.getHostingQuizzes()
         }
