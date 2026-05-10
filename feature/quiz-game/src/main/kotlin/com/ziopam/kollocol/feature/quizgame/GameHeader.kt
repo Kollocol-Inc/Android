@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.ziopam.kollocol.core.ui.buttons.CircleIconButton
 import com.ziopam.kollocol.core.ui.contentPadding
 import com.ziopam.kollocol.core.ui.theme.ExtraColors
+import com.ziopam.kollocol.core.ui.R as CoreR
 
 @Composable
 internal fun GameHeader(
@@ -40,7 +41,7 @@ internal fun GameHeader(
     ) {
         CircleIconButton(
             { onExit?.invoke() },
-            icon = ImageVector.vectorResource(id = R.drawable.exit),
+            icon = ImageVector.vectorResource(id = CoreR.drawable.exit),
             contentDescription = stringResource(R.string.game_leave_quiz),
             tint = ExtraColors.negative
         )

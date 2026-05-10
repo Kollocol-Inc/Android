@@ -6,6 +6,7 @@ import com.ziopam.kollocol.data.datasource.remote.quiz.CreateInstanceRequestDto
 import com.ziopam.kollocol.data.datasource.remote.quiz.CreateTemplateRequestDto
 import com.ziopam.kollocol.data.datasource.remote.quiz.GenerateQuestionsRequestDto
 import com.ziopam.kollocol.data.datasource.remote.quiz.GenerateTemplateRequestDto
+import com.ziopam.kollocol.data.datasource.remote.quiz.GradeAnswerRequestDto
 import com.ziopam.kollocol.data.datasource.remote.quiz.QuestionInputDto
 import com.ziopam.kollocol.data.datasource.remote.quiz.QuizApi
 import com.ziopam.kollocol.data.datasource.remote.quiz.QuizSettingsDTO
@@ -15,6 +16,11 @@ import com.ziopam.kollocol.data.storage.room.TemplateDao
 import com.ziopam.kollocol.data.storage.room.TemplateEntity
 import com.ziopam.kollocol.data.storage.room.toEntity
 import com.ziopam.kollocol.data.storage.room.toQuizInfo
+import com.ziopam.kollocol.domain.model.ParticipantAnswers
+import com.ziopam.kollocol.domain.model.QuizInstanceDetails
+import com.ziopam.kollocol.domain.model.QuizParticipant
+import com.ziopam.kollocol.domain.model.ReviewAnswer
+import com.ziopam.kollocol.domain.model.ReviewQuestion
 import com.ziopam.kollocol.domain.model.TemplateDetail
 import com.ziopam.kollocol.domain.model.TemplateQuestion
 import com.ziopam.kollocol.domain.repository.QuizRepository
@@ -121,7 +127,7 @@ class QuizRepositoryImpl @Inject constructor(
             QuestionInputDto(
                 text = q["text"] as String,
                 type = q["type"] as String,
-                correctAnswer = q["correct_answer"]!!,
+                correctAnswer = q["correct_answer"],
                 maxScore = q["max_score"] as Int,
                 options = q["options"] as? List<String>,
                 timeLimitSec = q["time_limit_sec"] as? Int,
@@ -156,12 +162,14 @@ class QuizRepositoryImpl @Inject constructor(
     override suspend fun createInstance(
         templateId: String,
         title: String,
-        deadline: String?
+        deadline: String?,
+        groupId: String?
     ): AppResult<Unit> {
         val request = CreateInstanceRequestDto(
             templateId = templateId,
             title = title,
-            deadline = deadline
+            deadline = deadline,
+            groupId = groupId
         )
         val result = safeApiCall.call { api.createInstance(request) }
         return when (result) {
@@ -197,7 +205,7 @@ class QuizRepositoryImpl @Inject constructor(
             QuestionInputDto(
                 text = q["text"] as String,
                 type = q["type"] as String,
-                correctAnswer = q["correct_answer"]!!,
+                correctAnswer = q["correct_answer"],
                 maxScore = q["max_score"] as Int,
                 options = q["options"] as? List<String>,
                 timeLimitSec = q["time_limit_sec"] as? Int,
@@ -301,6 +309,102 @@ class QuizRepositoryImpl @Inject constructor(
             )
         }
     )
+
+    override suspend fun getInstanceById(instanceId: String): AppResult<QuizInstanceDetails> {
+        val result = safeApiCall.call { api.getInstanceById(instanceId) }
+        return when (result) {
+            is AppResult.Ok -> AppResult.Ok(QuizInstanceDetails(
+                title = result.value.instance.title,
+                status = result.value.instance.status,
+                deadline = result.value.instance.deadline
+            ))
+            is AppResult.Err -> AppResult.Err(result.error)
+        }
+    }
+
+    override suspend fun getInstanceParticipants(instanceId: String): AppResult<List<QuizParticipant>> {
+        val result = safeApiCall.call { api.getInstanceParticipants(instanceId) }
+        return when (result) {
+            is AppResult.Ok -> AppResult.Ok(result.value.participants.map { dto ->
+                QuizParticipant(
+                    userId = dto.user.id,
+                    firstName = dto.user.firstName,
+                    lastName = dto.user.lastName,
+                    email = dto.user.email,
+                    avatarUrl = dto.user.avatarUrl,
+                    sessionStatus = dto.sessionStatus,
+                    reviewStatus = dto.reviewStatus,
+                    totalScore = dto.totalScore,
+                    maxPossibleScore = dto.maxPossibleScore
+                )
+            })
+            is AppResult.Err -> AppResult.Err(result.error)
+        }
+    }
+
+    override suspend fun getParticipantAnswers(instanceId: String, userId: String): AppResult<ParticipantAnswers> {
+        val result = safeApiCall.call { api.getParticipantAnswers(instanceId, userId) }
+        return when (result) {
+            is AppResult.Ok -> {
+                val dto = result.value
+                AppResult.Ok(ParticipantAnswers(
+                    instanceTitle = dto.instance.title,
+                    questions = dto.questions.map { q ->
+                        ReviewQuestion(
+                            id = q.id,
+                            text = q.text,
+                            type = q.type,
+                            options = q.options,
+                            correctAnswer = q.correctAnswer,
+                            maxScore = q.maxScore,
+                            orderIndex = q.orderIndex
+                        )
+                    },
+                    answers = dto.answers.map { a ->
+                        ReviewAnswer(
+                            questionId = a.questionId,
+                            answer = a.answer ?: "",
+                            isCorrect = a.isCorrect,
+                            isReviewed = a.isReviewed,
+                            score = a.score
+                        )
+                    }
+                ))
+            }
+            is AppResult.Err -> AppResult.Err(result.error)
+        }
+    }
+
+    override suspend fun gradeAnswer(
+        instanceId: String,
+        participantId: String,
+        questionId: String,
+        score: Int
+    ): AppResult<Unit> {
+        val result = safeApiCall.call {
+            api.gradeAnswer(instanceId, GradeAnswerRequestDto(participantId, questionId, score))
+        }
+        return when (result) {
+            is AppResult.Ok -> AppResult.Ok(Unit)
+            is AppResult.Err -> AppResult.Err(result.error)
+        }
+    }
+
+    override suspend fun publishResults(instanceId: String): AppResult<Unit> {
+        val result = safeApiCall.call { api.publishResults(instanceId) }
+        return when (result) {
+            is AppResult.Ok -> AppResult.Ok(Unit)
+            is AppResult.Err -> AppResult.Err(result.error)
+        }
+    }
+
+    override suspend fun deleteInstance(instanceId: String): AppResult<Unit> {
+        val result = safeApiCall.call { api.deleteInstance(instanceId) }
+        return when (result) {
+            is AppResult.Ok -> AppResult.Ok(Unit)
+            is AppResult.Err -> AppResult.Err(result.error)
+        }
+    }
 
     private fun TemplateEntity.toDetail(): TemplateDetail = TemplateDetail(
         id = id,

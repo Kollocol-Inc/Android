@@ -141,7 +141,7 @@ data class QuestionInputDto(
     val type: String,
 
     @SerializedName("correct_answer")
-    val correctAnswer: Any,
+    val correctAnswer: Any?,
 
     @SerializedName("max_score")
     val maxScore: Int,
@@ -256,3 +256,96 @@ data class GenerateQuestionsResponseDto(
     @SerializedName("questions")
     val questions: List<GeneratedQuestionDto>
 )
+
+data class GetInstanceResponseDto(
+    @SerializedName("instance")
+    val instance: InstanceDto,
+
+    @SerializedName("questions")
+    val questions: List<QuestionDTO>
+)
+
+data class GetInstanceParticipantsResponseDto(
+    @SerializedName("participants")
+    val participants: List<ParticipantDto>
+)
+
+data class ParticipantDto(
+    @SerializedName("user")
+    val user: UserDto,
+
+    @SerializedName("session_status")
+    val sessionStatus: String,
+
+    @SerializedName("review_status")
+    val reviewStatus: String,
+
+    @SerializedName("total_score")
+    val totalScore: Int,
+
+    @SerializedName("max_possible_score")
+    val maxPossibleScore: Int
+)
+
+data class UserDto(
+    @SerializedName("id")
+    val id: String,
+
+    @SerializedName("first_name")
+    val firstName: String,
+
+    @SerializedName("last_name")
+    val lastName: String,
+
+    @SerializedName("email")
+    val email: String,
+
+    @SerializedName("avatar_url")
+    val avatarUrl: String?
+)
+
+data class GetParticipantAnswersResponseDto(
+    @SerializedName("instance")
+    val instance: InstanceDto,
+
+    @SerializedName("questions")
+    val questions: List<QuestionDTO>,
+
+    @SerializedName("answers")
+    val answers: List<UserAnswerDto>
+)
+
+data class UserAnswerDto(
+    @SerializedName("question_id")
+    val questionId: String,
+
+    @SerializedName("answer")
+    val answer: String?,
+
+    @SerializedName("is_correct")
+    val isCorrect: Boolean,
+
+    @SerializedName("is_reviewed")
+    val isReviewed: Boolean,
+
+    @SerializedName("is_time_expired")
+    val isTimeExpired: Boolean,
+
+    @SerializedName("score")
+    val score: Int,
+
+    @SerializedName("time_spent_ms")
+    val timeSpentMs: Int?
+)
+
+data class GradeAnswerRequestDto(
+    @SerializedName("participant_id")
+    val participantId: String,
+
+    @SerializedName("question_id")
+    val questionId: String,
+
+    @SerializedName("score")
+    val score: Int
+)
+

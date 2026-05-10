@@ -8,7 +8,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import com.ziopam.kollocol.core.ui.cards.LayoutWithLargeBottomCard
 import com.ziopam.kollocol.core.ui.preview.quizzesInfoExample
 import com.ziopam.kollocol.domain.model.QuizInfo
@@ -20,44 +23,60 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
     onParticipatingQuizClick: (QuizInfo) -> Unit = {},
     onRunningQuizClick: (QuizInfo) -> Unit = {},
-    onJoinQuiz: (String) -> Unit = {}
+    onJoinQuiz: (String) -> Unit = {},
+    onNotificationsClick: () -> Unit = {}
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val lifecycleOwner = LocalLifecycleOwner.current
 
-    LaunchedEffect(Unit) {
-        viewModel.refresh()
+    LaunchedEffect(lifecycleOwner) {
+        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            viewModel.refresh()
+        }
     }
 
     HomeScreenContent(
         personName = state.personName,
+        avatarUrl = state.avatarUrl,
         participatingQuizzes = state.participatingQuizzes,
         runningQuizzes = state.hostingQuizzes,
         onParticipatingQuizClick = onParticipatingQuizClick,
         onRunningQuizClick = onRunningQuizClick,
         code = state.quizCode,
         codeChanged = viewModel::onCodeChanged,
-        onJoinQuiz = onJoinQuiz
+        onJoinQuiz = { code ->
+            viewModel.onCodeChanged("")
+            onJoinQuiz(code)
+        },
+        onNotificationsClick = onNotificationsClick,
+        unreadNotificationsCount = state.unreadNotificationsCount
     )
 }
 
 @Composable
 private fun HomeScreenContent(
     personName: String,
+    avatarUrl: String?,
     code: String,
     codeChanged: (String) -> Unit,
     participatingQuizzes: List<QuizInfo>,
     runningQuizzes: List<QuizInfo>,
     onParticipatingQuizClick: (QuizInfo) -> Unit,
     onRunningQuizClick: (QuizInfo) -> Unit,
-    onJoinQuiz: (String) -> Unit = {}
+    onJoinQuiz: (String) -> Unit = {},
+    onNotificationsClick: () -> Unit = {},
+    unreadNotificationsCount: Int = 0
 ) {
     LayoutWithLargeBottomCard(
         contentAbove = {
             HomeAbove(
                 personName = personName,
+                avatarUrl = avatarUrl,
                 code = code,
                 onCodeChanged = codeChanged,
-                onJoinQuiz = { if (code.length == 6) onJoinQuiz(code) }
+                onJoinQuiz = { if (code.length == 6) onJoinQuiz(code) },
+                onNotificationsClick = onNotificationsClick,
+                unreadNotificationsCount = unreadNotificationsCount
             )
         },
         content = { HomeBelow(participatingQuizzes, runningQuizzes, onParticipatingQuizClick, onRunningQuizClick) }
@@ -72,6 +91,7 @@ private fun HomeScreenPreview() {
     MainScaffoldPreview {
         HomeScreenContent(
             personName = "Павел Попов",
+            avatarUrl = null,
             code = code,
             codeChanged = { code = it },
             participatingQuizzes = quizzesInfoExample,

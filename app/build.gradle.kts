@@ -10,8 +10,8 @@ android {
 
     defaultConfig {
         applicationId = "com.ziopam.kollocol"
-        versionCode = 3
-        versionName = "0.03"
+        versionCode = 5
+        versionName = "1.00"
     }
 
     signingConfigs {
@@ -80,6 +80,8 @@ dependencies {
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
+
+    implementation(libs.coil.compose)
 
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)

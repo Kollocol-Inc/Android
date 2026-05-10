@@ -42,4 +42,25 @@ interface QuizApi {
 
     @POST("ml/generate/template/questions")
     suspend fun generateQuestions(@Body request: GenerateQuestionsRequestDto): GenerateQuestionsResponseDto
+
+    @GET("quizzes/instances/{id}")
+    suspend fun getInstanceById(@Path("id") id: String): GetInstanceResponseDto
+
+    @GET("quizzes/instances/{id}/participants")
+    suspend fun getInstanceParticipants(@Path("id") id: String): GetInstanceParticipantsResponseDto
+
+    @GET("quizzes/instances/{id}/participants/{userId}/answers")
+    suspend fun getParticipantAnswers(
+        @Path("id") id: String,
+        @Path("userId") userId: String
+    ): GetParticipantAnswersResponseDto
+
+    @POST("quizzes/instances/{id}/grade")
+    suspend fun gradeAnswer(@Path("id") id: String, @Body request: GradeAnswerRequestDto)
+
+    @POST("quizzes/instances/{id}/publish")
+    suspend fun publishResults(@Path("id") id: String)
+
+    @DELETE("quizzes/instances/{id}")
+    suspend fun deleteInstance(@Path("id") id: String)
 }

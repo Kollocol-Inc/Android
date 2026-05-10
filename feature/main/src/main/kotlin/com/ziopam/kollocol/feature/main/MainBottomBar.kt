@@ -3,7 +3,6 @@ package com.ziopam.kollocol.feature.main
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -38,6 +37,7 @@ import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.ziopam.kollocol.core.ui.clickableNoIndication
+import com.ziopam.kollocol.core.ui.theme.isDarkTheme
 
 private val selectionWidthPadding = 10.dp
 
@@ -57,11 +57,11 @@ fun MainBottomBar(
                 shape = RoundedCornerShape(24.dp),
                 shadow = Shadow(
                     radius = 10.dp,
-                    spread = if (isSystemInDarkTheme()) 1.dp else 0.dp,
+                    spread = if (isDarkTheme()) 1.dp else 0.dp,
                     color = DefaultShadowColor.copy(alpha = 0.2f),
                     offset = DpOffset(
                         x = 0.dp,
-                        y = if (isSystemInDarkTheme()) 2.dp else 6.dp),
+                        y = if (isDarkTheme()) 2.dp else 6.dp),
                 )
             ),
         contentAlignment = Alignment.Center

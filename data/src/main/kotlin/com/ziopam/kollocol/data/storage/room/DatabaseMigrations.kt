@@ -31,3 +31,38 @@ val MIGRATION_3_4 = object : Migration(3, 4) {
         db.execSQL("ALTER TABLE templates ADD COLUMN total_time INTEGER NOT NULL DEFAULT 0")
     }
 }
+
+val MIGRATION_5_6 = object : Migration(5, 6) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("""
+            CREATE TABLE IF NOT EXISTS `group_details` (
+                id TEXT PRIMARY KEY NOT NULL,
+                name TEXT NOT NULL,
+                description TEXT NOT NULL,
+                avatarUrl TEXT,
+                memberCount INTEGER NOT NULL,
+                pendingCount INTEGER NOT NULL,
+                ownerId TEXT NOT NULL,
+                members TEXT NOT NULL,
+                invitedUsers TEXT NOT NULL
+            )
+        """.trimIndent())
+    }
+}
+
+val MIGRATION_4_5 = object : Migration(4, 5) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("""
+            CREATE TABLE IF NOT EXISTS `groups` (
+                id TEXT PRIMARY KEY NOT NULL,
+                name TEXT NOT NULL,
+                description TEXT NOT NULL,
+                avatarUrl TEXT,
+                memberCount INTEGER NOT NULL,
+                pendingCount INTEGER NOT NULL,
+                ownerId TEXT NOT NULL,
+                membershipType TEXT NOT NULL
+            )
+        """.trimIndent())
+    }
+}

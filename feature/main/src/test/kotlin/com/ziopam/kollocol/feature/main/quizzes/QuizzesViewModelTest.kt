@@ -6,6 +6,7 @@ import com.ziopam.kollocol.core.common.AppError
 import com.ziopam.kollocol.core.common.AppResult
 import com.ziopam.kollocol.domain.model.QuizInfo
 import com.ziopam.kollocol.domain.model.QuizMode
+import com.ziopam.kollocol.domain.repository.GroupRepository
 import com.ziopam.kollocol.domain.repository.QuizRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -40,12 +41,15 @@ class QuizzesViewModelTest {
 
     private val testDispatcher = StandardTestDispatcher()
     private lateinit var quizRepository: QuizRepository
+    private lateinit var groupRepository: GroupRepository
     private lateinit var viewModel: QuizzesViewModel
 
     private val runningFlow = MutableStateFlow<List<QuizInfo>>(emptyList())
     private val pendingFlow = MutableStateFlow<List<QuizInfo>>(emptyList())
     private val reviewedFlow = MutableStateFlow<List<QuizInfo>>(emptyList())
     private val templatesFlow = MutableStateFlow<List<QuizInfo>>(emptyList())
+    private val memberGroupsFlow = MutableStateFlow<List<com.ziopam.kollocol.domain.model.Group>>(emptyList())
+    private val createdGroupsFlow = MutableStateFlow<List<com.ziopam.kollocol.domain.model.Group>>(emptyList())
 
     private fun makeQuiz(id: String, title: String) = QuizInfo(
         id = id, title = title, accessCode = "CODE$id",
@@ -56,13 +60,17 @@ class QuizzesViewModelTest {
     fun setup() {
         Dispatchers.setMain(testDispatcher)
         quizRepository = mockk(relaxed = true)
+        groupRepository = mockk(relaxed = true)
 
         every { quizRepository.runningQuizzes } returns runningFlow
         every { quizRepository.pendingQuizzes } returns pendingFlow
         every { quizRepository.reviewedQuizzes } returns reviewedFlow
         every { quizRepository.templates } returns templatesFlow
+        every { groupRepository.memberGroups } returns memberGroupsFlow
+        every { groupRepository.createdGroups } returns createdGroupsFlow
+        coEvery { groupRepository.syncGroups() } returns AppResult.Ok(Unit)
 
-        viewModel = QuizzesViewModel(quizRepository)
+        viewModel = QuizzesViewModel(quizRepository, groupRepository)
     }
 
     @After
@@ -243,7 +251,7 @@ class QuizzesViewModelTest {
         advanceUntilIdle()
 
         // Then
-        coVerify(exactly = 0) { quizRepository.createInstance(any(), any(), any()) }
+        coVerify(exactly = 0) { quizRepository.createInstance(any(), any(), any(), any()) }
     }
 
     @Test
@@ -251,7 +259,7 @@ class QuizzesViewModelTest {
         // Given
         val template = makeQuiz("1", "Template")
         viewModel.onStartClick(template)
-        coEvery { quizRepository.createInstance(any(), any(), any()) } returns AppResult.Ok(Unit)
+        coEvery { quizRepository.createInstance(any(), any(), any(), any()) } returns AppResult.Ok(Unit)
 
         // When & Then
         viewModel.startQuizState.test {
@@ -269,7 +277,7 @@ class QuizzesViewModelTest {
         // Given
         val template = makeQuiz("1", "Template")
         viewModel.onStartClick(template)
-        coEvery { quizRepository.createInstance(any(), any(), any()) } returns AppResult.Ok(Unit)
+        coEvery { quizRepository.createInstance(any(), any(), any(), any()) } returns AppResult.Ok(Unit)
 
         // When
         viewModel.events.test {
@@ -287,7 +295,7 @@ class QuizzesViewModelTest {
         // Given
         val template = makeQuiz("1", "Template")
         viewModel.onStartClick(template)
-        coEvery { quizRepository.createInstance(any(), any(), any()) } returns AppResult.Ok(Unit)
+        coEvery { quizRepository.createInstance(any(), any(), any(), any()) } returns AppResult.Ok(Unit)
 
         // When
         viewModel.startQuiz()
@@ -302,7 +310,7 @@ class QuizzesViewModelTest {
         // Given
         val template = makeQuiz("1", "Template")
         viewModel.onStartClick(template)
-        coEvery { quizRepository.createInstance(any(), any(), any()) } returns
+        coEvery { quizRepository.createInstance(any(), any(), any(), any()) } returns
             AppResult.Err(AppError.NoInternet)
 
         // When
@@ -321,7 +329,7 @@ class QuizzesViewModelTest {
         // Given
         val template = makeQuiz("1", "Template")
         viewModel.onStartClick(template)
-        coEvery { quizRepository.createInstance(any(), any(), any()) } returns
+        coEvery { quizRepository.createInstance(any(), any(), any(), any()) } returns
             AppResult.Err(AppError.Timeout)
 
         // When
@@ -338,14 +346,14 @@ class QuizzesViewModelTest {
         val template = makeQuiz("template-id", "My Quiz")
         viewModel.onStartClick(template)
         viewModel.onStartQuizTitleChange("Custom Title")
-        coEvery { quizRepository.createInstance(any(), any(), any()) } returns AppResult.Ok(Unit)
+        coEvery { quizRepository.createInstance(any(), any(), any(), any()) } returns AppResult.Ok(Unit)
 
         // When
         viewModel.startQuiz()
         advanceUntilIdle()
 
         // Then
-        coVerify { quizRepository.createInstance("template-id", "Custom Title", null) }
+        coVerify { quizRepository.createInstance("template-id", "Custom Title", null, null) }
     }
 
     @Test

@@ -2,7 +2,6 @@ package com.ziopam.kollocol.core.ui.cards
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,6 +35,7 @@ import com.ziopam.kollocol.core.ui.clickableNoIndication
 import com.ziopam.kollocol.core.ui.other.QuizInfoIcon
 import com.ziopam.kollocol.core.ui.preview.quizzesInfoExample
 import com.ziopam.kollocol.core.ui.theme.AppTheme
+import com.ziopam.kollocol.core.ui.theme.isDarkTheme
 import com.ziopam.kollocol.domain.model.QuizInfo
 import com.ziopam.kollocol.domain.model.QuizMode
 
@@ -47,7 +47,7 @@ fun QuizCard(
     showButton: Boolean = false,
     onButtonClick: (() -> Unit)? = null,
 ) {
-    val cardColor = if (isSystemInDarkTheme()) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface
+    val cardColor = if (isDarkTheme()) MaterialTheme.colorScheme.surfaceVariant else MaterialTheme.colorScheme.surface
 
     Card(
         modifier = modifier,

@@ -4,11 +4,15 @@ package com.ziopam.kollocol.core.di
 
 import com.ziopam.kollocol.data.repository.AuthRepositoryImpl
 import com.ziopam.kollocol.data.repository.GameRepositoryImpl
+import com.ziopam.kollocol.data.repository.GroupRepositoryImpl
+import com.ziopam.kollocol.data.repository.NotificationRepositoryImpl
 import com.ziopam.kollocol.data.repository.PersonalRepositoryImpl
 import com.ziopam.kollocol.data.repository.QuizRepositoryImpl
 import com.ziopam.kollocol.data.repository.UserRepositoryImpl
 import com.ziopam.kollocol.domain.repository.AuthRepository
 import com.ziopam.kollocol.domain.repository.GameRepository
+import com.ziopam.kollocol.domain.repository.GroupRepository
+import com.ziopam.kollocol.domain.repository.NotificationRepository
 import com.ziopam.kollocol.domain.repository.PersonalRepository
 import com.ziopam.kollocol.domain.repository.QuizRepository
 import com.ziopam.kollocol.domain.repository.UserRepository
@@ -40,4 +44,12 @@ abstract class DataModule {
     @Binds
     @Singleton
     abstract fun bindGameRepository(impl: GameRepositoryImpl): GameRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindNotificationRepository(impl: NotificationRepositoryImpl): NotificationRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindGroupRepository(impl: GroupRepositoryImpl): GroupRepository
 }

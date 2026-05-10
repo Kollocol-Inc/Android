@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ziopam.kollocol.core.common.AppResult
 import com.ziopam.kollocol.domain.model.QuizInfo
-import com.ziopam.kollocol.domain.model.User
+import com.ziopam.kollocol.domain.repository.NotificationRepository
 import com.ziopam.kollocol.domain.repository.PersonalRepository
 import com.ziopam.kollocol.domain.repository.QuizRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,30 +17,36 @@ import javax.inject.Inject
 
 data class HomeUiState(
     val personName: String = "",
+    val avatarUrl: String? = null,
     val quizCode: String = "",
     val participatingQuizzes: List<QuizInfo> = emptyList(),
     val hostingQuizzes: List<QuizInfo> = emptyList(),
+    val unreadNotificationsCount: Int = 0
 )
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val quizRepository: QuizRepository,
-    private val personalRepository: PersonalRepository
+    private val personalRepository: PersonalRepository,
+    private val notificationRepository: NotificationRepository
 ) : ViewModel() {
-    private val user = MutableStateFlow(User(avatarUrl = null, firstName = "", lastName = ""))
     private val quizCode = MutableStateFlow("")
+    private val _unreadCount = MutableStateFlow(0)
 
     val uiState = combine(
-        user,
+        personalRepository.getUserFlow(),
         quizCode,
         quizRepository.participatingQuizzes,
         quizRepository.runningQuizzes,
-    ) { user, quizCode, participating, hosting ->
+        _unreadCount
+    ) { user, quizCode, participating, hosting, unread ->
         HomeUiState(
-            personName = formatPersonName(user),
+            personName = "${user.firstName} ${user.lastName}".trim(),
+            avatarUrl = user.avatarUrl,
             quizCode = quizCode,
             participatingQuizzes = participating,
             hostingQuizzes = hosting,
+            unreadNotificationsCount = unread
         )
     }.stateIn(
         scope = viewModelScope,
@@ -58,14 +64,15 @@ class HomeViewModel @Inject constructor(
 
     fun refresh() {
         viewModelScope.launch {
-            val result = personalRepository.getUser()
-            if (result is AppResult.Ok) user.value = result.value
+            personalRepository.getUser()
             quizRepository.getParticipatingQuizzes()
             quizRepository.getHostingQuizzes()
         }
-    }
-
-    private fun formatPersonName(user: User): String {
-        return "${user.firstName} ${user.lastName}".trim()
+        viewModelScope.launch {
+            val result = notificationRepository.getUnreadCount()
+            if (result is AppResult.Ok) {
+                _unreadCount.value = result.value
+            }
+        }
     }
 }

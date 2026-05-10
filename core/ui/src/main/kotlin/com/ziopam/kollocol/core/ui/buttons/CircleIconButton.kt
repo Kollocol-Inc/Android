@@ -26,6 +26,7 @@ fun CircleIconButton(
     icon: ImageVector,
     contentDescription: String?,
     modifier: Modifier = Modifier,
+    iconModifier: Modifier = Modifier,
     size: Dp = 48.dp,
     enabled: Boolean = true,
     tint : Color = MaterialTheme.colorScheme.primary
@@ -46,7 +47,7 @@ fun CircleIconButton(
                 imageVector = icon,
                 contentDescription = contentDescription,
                 tint = tint,
-                modifier = Modifier.size(size / 2)
+                modifier = Modifier.size(size / 2).then(iconModifier)
             )
         }
     }

@@ -23,9 +23,11 @@ import com.ziopam.kollocol.feature.main.MainScaffoldPreview
 fun QuizzesScreen(
     viewModel: QuizzesViewModel = hiltViewModel(),
     onRunningQuizClick: (QuizInfo) -> Unit = {},
+    onReviewQuizClick: (QuizInfo) -> Unit = {},
     onCreateTemplateClick: () -> Unit = {},
     onCreateTemplateAiClick: (String) -> Unit = {},
-    onEditTemplateClick: (QuizInfo) -> Unit = {}
+    onEditTemplateClick: (QuizInfo) -> Unit = {},
+    onNavigateToGroups: () -> Unit = {}
 ) {
     val state by viewModel.myQuizzesState.collectAsStateWithLifecycle()
     val templatesState by viewModel.templatesState.collectAsStateWithLifecycle()
@@ -53,7 +55,15 @@ fun QuizzesScreen(
             onTitleChange = viewModel::onStartQuizTitleChange,
             onDeadlineDateChange = viewModel::onStartQuizDeadlineDateChange,
             onDeadlineTimeChange = viewModel::onStartQuizDeadlineTimeChange,
-            onStartClick = viewModel::startQuiz
+            onStartClick = viewModel::startQuiz,
+            onGroupDropdownToggle = viewModel::onGroupDropdownToggle,
+            onGroupDropdownDismiss = viewModel::onGroupDropdownDismiss,
+            onGroupSearchQueryChange = viewModel::onGroupSearchQueryChange,
+            onGroupSelected = viewModel::onGroupSelected,
+            onNavigateToGroups = {
+                viewModel.onDismissStartQuiz()
+                onNavigateToGroups()
+            }
         )
     }
 
@@ -67,7 +77,7 @@ fun QuizzesScreen(
         onSearchQueryChange = viewModel::onSearchQueryChange,
         onTabSelected = viewModel::onTabSelected,
         onRunningQuizClick = onRunningQuizClick,
-        onQuizClick = {},
+        onQuizClick = onReviewQuizClick,
         onTemplateClick = onEditTemplateClick,
         onStartClick = viewModel::onStartClick,
         onCreateTemplateClick = onCreateTemplateClick,
@@ -89,8 +99,8 @@ private fun QuizzesScreen(
     onQuizClick: (QuizInfo) -> Unit,
     onTemplateClick: (QuizInfo) -> Unit,
     onStartClick: (QuizInfo) -> Unit,
-    onCreateTemplateClick: () -> Unit = {},
-    onCreateTemplateAiClick: (String) -> Unit = {}
+    onCreateTemplateClick: () -> Unit,
+    onCreateTemplateAiClick: (String) -> Unit
 ) {
     LayoutWithLargeBottomCard(
         contentAbove = {
@@ -153,7 +163,9 @@ private fun MyQuizzesPreview() {
             onRunningQuizClick = {},
             onQuizClick = {},
             onTemplateClick = {},
-            onStartClick = {}
+            onStartClick = {},
+            onCreateTemplateClick = {},
+            onCreateTemplateAiClick = {}
         )
     }
 }
@@ -176,7 +188,9 @@ private fun TemplatesPreview() {
             onRunningQuizClick = {},
             onQuizClick = {},
             onTemplateClick = {},
-            onStartClick = {}
+            onStartClick = {},
+            onCreateTemplateClick = {},
+            onCreateTemplateAiClick = {}
         )
     }
 }

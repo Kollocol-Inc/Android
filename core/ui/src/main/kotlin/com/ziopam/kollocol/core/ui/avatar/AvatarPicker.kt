@@ -33,6 +33,7 @@ fun AvatarPicker(
     modifier: Modifier = Modifier,
     defaultIconSize: Dp = 50.dp,
     borderColor: Color = MaterialTheme.colorScheme.primary,
+    defaultIcon: Int = R.drawable.user,
     onLongClick: (() -> Unit)? = null,
     overlay: (@Composable BoxScope.() -> Unit)? = null,
 ) {
@@ -60,6 +61,12 @@ fun AvatarPicker(
                 ),
             contentAlignment = Alignment.Center
         ) {
+            Icon(
+                imageVector = ImageVector.vectorResource(defaultIcon),
+                contentDescription = stringResource(R.string.pick_a_photo),
+                modifier = Modifier.size(defaultIconSize),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
+            )
             if (avatarUrl != null) {
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
@@ -69,13 +76,6 @@ fun AvatarPicker(
                     contentDescription = stringResource(R.string.avatar),
                     modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop
-                )
-            } else {
-                Icon(
-                    imageVector = ImageVector.vectorResource(R.drawable.user),
-                    contentDescription = stringResource(R.string.pick_a_photo),
-                    modifier = Modifier.size(defaultIconSize),
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
         }

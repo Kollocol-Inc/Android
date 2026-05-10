@@ -6,6 +6,8 @@ import com.ziopam.kollocol.core.network.AuthInterceptor
 import com.ziopam.kollocol.core.network.SafeApiCall
 import com.ziopam.kollocol.core.network.TokenAuthenticator
 import com.ziopam.kollocol.data.datasource.remote.auth.AuthApi
+import com.ziopam.kollocol.data.datasource.remote.group.GroupApi
+import com.ziopam.kollocol.data.datasource.remote.notification.NotificationApi
 import com.ziopam.kollocol.data.datasource.remote.quiz.QuizApi
 import com.ziopam.kollocol.data.datasource.remote.user.UserApi
 import com.ziopam.kollocol.domain.repository.SessionRepository
@@ -16,8 +18,8 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import java.util.concurrent.TimeUnit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
@@ -90,4 +92,14 @@ object NetworkModule {
     @Singleton
     fun provideQuizApi(retrofit: Retrofit): QuizApi =
         retrofit.create(QuizApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideNotificationApi(retrofit: Retrofit): NotificationApi =
+        retrofit.create(NotificationApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideGroupApi(retrofit: Retrofit): GroupApi =
+        retrofit.create(GroupApi::class.java)
 }

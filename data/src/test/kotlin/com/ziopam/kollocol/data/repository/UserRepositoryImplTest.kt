@@ -1,5 +1,6 @@
 package com.ziopam.kollocol.data.repository
 
+import android.content.Context
 import com.ziopam.kollocol.core.common.AppError
 import com.ziopam.kollocol.core.common.AppResult
 import com.ziopam.kollocol.core.network.SafeApiCall
@@ -19,6 +20,7 @@ class UserRepositoryImplTest {
     private lateinit var api: UserApi
     private lateinit var safeApiCall: SafeApiCall
     private lateinit var personalRepository: PersonalRepository
+    private lateinit var context: Context
     private lateinit var repository: UserRepositoryImpl
 
     @Before
@@ -26,7 +28,8 @@ class UserRepositoryImplTest {
         api = mockk(relaxed = true)
         safeApiCall = mockk(relaxed = true)
         personalRepository = mockk(relaxed = true)
-        repository = UserRepositoryImpl(api, safeApiCall, personalRepository)
+        context = mockk(relaxed = true)
+        repository = UserRepositoryImpl(api, safeApiCall, personalRepository, context)
     }
 
     @Test

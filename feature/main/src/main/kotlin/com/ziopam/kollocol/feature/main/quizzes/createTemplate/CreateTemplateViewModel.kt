@@ -368,10 +368,10 @@ class CreateTemplateViewModel @Inject constructor(
 
     private fun mapQuestionsToDto(questions: List<QuestionUiModel>): List<Map<String, Any?>> {
         return questions.map { q ->
-            val correctAnswer: Any = when (q.type) {
+            val correctAnswer: Any? = when (q.type) {
                 QuestionType.SINGLE -> q.correctOptionIndices.firstOrNull() ?: 0
                 QuestionType.MULTIPLE -> q.correctOptionIndices.sorted()
-                QuestionType.OPEN -> q.correctAnswer
+                QuestionType.OPEN -> q.correctAnswer.takeIf { it.isNotBlank() }
             }
             mapOf(
                 "text" to q.text,
