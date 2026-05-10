@@ -19,3 +19,10 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-keepclassmembers,allowobfuscation class * {
+    @com.google.gson.annotations.SerializedName <fields>;
+}
+
+-keep class com.ziopam.kollocol.data.datasource.remote.** { *; }
+-keep class com.ziopam.kollocol.core.network.model.** { *; }

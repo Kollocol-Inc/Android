@@ -112,7 +112,7 @@ class ProfileViewModelTest {
     }
 
     @Test
-    fun `init appends cache buster to avatarUrl when not null`() = runTest {
+    fun `init sets avatarUrl from getUserFlow when not null`() = runTest {
         // Given
         userFlow.value = User(avatarUrl = "http://example.com/avatar.png", firstName = "John", lastName = "Doe", email = "")
         viewModel = ProfileViewModel(userRepository, authRepository, personalRepository, sessionRepository)
@@ -122,8 +122,7 @@ class ProfileViewModelTest {
         advanceUntilIdle()
 
         // Then
-        assertNotNull(viewModel.state.value.avatarUrl)
-        assertTrue(viewModel.state.value.avatarUrl!!.contains("?t="))
+        assertEquals("http://example.com/avatar.png", viewModel.state.value.avatarUrl)
     }
 
     @Test
@@ -369,7 +368,7 @@ class ProfileViewModelTest {
     }
 
     @Test
-    fun `onUploadAvatar updates avatarUrl with cache buster on success`() = runTest {
+    fun `onUploadAvatar keeps avatarUrl present on success`() = runTest {
         // Given
         val uri = mockk<Uri>()
         coEvery { userRepository.uploadAvatar(uri) } returns AppResult.Ok(null)
@@ -384,7 +383,6 @@ class ProfileViewModelTest {
 
         // Then
         assertNotNull(viewModel.state.value.avatarUrl)
-        assertTrue(viewModel.state.value.avatarUrl!!.contains("?t="))
     }
 
     @Test
