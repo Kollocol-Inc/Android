@@ -33,6 +33,7 @@ fun AvatarPicker(
     modifier: Modifier = Modifier,
     defaultIconSize: Dp = 50.dp,
     borderColor: Color = MaterialTheme.colorScheme.primary,
+    defaultIcon: Int = R.drawable.user,
     onLongClick: (() -> Unit)? = null,
     overlay: (@Composable BoxScope.() -> Unit)? = null,
 ) {
@@ -72,7 +73,7 @@ fun AvatarPicker(
                 )
             } else {
                 Icon(
-                    imageVector = ImageVector.vectorResource(R.drawable.user),
+                    imageVector = ImageVector.vectorResource(defaultIcon),
                     contentDescription = stringResource(R.string.pick_a_photo),
                     modifier = Modifier.size(defaultIconSize),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant

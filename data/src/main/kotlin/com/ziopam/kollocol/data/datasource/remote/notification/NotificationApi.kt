@@ -14,4 +14,7 @@ interface NotificationApi {
 
     @PUT("notifications/read")
     suspend fun markAsRead(@Body request: NotificationIdsRequestDto)
+
+    @PUT("notifications/read/all")
+    suspend fun markAllAsRead()
 }

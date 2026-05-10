@@ -26,7 +26,8 @@ fun QuizzesScreen(
     onReviewQuizClick: (QuizInfo) -> Unit = {},
     onCreateTemplateClick: () -> Unit = {},
     onCreateTemplateAiClick: (String) -> Unit = {},
-    onEditTemplateClick: (QuizInfo) -> Unit = {}
+    onEditTemplateClick: (QuizInfo) -> Unit = {},
+    onNavigateToGroups: () -> Unit = {}
 ) {
     val state by viewModel.myQuizzesState.collectAsStateWithLifecycle()
     val templatesState by viewModel.templatesState.collectAsStateWithLifecycle()
@@ -54,7 +55,15 @@ fun QuizzesScreen(
             onTitleChange = viewModel::onStartQuizTitleChange,
             onDeadlineDateChange = viewModel::onStartQuizDeadlineDateChange,
             onDeadlineTimeChange = viewModel::onStartQuizDeadlineTimeChange,
-            onStartClick = viewModel::startQuiz
+            onStartClick = viewModel::startQuiz,
+            onGroupDropdownToggle = viewModel::onGroupDropdownToggle,
+            onGroupDropdownDismiss = viewModel::onGroupDropdownDismiss,
+            onGroupSearchQueryChange = viewModel::onGroupSearchQueryChange,
+            onGroupSelected = viewModel::onGroupSelected,
+            onNavigateToGroups = {
+                viewModel.onDismissStartQuiz()
+                onNavigateToGroups()
+            }
         )
     }
 

@@ -1,11 +1,14 @@
 package com.ziopam.kollocol.feature.main.quizzes
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -17,7 +20,10 @@ import androidx.compose.material3.AssistChipDefaults
 import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
+import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -36,6 +42,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
@@ -46,9 +53,10 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ziopam.kollocol.core.ui.buttons.DefaultButton
-import com.ziopam.kollocol.core.ui.clickableNoIndication
 import com.ziopam.kollocol.core.ui.input.RoundedFocusTextField
+import com.ziopam.kollocol.core.ui.input.SearchBar
 import com.ziopam.kollocol.core.ui.theme.AppTheme
+import com.ziopam.kollocol.domain.model.Group
 import com.ziopam.kollocol.domain.model.QuizInfo
 import com.ziopam.kollocol.domain.model.QuizMode
 import com.ziopam.kollocol.feature.main.R
@@ -66,7 +74,12 @@ fun StartQuizSheet(
     onTitleChange: (String) -> Unit,
     onDeadlineDateChange: (Long) -> Unit,
     onDeadlineTimeChange: (Int, Int) -> Unit,
-    onStartClick: () -> Unit
+    onStartClick: () -> Unit,
+    onGroupDropdownToggle: () -> Unit,
+    onGroupDropdownDismiss: () -> Unit,
+    onGroupSearchQueryChange: (String) -> Unit,
+    onGroupSelected: (Group?) -> Unit,
+    onNavigateToGroups: () -> Unit
 ) {
     val template = state.template ?: return
 
@@ -244,24 +257,93 @@ fun StartQuizSheet(
                     }
                 }
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
+                val chevronAngle by animateFloatAsState(
+                    targetValue = if (state.groupDropdownExpanded) -90f else 90f,
+                    animationSpec = tween(durationMillis = 300),
+                    label = "chevron_angle"
+                )
+
+                ExposedDropdownMenuBox(
+                    expanded = state.groupDropdownExpanded,
+                    onExpandedChange = { expanded ->
+                        if (expanded) onGroupDropdownToggle() else onGroupDropdownDismiss()
+                    },
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text(text = stringResource(R.string.group), style = bodySmall)
-                    Spacer(Modifier.weight(1f))
-                    Text(
-                        text = stringResource(R.string.no_group),
-                        style = bodySmall,
-                        color = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.clickableNoIndication { }
-                    )
-                    Icon(
-                        imageVector = ImageVector.vectorResource(CoreR.drawable.chevron_right),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(18.dp)
-                    )
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(text = stringResource(R.string.group), style = bodySmall)
+                        Spacer(Modifier.weight(1f))
+                        Text(
+                            text = state.selectedGroup?.name ?: stringResource(R.string.no_group),
+                            style = bodySmall,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        Icon(
+                            imageVector = ImageVector.vectorResource(CoreR.drawable.chevron_right),
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier
+                                .size(18.dp)
+                                .rotate(chevronAngle)
+                        )
+                    }
+
+                    ExposedDropdownMenu(
+                        expanded = state.groupDropdownExpanded,
+                        onDismissRequest = onGroupDropdownDismiss,
+                        modifier = Modifier.heightIn(max = 320.dp),
+                        shape = RoundedCornerShape(20.dp),
+                        containerColor = MaterialTheme.colorScheme.background,
+                        shadowElevation = 8.dp
+                    ) {
+                        SearchBar(
+                            placeholder = stringResource(R.string.search_groups),
+                            text = state.groupSearchQuery,
+                            onQueryChange = onGroupSearchQueryChange,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 8.dp, vertical = 8.dp)
+                        )
+                        DropdownMenuItem(
+                            text = { Text(stringResource(R.string.no_group)) },
+                            onClick = { onGroupSelected(null) }
+                        )
+                        val filteredGroups = state.ownedGroups.filter {
+                            state.groupSearchQuery.isBlank() ||
+                                    it.name.contains(state.groupSearchQuery, ignoreCase = true)
+                        }
+                        filteredGroups.forEach { group ->
+                            DropdownMenuItem(
+                                text = { Text(group.name) },
+                                onClick = { onGroupSelected(group) }
+                            )
+                        }
+                        DropdownMenuItem(
+                            text = {
+                                Text(
+                                    text = stringResource(R.string.create_group_action),
+                                    color = MaterialTheme.colorScheme.primary
+                                )
+                            },
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = ImageVector.vectorResource(CoreR.drawable.add),
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.size(18.dp)
+                                )
+                            },
+                            onClick = {
+                                onGroupDropdownDismiss()
+                                onNavigateToGroups()
+                            }
+                        )
+                    }
                 }
             }
 
@@ -297,6 +379,11 @@ private fun StartQuizSheetPreviewAsync() {
             onDeadlineDateChange = {},
             onDeadlineTimeChange = { _, _ -> {} },
             onStartClick = {},
+            onGroupDropdownToggle = {},
+            onGroupDropdownDismiss = {},
+            onGroupSearchQueryChange = {},
+            onGroupSelected = {},
+            onNavigateToGroups = {}
         )
     }
 }
@@ -320,6 +407,11 @@ private fun StartQuizSheetPreviewSync() {
             onDeadlineDateChange = {},
             onDeadlineTimeChange = { _, _ -> {} },
             onStartClick = {},
+            onGroupDropdownToggle = {},
+            onGroupDropdownDismiss = {},
+            onGroupSearchQueryChange = {},
+            onGroupSelected = {},
+            onNavigateToGroups = {}
         )
     }
 }

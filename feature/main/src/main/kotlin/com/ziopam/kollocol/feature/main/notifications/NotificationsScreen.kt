@@ -153,7 +153,7 @@ private val previewNotifications = listOf(
         content = "Вы были приглашены в группу Amogus",
         isRead = false,
         createdAt = "2026-05-08T10:00:00Z",
-        referenceId = "group-1"
+        relatedEntityId = "group-1"
     ),
     Notification(
         id = "2",

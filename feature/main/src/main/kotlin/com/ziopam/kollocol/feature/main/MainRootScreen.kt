@@ -7,7 +7,6 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -20,6 +19,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.ziopam.kollocol.core.ui.cards.LocalExtraBottomPadding
 import com.ziopam.kollocol.domain.model.QuizMode
+import com.ziopam.kollocol.feature.main.groups.GroupsScreen
+import com.ziopam.kollocol.feature.main.groups.detail.GroupDetailScreen
 import com.ziopam.kollocol.feature.main.home.HomeScreen
 import com.ziopam.kollocol.feature.main.notifications.NotificationsScreen
 import com.ziopam.kollocol.feature.main.profile.ProfileScreen
@@ -39,6 +40,7 @@ fun MainRootScreen() {
             currentRoute?.startsWith("game/") != true &&
             currentRoute?.startsWith("quiz_review/") != true &&
             currentRoute?.startsWith("participant_review/") != true &&
+            currentRoute?.startsWith("group_detail/") != true &&
             currentRoute != MainRoute.NOTIFICATIONS
 
     Scaffold(
@@ -125,8 +127,51 @@ fun MainRootScreen() {
                 )
             }
 
-            composable(MainRoute.GROUPS) {
-                Text("Groups screen")
+            composable(
+                route = MainRoute.GROUPS,
+                exitTransition = {
+                    val target = targetState.destination.route ?: ""
+                    if (target.startsWith("group_detail/")) {
+                        slideOutHorizontally(targetOffsetX = { -it }, animationSpec = tween(300))
+                    } else {
+                        fadeOut(animationSpec = tween(200))
+                    }
+                },
+                popEnterTransition = {
+                    val initial = initialState.destination.route ?: ""
+                    if (initial.startsWith("group_detail/")) {
+                        slideInHorizontally(initialOffsetX = { -it }, animationSpec = tween(300))
+                    } else {
+                        fadeIn(animationSpec = tween(200))
+                    }
+                }
+            ) {
+                GroupsScreen(
+                    onNavigateToDetail = { groupId ->
+                        tabNavController.navigate(MainRoute.groupDetailRoute(groupId))
+                    }
+                )
+            }
+
+            composable(
+                route = MainRoute.GROUP_DETAIL,
+                arguments = listOf(navArgument("groupId") { type = NavType.StringType }),
+                enterTransition = {
+                    slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(300))
+                },
+                exitTransition = {
+                    slideOutHorizontally(targetOffsetX = { it }, animationSpec = tween(300))
+                },
+                popEnterTransition = {
+                    slideInHorizontally(initialOffsetX = { it }, animationSpec = tween(300))
+                },
+                popExitTransition = {
+                    slideOutHorizontally(targetOffsetX = { it }, animationSpec = tween(300))
+                }
+            ) {
+                GroupDetailScreen(
+                    onNavigateBack = { tabNavController.popBackStack() }
+                )
             }
 
             composable(
@@ -236,6 +281,9 @@ fun MainRootScreen() {
                     },
                     onEditTemplateClick = { template ->
                         tabNavController.navigate(MainRoute.editTemplateRoute(template.id))
+                    },
+                    onNavigateToGroups = {
+                        tabNavController.navigateToMainTab(MainRoute.GROUPS)
                     }
                 )
             }

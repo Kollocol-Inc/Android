@@ -94,7 +94,7 @@ fun NotificationItem(
             }
         }
 
-        val groupId = notification.referenceId
+        val groupId = notification.relatedEntityId
         if (notification.type == NotificationType.GROUP_INVITE && groupId != null) {
             Spacer(Modifier.height(10.dp))
             GroupInviteActions(

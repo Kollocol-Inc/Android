@@ -31,7 +31,8 @@ interface QuizRepository {
     suspend fun createInstance(
         templateId: String,
         title: String,
-        deadline: String? = null
+        deadline: String? = null,
+        groupId: String? = null
     ): AppResult<Unit>
 
     suspend fun getTemplateById(id: String): AppResult<TemplateDetail>

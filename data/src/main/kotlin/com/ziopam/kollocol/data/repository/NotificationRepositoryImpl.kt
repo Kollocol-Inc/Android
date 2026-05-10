@@ -29,6 +29,10 @@ class NotificationRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun markAllAsRead(): AppResult<Unit> {
+        return safeApiCall.call { notificationApi.markAllAsRead() }
+    }
+
     override suspend fun acceptGroupInvite(groupId: String): AppResult<Unit> {
         return safeApiCall.call { groupApi.acceptInvite(groupId) }
     }

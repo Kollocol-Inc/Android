@@ -162,12 +162,14 @@ class QuizRepositoryImpl @Inject constructor(
     override suspend fun createInstance(
         templateId: String,
         title: String,
-        deadline: String?
+        deadline: String?,
+        groupId: String?
     ): AppResult<Unit> {
         val request = CreateInstanceRequestDto(
             templateId = templateId,
             title = title,
-            deadline = deadline
+            deadline = deadline,
+            groupId = groupId
         )
         val result = safeApiCall.call { api.createInstance(request) }
         return when (result) {

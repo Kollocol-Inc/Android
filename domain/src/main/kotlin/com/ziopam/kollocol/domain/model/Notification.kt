@@ -12,5 +12,6 @@ data class Notification(
     val content: String,
     val isRead: Boolean,
     val createdAt: String,
-    val referenceId: String? = null
+    val relatedEntityId: String? = null,
+    val requiresAction: Boolean = false
 )

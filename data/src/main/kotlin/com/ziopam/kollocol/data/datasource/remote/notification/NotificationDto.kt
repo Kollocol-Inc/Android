@@ -26,8 +26,11 @@ data class NotificationDto(
     @SerializedName("created_at")
     val createdAt: String,
 
-    @SerializedName("reference_id")
-    val referenceId: String? = null
+    @SerializedName("related_entity_id")
+    val relatedEntityId: String? = null,
+
+    @SerializedName("requires_action")
+    val requiresAction: Boolean = false
 ) {
     fun toDomain(): Notification = Notification(
         id = id,
@@ -44,7 +47,8 @@ data class NotificationDto(
         content = content,
         isRead = isRead,
         createdAt = createdAt,
-        referenceId = referenceId
+        relatedEntityId = relatedEntityId,
+        requiresAction = requiresAction
     )
 }
 

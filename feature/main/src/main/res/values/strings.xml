@@ -71,6 +71,7 @@
     <string name="date">Дата</string>
     <string name="group">Группа</string>
     <string name="no_group">Без группы</string>
+    <string name="create_group_action">Создать группу</string>
     <string name="launch">Запустить</string>
     <string name="ok">OK</string>
 
@@ -141,4 +142,60 @@
     <string name="no_notifications">Уведомлений нет</string>
     <string name="accept_invite">Принять</string>
     <string name="decline_invite">Отклонить</string>
+
+    <string name="groups_member_tab">Состою</string>
+    <string name="groups_owner_tab">Управляю</string>
+    <string name="search_groups">Поиск групп</string>
+    <string name="invitations">Приглашения</string>
+    <string name="show_all">Показать все</string>
+    <string name="hide">Скрыть</string>
+    <string name="no_groups">Групп нет</string>
+    <string name="no_groups_member">Вы не состоите ни в одной группе</string>
+    <string name="no_groups_owner">Вы не управляете ни одной группой</string>
+    <string name="group_members_count">%d участников</string>
+    <string name="group_pending_count">%d ожидают</string>
+
+    <string name="create_group">Создание группы</string>
+    <string name="edit_group">Редактирование</string>
+    <string name="group_name">Название</string>
+    <string name="group_name_hint">Введите название</string>
+    <string name="group_description">Описание</string>
+    <string name="group_description_hint">Введите описание</string>
+    <string name="group_participants">Участники</string>
+    <string name="add_participant_email_hint">Email участника</string>
+    <string name="create_group_button">Создать</string>
+    <string name="save_group_button">Сохранить</string>
+    <string name="group_name_empty_error">Введите название группы</string>
+
+    <string name="group_detail_subtitle">Группа %d героев</string>
+    <string name="group_members_section">Участники</string>
+    <string name="group_invited_section">Приглашены</string>
+    <string name="invite_member_button">Пригласить участника</string>
+    <string name="invite_members_title">Пригласить участников</string>
+    <string name="invite_button">Пригласить</string>
+    <string name="members_invited_success">Приглашения отправлены</string>
+
+    <string name="leave_group">Покинуть группу</string>
+    <string name="leave_group_confirm_title">Покинуть группу?</string>
+    <string name="leave_group_confirm_message">Вы уверены, что хотите покинуть группу?</string>
+    <string name="leave">Покинуть</string>
+
+    <string name="delete_group">Удалить группу</string>
+    <string name="delete_group_confirm_title">Удалить группу?</string>
+    <string name="delete_group_confirm_message">Группа будет удалена безвозвратно</string>
+
+    <string name="kick_member_confirm_title">Исключить участника?</string>
+    <string name="kick_member_confirm_message">%s будет исключён из группы</string>
+    <string name="cancel_invite_confirm_title">Отменить приглашение?</string>
+    <string name="cancel_invite_confirm_message">Приглашение для %s будет отменено</string>
+    <string name="confirm">Подтвердить</string>
+
+    <string name="group_left">Вы покинули группу</string>
+    <string name="group_deleted">Группа удалена</string>
+    <string name="group_created">Группа создана</string>
+    <string name="group_updated">Группа обновлена</string>
+    <string name="member_kicked">Участник исключён</string>
+    <string name="invite_cancelled">Приглашение отменено</string>
+    <string name="invite_accepted">Приглашение принято</string>
+    <string name="invite_declined">Приглашение отклонено</string>
 </resources>

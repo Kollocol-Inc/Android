@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ziopam.kollocol.core.common.AppResult
 import com.ziopam.kollocol.domain.model.Notification
-import com.ziopam.kollocol.domain.model.NotificationType
 import com.ziopam.kollocol.domain.repository.NotificationRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,7 +37,7 @@ class NotificationsViewModel @Inject constructor(
             val result = notificationRepository.getNotifications(limit = 50, offset = 0)
             if (result is AppResult.Ok) {
                 val notifications = result.value
-                    .filter { it.type != NotificationType.GROUP_INVITE || !it.isRead }
+                    .filter { !it.requiresAction || !it.isRead }
                     .sortedByDescending { parseInstantOrMin(it.createdAt) }
                 sentReadIds.addAll(notifications.filter { it.isRead }.map { it.id })
                 _uiState.update { it.copy(notifications = notifications, isLoading = false) }
@@ -53,7 +52,7 @@ class NotificationsViewModel @Inject constructor(
             id !in sentReadIds && _uiState.value.notifications.any { notification ->
                 notification.id == id &&
                         !notification.isRead &&
-                        notification.type != NotificationType.GROUP_INVITE
+                        !notification.requiresAction
             }
         }
         if (toMark.isEmpty()) return
@@ -71,20 +70,20 @@ class NotificationsViewModel @Inject constructor(
     }
 
     fun markAllAsRead() {
-        val unreadIds = _uiState.value.notifications
-            .filter { !it.isRead && it.type != NotificationType.GROUP_INVITE }
+        val toMark = _uiState.value.notifications
+            .filter { !it.isRead && !it.requiresAction }
             .map { it.id }
-        if (unreadIds.isEmpty()) return
+        if (toMark.isEmpty()) return
 
-        sentReadIds.addAll(unreadIds)
+        sentReadIds.addAll(toMark)
         _uiState.update { state ->
             state.copy(notifications = state.notifications.map {
-                if (it.id in unreadIds) it.copy(isRead = true) else it
+                if (it.id in toMark) it.copy(isRead = true) else it
             })
         }
 
         viewModelScope.launch {
-            notificationRepository.markAsRead(unreadIds)
+            notificationRepository.markAllAsRead()
         }
     }
 

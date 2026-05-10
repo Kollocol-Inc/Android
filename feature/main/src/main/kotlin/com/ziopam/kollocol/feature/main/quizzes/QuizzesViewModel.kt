@@ -4,7 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ziopam.kollocol.core.common.AppError
 import com.ziopam.kollocol.core.common.AppResult
+import com.ziopam.kollocol.domain.model.Group
 import com.ziopam.kollocol.domain.model.QuizInfo
+import com.ziopam.kollocol.domain.repository.GroupRepository
 import com.ziopam.kollocol.domain.repository.QuizRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -12,6 +14,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -39,7 +42,11 @@ data class StartQuizSheetState(
     val deadlineDateMillis: Long? = null,
     val deadlineHour: Int? = null,
     val deadlineMinute: Int? = null,
-    val isLoading: Boolean = false
+    val isLoading: Boolean = false,
+    val selectedGroup: Group? = null,
+    val ownedGroups: List<Group> = emptyList(),
+    val groupDropdownExpanded: Boolean = false,
+    val groupSearchQuery: String = ""
 )
 
 sealed class QuizzesEvent {
@@ -49,7 +56,8 @@ sealed class QuizzesEvent {
 
 @HiltViewModel
 class QuizzesViewModel @Inject constructor(
-    private val quizRepository: QuizRepository
+    private val quizRepository: QuizRepository,
+    private val groupRepository: GroupRepository
 ) : ViewModel() {
     private val searchQuery = MutableStateFlow("")
     private val selectedTabIndex = MutableStateFlow(0)
@@ -116,6 +124,11 @@ class QuizzesViewModel @Inject constructor(
 
     fun onStartClick(template: QuizInfo) {
         _startQuizState.value = StartQuizSheetState(template = template, title = template.title)
+        viewModelScope.launch {
+            groupRepository.syncGroups()
+            val groups = groupRepository.createdGroups.first()
+            _startQuizState.update { it.copy(ownedGroups = groups) }
+        }
     }
 
     fun onDismissStartQuiz() {
@@ -134,6 +147,22 @@ class QuizzesViewModel @Inject constructor(
         _startQuizState.update { it.copy(deadlineHour = hour, deadlineMinute = minute) }
     }
 
+    fun onGroupDropdownToggle() {
+        _startQuizState.update { it.copy(groupDropdownExpanded = !it.groupDropdownExpanded) }
+    }
+
+    fun onGroupDropdownDismiss() {
+        _startQuizState.update { it.copy(groupDropdownExpanded = false, groupSearchQuery = "") }
+    }
+
+    fun onGroupSearchQueryChange(query: String) {
+        _startQuizState.update { it.copy(groupSearchQuery = query) }
+    }
+
+    fun onGroupSelected(group: Group?) {
+        _startQuizState.update { it.copy(selectedGroup = group, groupDropdownExpanded = false, groupSearchQuery = "") }
+    }
+
     fun startQuiz() {
         val state = _startQuizState.value
         val template = state.template ?: return
@@ -146,7 +175,8 @@ class QuizzesViewModel @Inject constructor(
             val result = quizRepository.createInstance(
                 templateId = template.id,
                 title = state.title,
-                deadline = deadline
+                deadline = deadline,
+                groupId = state.selectedGroup?.id
             )
 
             when (result) {

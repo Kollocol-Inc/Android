@@ -7,6 +7,7 @@ import com.ziopam.kollocol.core.navigation.Graph
 object MainRoute {
     const val HOME = "home"
     const val GROUPS = "groups"
+    const val GROUP_DETAIL = "group_detail/{groupId}"
     const val QUIZZES = "quizzes"
     const val PROFILE = "profile"
     const val NOTIFICATIONS = "notifications"
@@ -22,6 +23,7 @@ object MainRoute {
     fun quizReviewRoute(instanceId: String) = "quiz_review/$instanceId"
     fun participantReviewRoute(instanceId: String, userId: String, name: String, email: String) =
         "participant_review/$instanceId/$userId?name=${android.net.Uri.encode(name)}&email=${android.net.Uri.encode(email)}"
+    fun groupDetailRoute(groupId: String) = "group_detail/$groupId"
 }
 
 fun NavGraphBuilder.mainGraph() {
