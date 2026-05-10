@@ -1,5 +1,7 @@
 package com.ziopam.kollocol.feature.quizgame
 
+import android.app.Activity
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -15,6 +17,7 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -42,6 +45,13 @@ fun GameScreen(
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
+
+    val isPlaying = state.phase is GamePhase.Playing
+    val window = (context as? Activity)?.window
+    DisposableEffect(isPlaying) {
+        if (isPlaying) window?.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
+        onDispose { window?.clearFlags(WindowManager.LayoutParams.FLAG_SECURE) }
+    }
 
     LaunchedEffect(Unit) {
         viewModel.events.collect { event ->

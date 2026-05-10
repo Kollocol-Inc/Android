@@ -403,6 +403,8 @@ class GameViewModel @Inject constructor(
             val message = when (event.message) {
                 "Quiz has already finished" -> UiText.StringRes(R.string.game_error_quiz_already_finished)
                 "Quiz has already started" -> UiText.StringRes(R.string.game_error_quiz_already_started)
+                "Quiz not found" -> UiText.StringRes(R.string.game_error_quiz_not_found)
+                "Creator cannot join async quizzes" -> UiText.StringRes(R.string.game_error_creator_cannot_join_async)
                 else -> UiText.Dynamic(event.message)
             }
             _uiState.update { it.copy(phase = GamePhase.Error(message = message)) }

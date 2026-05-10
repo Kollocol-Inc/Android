@@ -38,6 +38,8 @@
     <string name="game_error_quiz_already_started">Квиз уже начался</string>
     <string name="game_error_session_replaced">Ваша сессия прервана другим устройством</string>
     <string name="game_error_kicked">Вас исключили из игры</string>
+    <string name="game_error_quiz_not_found">Квиз не найден</string>
+    <string name="game_error_creator_cannot_join_async">Создатель не может участвовать в асинхронном квизе</string>
     <string name="game_not_enough_participants">Недостаточно участников</string>
     <string name="game_async_about">О квизе</string>
     <string name="game_async_deadline">до %s</string>

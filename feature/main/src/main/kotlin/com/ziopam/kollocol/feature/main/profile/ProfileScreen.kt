@@ -6,6 +6,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -151,32 +152,26 @@ fun ProfileScreen(
     LayoutWithLargeBottomCard(
         scrollable = false,
         contentAbove = {
-            Box(modifier = Modifier.fillMaxWidth()) {
-                Text(
-                    text = stringResource(R.string.profile),
-                    style = MaterialTheme.typography.headlineMedium,
-                    modifier = Modifier.align(Alignment.Center)
-                )
-                CircleIconButton(
-                    onClick = { showLogoutDialog = true },
-                    icon = ImageVector.vectorResource(CoreR.drawable.exit),
-                    contentDescription = stringResource(R.string.logout),
-                    size = 48.dp,
-                    iconModifier = Modifier.graphicsLayer { scaleX = -1f },
-                    modifier = Modifier.align(Alignment.CenterEnd),
-                    tint = Color(0xFFE53935)
-                )
-            }
-        }
-    ) {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 4.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            item(key = "user_card") {
-                Spacer(Modifier.height(6.dp))
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Box(modifier = Modifier.fillMaxWidth()) {
+                    Text(
+                        text = stringResource(R.string.profile),
+                        style = MaterialTheme.typography.headlineMedium,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                    CircleIconButton(
+                        onClick = { showLogoutDialog = true },
+                        icon = ImageVector.vectorResource(CoreR.drawable.exit),
+                        contentDescription = stringResource(R.string.logout),
+                        size = 48.dp,
+                        iconModifier = Modifier.graphicsLayer { scaleX = -1f },
+                        modifier = Modifier.align(Alignment.CenterEnd),
+                        tint = Color(0xFFE53935)
+                    )
+                }
                 ProfileUserCard(
                     firstName = state.firstName,
                     lastName = state.lastName,
@@ -198,9 +193,15 @@ fun ProfileScreen(
                     onDeletePhoto = { showAvatarMenu = false; onDeleteAvatar() }
                 )
             }
-
+        }
+    ) {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 4.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
             item(key = "notif_header") {
-                Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = stringResource(R.string.notifications_section),
                     style = MaterialTheme.typography.headlineSmall

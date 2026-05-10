@@ -44,7 +44,10 @@ fun HomeScreen(
         onRunningQuizClick = onRunningQuizClick,
         code = state.quizCode,
         codeChanged = viewModel::onCodeChanged,
-        onJoinQuiz = onJoinQuiz,
+        onJoinQuiz = { code ->
+            viewModel.onCodeChanged("")
+            onJoinQuiz(code)
+        },
         onNotificationsClick = onNotificationsClick,
         unreadNotificationsCount = state.unreadNotificationsCount
     )
